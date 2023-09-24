@@ -2,10 +2,10 @@
   <SplashScreen :isLoading="loading" v-if="loading" />
   <VContainer v-else class="layout-wrapper" :fluid="true">
     <VRow class="content">
-      <VCol cols="4">
-        <VImg :src="Logo" width="500" height="200" cover />
+      <VCol cols="6" class="logo">
+        <VImg :src="Logo" width="500" height="500" />
       </VCol>
-      <VCol cols="4">
+      <VCol cols="6">
         <VCard class="card">
           <VForm @submit.prevent="submit">
             <VCardTitle style="color: white; text-align: center; font-size: 48px" class="py-8">
@@ -14,12 +14,12 @@
             <VCardItem>
               <VLabel class="mb-2" style="color: white">Username</VLabel>
               <VTextField v-model="username.value.value" :error-messages="username.errorMessage.value" variant="outlined"
-                bgColor="white" rounded="lg" />
+                bgColor="white" rounded="lg" density="compact" />
               <VLabel class="mb-2" style="color: white">Password</VLabel>
               <VTextField v-model="password.value.value" :error-messages="password.errorMessage.value" type="password"
-                variant="outlined" bgColor="white" rounded="lg" />
+                variant="outlined" bgColor="white" rounded="lg" density="compact" />
               <div class="d-flex justify-center">
-                <VBtn type="submit" :loading="isLoading" color="#12BA68" rounded="md" class="my-6" width="140px">Login
+                <VBtn type="submit" :loading="isLoading" color="#12BA68" rounded="lg" class="my-6" width="140px">Login
                 </VBtn>
               </div>
             </VCardItem>
@@ -81,12 +81,18 @@ setTimeout(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 1200px;
+  width: 600px;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card {
   background: rgba(255, 255, 255, 0.1);
-  width: 600px;
+  width: 500px;
   padding: 24px;
 }
 

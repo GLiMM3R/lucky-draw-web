@@ -1,3 +1,5 @@
+import jwtDecode from 'jwt-decode'
+
 export function getAccessToken() {
   return localStorage.getItem('access_token')
 }
@@ -20,4 +22,14 @@ export function removeAccessToken() {
 
 export function removeRefreshToken() {
   localStorage.removeItem('refresh_token')
+}
+
+export function isTokenExpired(token?: string) {
+  const decoded: any = jwtDecode(token ?? '')
+  // console.log('🚀 ~ file: token.ts:29 ~ isTokenExpired ~ decoded:', decoded)
+  // if (decoded.exp < Date.now() / 1000) {
+  //   console.log('token expire')
+  // }
+  // return decoded.iat > Date.now()
+  return decoded.exp < Date.now() / 1000
 }
