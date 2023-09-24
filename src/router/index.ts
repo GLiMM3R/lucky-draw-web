@@ -1,3 +1,5 @@
+import useUser from '@/composables/useUser'
+import { getAccessToken } from '@/utils/token'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -11,36 +13,41 @@ const router = createRouter({
         {
           path: '/home',
           name: 'home',
-          component: () => import('@/views/home/index.vue')
+          component: () => import('@/views/home/HomeView.vue')
         },
         {
           path: '/report',
           name: 'report',
-          component: () => import('@/views/report/index.vue')
+          component: () => import('@/views/report/ReportView.vue')
         },
         {
           path: '/random',
           name: 'random',
-          component: () => import('@/views/random/index.vue')
+          component: () => import('@/views/random/RandomView.vue')
         },
         {
           path: '/wheel',
           name: 'wheel',
-          component: () => import('@/views/wheel/index.vue')
+          component: () => import('@/views/wheel/WheelView.vue')
         },
         {
           path: '/customization',
           name: 'customization',
-          component: () => import('@/views/customization/index.vue')
+          component: () => import('@/views/customization/CustomizationView.vue')
         }
       ]
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/login/index.vue')
+      component: () => import('@/views/login/LoginView.vue')
     }
   ]
 })
+
+// router.beforeEach(async (to, from,) => {
+//   if (!getAccessToken() && to.name !== 'login') next({ name: 'login' })
+//   else next()
+// })
 
 export default router
