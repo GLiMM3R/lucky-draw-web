@@ -1,5 +1,10 @@
 import useUser from '@/composables/useUser'
-import { getAccessToken } from '@/utils/token'
+import {
+  getAccessToken,
+  getRefreshToken,
+  removeAccessToken,
+  removeRefreshToken
+} from '@/utils/token'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -45,9 +50,10 @@ const router = createRouter({
   ]
 })
 
-// router.beforeEach(async (to, from,) => {
-//   if (!getAccessToken() && to.name !== 'login') next({ name: 'login' })
-//   else next()
-// })
+router.beforeEach(async (to, from, next) => {
+  const { state } = useUser()
+  if ((!getAccessToken() || !getRefreshToken()) && to.name !== 'login') next({ name: 'login' })
+  else next()
+})
 
 export default router

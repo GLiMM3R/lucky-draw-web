@@ -16,8 +16,10 @@
               <VTextField v-model="username.value.value" :error-messages="username.errorMessage.value" variant="outlined"
                 bgColor="white" rounded="lg" density="compact" />
               <VLabel class="mb-2" style="color: white">Password</VLabel>
-              <VTextField v-model="password.value.value" :error-messages="password.errorMessage.value" type="password"
-                variant="outlined" bgColor="white" rounded="lg" density="compact" />
+              <VTextField v-model="password.value.value" :error-messages="password.errorMessage.value"
+                :type="isShowPassword ? 'password' : 'text'" variant="outlined" bgColor="white" rounded="lg"
+                density="compact" :append-inner-icon="isShowPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
+                @click:append-inner="showPassword" />
               <div class="d-flex justify-center">
                 <VBtn type="submit" :loading="isLoading" color="#12BA68" rounded="lg" class="my-6" width="140px">Login
                 </VBtn>
@@ -32,14 +34,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useForm, useField } from 'vee-validate';
+import { useForm, useField } from 'vee-validate'
 import SplashScreen from '@/components/SplashScreen.vue'
-import useUser from '@/composables/useUser';
+import useUser from '@/composables/useUser'
 import Logo from '@/assets/images/jmart.png'
 
-const { login, isLoading } = useUser();
+const { login, isLoading } = useUser()
 
 const loading = ref(true)
+const isShowPassword = ref(false)
+
+const showPassword = () => isShowPassword.value = !isShowPassword.value;
 
 const { handleSubmit, handleReset } = useForm({
   validationSchema: {
@@ -52,7 +57,7 @@ const { handleSubmit, handleReset } = useForm({
       if (val?.trim().length > 0) return true
 
       return 'Password is required!'
-    },
+    }
   }
 })
 
