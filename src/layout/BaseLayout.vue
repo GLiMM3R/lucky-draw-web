@@ -8,7 +8,7 @@ import { RouterView } from 'vue-router'
   <VLayout>
     <BaseSidebar />
     <BaseAppbar />
-    <VMain class="w-full h-[100vh]">
+    <VMain>
       <VContainer :fluid="true">
         <RouterView></RouterView>
       </VContainer>

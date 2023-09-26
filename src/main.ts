@@ -1,4 +1,4 @@
-import './assets/main.scss'
+import '@/assets/main.scss'
 import 'vue-toast-notification/dist/theme-bootstrap.css'
 
 import { createApp } from 'vue'

@@ -10,15 +10,5 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // and local and vuetify variables globally
-        additionalData: `
-                @import '@/assets/variables.scss';
-            `
-      }
-    }
   }
 })

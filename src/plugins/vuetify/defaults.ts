@@ -7,5 +7,8 @@ export default {
   },
   VNavigationDrawer: {
     theme: 'primary'
+  },
+  VDataTable: {
+    color: 'white'
   }
 }
