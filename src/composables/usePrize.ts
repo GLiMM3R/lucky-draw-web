@@ -1,25 +1,23 @@
-import { campaignStore } from '@/stores/campaign'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
 
-export interface CreateCampaign {
+export interface CreatePrize {
+  campaignId: string
   title: string
-  prizeCap: number
-  campaignType: string
+  amount: number
+  file: File
 }
 
-export default function useCampaign() {
-  const { state } = campaignStore()
+export default function usePrize() {
   const $toast = useToast()
   const isLoading = ref(false)
 
-  async function getCampaigns(type: string) {
+  async function getPrizes(campaignId: string) {
     isLoading.value = true
-    const { data, status } = await request({ url: `/campaigns?type=${type}` })
+    const { data, status } = await request({ url: `/prizes/${campaignId}` })
 
     if (status === 200) {
-      state.campaigns = data.data
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -27,12 +25,11 @@ export default function useCampaign() {
     }
   }
 
-  async function getCampaign(id: string) {
+  async function getPrize(id: string) {
     isLoading.value = true
-    const { data, status } = await request({ url: `/campaigns/${id}` })
+    const { data, status } = await request({ url: `/prizes?${id}` })
 
     if (status === 200) {
-      state.campaign = data.data
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -40,12 +37,19 @@ export default function useCampaign() {
     }
   }
 
-  async function addCampaign(campaignData: CreateCampaign) {
+  async function addPrize(prizeData: CreatePrize) {
     isLoading.value = true
+
+    const formData = new FormData()
+    formData.append('campaignId', prizeData.campaignId)
+    formData.append('title', prizeData.title)
+    formData.append('amount', prizeData.amount)
+    formData.append('image', prizeData.file)
+
     const { data, status } = await request({
-      url: '/campaigns',
+      url: '/prizes',
       method: 'POST',
-      data: campaignData
+      data: formData
     })
 
     if (status === 201) {
@@ -56,5 +60,5 @@ export default function useCampaign() {
     }
   }
 
-  return { state, addCampaign, getCampaigns, getCampaign, isLoading }
+  return { addPrize, getPrize, getPrizes, isLoading }
 }

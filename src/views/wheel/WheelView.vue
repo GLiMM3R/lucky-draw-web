@@ -14,6 +14,6 @@ const { refreshToken } = useUser()
 const { getCampaigns } = useCampaign()
 
 onMounted(async () => {
-  await getCampaigns()
+  await getCampaigns('random')
 })
 </script>
