@@ -9,9 +9,7 @@ import { RouterView } from 'vue-router'
     <BaseSidebar />
     <BaseAppbar />
     <VMain style="background: rgba(234, 248, 220, 0.1);">
-      <!-- <VContainer :fluid="true" > -->
       <RouterView></RouterView>
-      <!-- </VContainer> -->
     </VMain>
   </VLayout>
 </template>

@@ -35,31 +35,6 @@
                 </td>
             </tr>
         </template>
-        <!-- <template v-slot:item="{ item }">
-            <tr :key="item.key" @click="handleSelect(item)">
-                <td style="background-color: white; border-bottom: none; text-align: center;">
-                    <v-checkbox v-model="selected" :value="item" style="margin:0px;padding:0px" hide-details />
-                </td>
-                <td style="background-color: white; border-bottom: none; text-align: center;">{{
-                    item.columns.title }}
-                </td>
-                <td style="background-color: white; border-bottom: none; text-align: center;">{{
-                    new Date(item.columns.createdAt).toLocaleString()
-                }}</td>
-                <td style="background-color: white; border-bottom: none; text-align: center;">
-                    {{ item.columns.createdBy.username }}</td>
-                <td style="background-color: white; border-bottom: none; text-align: center;">
-                    <VChip rounded="sm" :color="getColor(item.columns.prizeCap)">
-                        {{ item.columns.prizeCap }}
-                    </VChip>
-                </td>
-                <td style="background-color: white; border-bottom: none; text-align: center;">
-                    <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" @click="() => { }" />
-                    <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" />
-                    <v-btn size="small" variant="text" icon="mdi-play" @click="() => { }" />
-                </td>
-            </tr>
-        </template> -->
     </VDataTable>
 </template>
 

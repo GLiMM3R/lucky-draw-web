@@ -17,7 +17,7 @@
                 bgColor="white" rounded="lg" density="compact" />
               <VLabel class="mb-2" style="color: white">Password</VLabel>
               <VTextField v-model="password.value.value" :error-messages="password.errorMessage.value"
-                :type="isShowPassword ? 'password' : 'text'" variant="outlined" bgColor="white" rounded="lg"
+                :type="isShowPassword ? 'text' : 'password'" variant="outlined" bgColor="white" rounded="lg"
                 density="compact" :append-inner-icon="isShowPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                 @click:append-inner="showPassword" />
               <div class="d-flex justify-center">

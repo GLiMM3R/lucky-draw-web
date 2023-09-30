@@ -14,12 +14,14 @@
                             <VForm @submit.prevent="submit">
                                 <VTextField label="Prize Name" v-model="title.value.value"
                                     :error-messages="title.errorMessage.value" variant="outlined" rounded="lg" />
+                                <VTextField label="Rank" v-model="rank.value.value"
+                                    :error-messages="rank.errorMessage.value" type="number" variant="outlined"
+                                    rounded="lg" />
                                 <VTextField label="Prize Amount" v-model="amount.value.value"
                                     :error-messages="amount.errorMessage.value" type="number" variant="outlined"
                                     rounded="lg" />
                                 <DropFile @getImage="getImage" />
-                                <v-btn color="primary" type="submit" rounded="lg" block class="my-4"
-                                    :loading="props.isLoading">Confirm</v-btn>
+                                <v-btn color="primary" type="submit" rounded="lg" block class="my-4">Confirm</v-btn>
                             </VForm>
                         </VContainer>
                     </VCardItem>
@@ -30,22 +32,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
+import { ref } from 'vue';
 import { useForm, useField } from 'vee-validate'
 import usePrize from '@/composables/usePrize';
 import DropFile from './DropFile.vue';
+import { useToast } from 'vue-toast-notification';
 
-const { addPrize } = usePrize();
-
+const $toast = useToast()
+const { addPrize, getPrizes } = usePrize();
+const props = defineProps(['campaignId'])
 const dialog = ref(false)
-const emit = defineEmits(['handleSubmit'])
-const props = defineProps(['isLoading', 'campaignId'])
+const isLoading = ref(false)
 
-watchEffect(() => {
-    if (!props.isLoading) {
-        dialog.value = false
-    }
-})
+const file = ref<File>();
 
 const { handleSubmit, handleReset } = useForm({
     validationSchema: {
@@ -53,6 +52,11 @@ const { handleSubmit, handleReset } = useForm({
             if (val?.trim().length > 0) return true
 
             return 'Title is required!'
+        },
+        rank(val: number) {
+            if (val > 0) return true
+
+            return 'Rank > 0!'
         },
         amount(val: number) {
             if (val > 0) return true
@@ -63,15 +67,19 @@ const { handleSubmit, handleReset } = useForm({
 })
 
 const title = useField('title')
+const rank = useField('rank')
 const amount = useField('amount')
-const file = ref<Object>();
 
 const getImage = (value: File) => {
-    console.log("🚀 ~ file: CreatePrizeModal.vue:70 ~ getImage ~ value:", value)
     file.value = value
 }
+
 const submit = handleSubmit(async (values) => {
-    await addPrize({ campaignId: props.campaignId, title: values.title, amount: values.amount, file: file.value })
+    console.log("🚀 ~ file: CreatePrizeModal.vue:78 ~ submit ~ values:", values)
+    await addPrize({ campaignId: props.campaignId, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
+    await getPrizes(props.campaignId)
+    $toast.success('Create prize success!')
+    dialog.value = false
 })
 
 

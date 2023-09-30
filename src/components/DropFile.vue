@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <VImg :src="previewImage" class="preview-img" />
+                    <VImg :src="previewImage" cover class="preview-img" />
                 </div>
                 <input type="file" @change="onFileChange">
             </div>
@@ -80,9 +80,8 @@ const createFile = (file: File) => {
 }
 
 .preview-img {
-    object-fit: cover;
+    // object-fit: cover;
     width: 100%;
-    height: 100%;
     opacity: 0.8;
 }
 

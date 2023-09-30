@@ -1,4 +1,5 @@
 import { campaignStore } from '@/stores/campaign'
+import { prizeStore } from '@/stores/prize'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
@@ -10,7 +11,8 @@ export interface CreateCampaign {
 }
 
 export default function useCampaign() {
-  const { state } = campaignStore()
+  const { state: campaignState } = campaignStore()
+  const { state: prizeState } = prizeStore()
   const $toast = useToast()
   const isLoading = ref(false)
 
@@ -19,7 +21,7 @@ export default function useCampaign() {
     const { data, status } = await request({ url: `/campaigns?type=${type}` })
 
     if (status === 200) {
-      state.campaigns = data.data
+      campaignState.campaigns = data.data
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -32,7 +34,8 @@ export default function useCampaign() {
     const { data, status } = await request({ url: `/campaigns/${id}` })
 
     if (status === 200) {
-      state.campaign = data.data
+      campaignState.campaign = data.data
+      prizeState.prizes = data.data.prizes
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -56,5 +59,5 @@ export default function useCampaign() {
     }
   }
 
-  return { state, addCampaign, getCampaigns, getCampaign, isLoading }
+  return { campaignState, addCampaign, getCampaigns, getCampaign, isLoading }
 }

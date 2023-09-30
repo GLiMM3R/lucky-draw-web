@@ -25,7 +25,7 @@
                                     prepend-inner-icon="mdi-magnify" placeholder="Search..." />
                                 <CreateCampaignModal @handleSubmit="handleSubmit" :isLoading="isLoading" />
                             </VCardTitle>
-                            <RandomTable :campaigns="state.campaigns" :search="search" />
+                            <RandomTable :campaigns="campaignState.campaigns" :search="search" />
                         </VSheet>
                     </VWindowItem>
                 </VWindow>
@@ -44,7 +44,7 @@ import RandomTable from '@/components/random/RandomTable.vue';
 import useCampaign from '@/composables/useCampaign';
 import { ref, onMounted } from 'vue';
 
-const { state, addCampaign, getCampaigns, isLoading } = useCampaign();
+const { campaignState, addCampaign, getCampaigns, isLoading } = useCampaign();
 const tab = ref(null)
 const search = ref('')
 

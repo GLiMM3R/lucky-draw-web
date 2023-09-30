@@ -1,6 +1,6 @@
 <template>
   wheel
-  <VBtn @click="refreshToken">
+  <VBtn @click="getCampaigns">
     click
   </VBtn>
 </template>
@@ -10,7 +10,6 @@ import useCampaign from '@/composables/useCampaign'
 import useUser from '@/composables/useUser'
 import { onMounted } from 'vue'
 
-const { refreshToken } = useUser()
 const { getCampaigns } = useCampaign()
 
 onMounted(async () => {

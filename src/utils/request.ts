@@ -9,8 +9,8 @@ import {
 import axios from 'axios'
 
 const axiosApiInstance = axios.create({
-  // baseURL: 'http://localhost:3008',
-  baseURL: 'http://192.168.1.7:3008',
+  baseURL: 'http://localhost:3008',
+  // baseURL: 'http://192.168.1.7:3008',
   timeout: 10000,
   headers: { 'content-type': 'application/json' }
 })
@@ -38,7 +38,7 @@ axiosApiInstance.interceptors.response.use(
       prevRequest.sent = true
 
       try {
-        const { data, status } = await axios.get('http://192.168.1.7:3008/auth/refresh', {
+        const { data, status } = await axios.get('http://127.0.0.1:3008/auth/refresh', {
           headers: {
             Authorization: `Bearer ${getRefreshToken()}`
           }
