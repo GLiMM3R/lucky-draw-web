@@ -7,7 +7,10 @@ import {
   setRefreshToken
 } from '@/utils/token'
 import axios from 'axios'
-const BASE_URL = 'http://192.168.1.6:3008'
+
+const BASE_URL = 'http://127.0.0.1:3008'
+// const BASE_URL = 'http://192.168.1.6:3008'
+
 const axiosApiInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,

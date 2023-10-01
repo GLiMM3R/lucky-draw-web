@@ -17,7 +17,7 @@
             <template v-slot:body="{ items }">
                 <tr v-if="items.length" v-for="item in items" :key="item.raw.id">
                     <td style="border-bottom: none; text-align: center;">
-                        <VCheckbox v-model="selectedCoupon" color="green" :value="item.raw" />
+                        <VCheckbox v-model="selectedCoupon" color="green" :value="item.raw" @change="handleSelectDataset" />
                     </td>
                     <td td style="border-bottom: none; text-align: center;"> {{
                         item.columns.file.replace('coupon/', '') }}
@@ -50,8 +50,12 @@ import { ref } from 'vue';
 import useCoupon from '@/composables/useCoupon';
 
 const { couponState } = useCoupon();
+const emit = defineEmits(['handleSelectDataset'])
 const selectedCoupon = ref(null);
 
+const handleSelectDataset = () => {
+    emit('handleSelectDataset', selectedCoupon.value)
+}
 
 const couponHeaders = [
     {

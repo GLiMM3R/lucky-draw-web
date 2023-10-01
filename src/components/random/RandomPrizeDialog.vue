@@ -56,7 +56,7 @@
             </VDataTable>
             <VCardItem>
                 <div class="text-center mb-4">
-                    <RandomDrawDialog />
+                    <RandomDrawDialog :selectedPrize="selectedPrize" :selectedCoupon="props.selectedCoupon" />
                 </div>
             </VCardItem>
         </v-card>
@@ -69,6 +69,7 @@ import { ref } from 'vue';
 import RandomDrawDialog from './RandomDrawDialog.vue';
 
 const { prizeState } = usePrize()
+const props = defineProps(['selectedCoupon'])
 const dialog = ref(false)
 const selectedPrize = ref(null)
 

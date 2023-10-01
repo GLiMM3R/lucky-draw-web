@@ -20,6 +20,7 @@ export default function useCampaign() {
 
   async function getCampaigns(type: string) {
     isLoading.value = true
+    campaignState.campaign = null;
     const { data, status } = await request({ url: `/campaigns?type=${type}` })
 
     if (status === 200) {

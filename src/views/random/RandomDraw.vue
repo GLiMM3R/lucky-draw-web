@@ -14,11 +14,11 @@
                         <VBtn class="text-none" variant="outlined" rounded="lg" :loading="isSelecting"
                             @click="handleFileImport">+ Import
                             Coupon</VBtn>
-                        <input ref="uploader" accept=".csv" class="d-none" type="file" @change="onFileChanged">
-                        <VBtn class="text-none ml-4" rounded="lg" @click="ex">+ Export Coupon</VBtn>
+                        <VFileInput ref="uploader" accept=".csv" class="d-none" type="file" @change="onFileChanged" />
+                        <VBtn class="text-none ml-4" rounded="lg">+ Export Coupon</VBtn>
                     </div>
                 </div>
-                <RandomCouponTable />
+                <RandomCouponTable @handleSelectDataset="handleSelectDataset" />
             </VCol>
         </VRow>
         <VRow class="static">
@@ -33,7 +33,7 @@
             </VCol>
         </VRow>
         <VRow>
-            <RandomPrizeDialog />
+            <RandomPrizeDialog :selectedCoupon="selectedCoupon" />
         </VRow>
     </VContainer>
 </template>
@@ -55,6 +55,12 @@ const route = useRoute();
 const uploader = ref(null);
 const isSelecting = ref(false);
 const selectedFile = ref(null);
+const selectedCoupon = ref(null);
+
+const handleSelectDataset = (value: any) => {
+    console.log("🚀 ~ file: RandomDraw.vue:61 ~ handleSelectDataset ~ value:", value)
+    selectedCoupon.value = value;
+}
 
 function handleFileImport() {
     isSelecting.value = true;
@@ -68,15 +74,19 @@ function handleFileImport() {
 
 async function onFileChanged(event: Event) {
     const files = event.target.files[0];
+    console.log("🚀 ~ file: RandomDraw.vue:71 ~ onFileChanged ~ files:", files)
     if (!files.type.match('text/csv')) {
         alert('alert')
         return;
     }
     if (files) {
-        selectedFile.value = event.target.files[0];
+        selectedFile.value = files;
+        event.target.files = null;
         await addCoupon({ campaignId: route.params.slug.toString(), file: selectedFile.value })
         await getCampaign(route.params.slug);
     }
+    console.log("🚀 ~ file: RandomDraw.vue:82 ~ onFileChanged ~ event.target.files:", event.target.files)
+
 };
 
 const items = [
