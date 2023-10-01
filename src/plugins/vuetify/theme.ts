@@ -18,6 +18,7 @@ const theme: VuetifyOptions['theme'] = {
         'on-warning': '#FFFFFF',
         background: '#F4F5FA',
         'on-background': '#3A3541',
+        surface: '#FFFFFF',
         'on-surface': '#3A3541',
         'grey-50': '#FAFAFA',
         'grey-100': '#F5F5F5',
@@ -34,7 +35,6 @@ const theme: VuetifyOptions['theme'] = {
       variables: {
         'border-color': '#3A3541',
         'medium-emphasis-opacity': 0.68,
-
         // Shadows
         'shadow-key-umbra-opacity': 'rgba(var(--v-theme-on-surface), 0.08)',
         'shadow-key-penumbra-opacity': 'rgba(var(--v-theme-on-surface), 0.12)',

@@ -83,10 +83,4 @@ const getColor = (quota: number) => {
 .row-table:hover {
     background-color: #028947;
 }
-
-v-data-table {
-    & tr:hover {
-        background: red !important;
-    }
-}
 </style>

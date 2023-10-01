@@ -25,7 +25,7 @@
                                     prepend-inner-icon="mdi-magnify" placeholder="Search..." />
                                 <CreateCampaignModal @handleSubmit="handleSubmit" :isLoading="isLoading" />
                             </VCardTitle>
-                            <RandomTable :campaigns="campaignState.campaigns" :search="search" />
+                            <RandomCampaignTable :campaigns="campaignState.campaigns" :search="search" />
                         </VSheet>
                     </VWindowItem>
                 </VWindow>
@@ -40,7 +40,7 @@ import LogoDone from '@/assets/images/done.png'
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import StaticCard from '@/components/StaticCard.vue';
 import CreateCampaignModal from '@/components/CreateCampaignModal.vue';
-import RandomTable from '@/components/random/RandomTable.vue';
+import RandomCampaignTable from '@/components/random/RandomCampaignTable.vue';
 import useCampaign from '@/composables/useCampaign';
 import { ref, onMounted } from 'vue';
 

@@ -1,4 +1,5 @@
 import { campaignStore } from '@/stores/campaign'
+import { couponStore } from '@/stores/coupon'
 import { prizeStore } from '@/stores/prize'
 import request from '@/utils/request'
 import { ref } from 'vue'
@@ -13,6 +14,7 @@ export interface CreateCampaign {
 export default function useCampaign() {
   const { state: campaignState } = campaignStore()
   const { state: prizeState } = prizeStore()
+  const { state: couponState } = couponStore()
   const $toast = useToast()
   const isLoading = ref(false)
 
@@ -36,6 +38,7 @@ export default function useCampaign() {
     if (status === 200) {
       campaignState.campaign = data.data
       prizeState.prizes = data.data.prizes
+      couponState.coupons = data.data.coupon
       isLoading.value = false
     } else {
       isLoading.value = false
