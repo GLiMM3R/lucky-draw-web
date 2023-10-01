@@ -28,7 +28,7 @@
                     <td style="border-bottom: none; text-align: center;">
                         {{ item.columns.createdBy.username }}</td>
                     <td style="border-bottom: none; text-align: center;">
-                        <VChip rounded="sm" :color="getColor(item.columns.prizeCap)">
+                        <VChip rounded="sm" :color="getColor(item.columns.amount)">
                             {{ item.columns.amount }}
                         </VChip>
                     </td>

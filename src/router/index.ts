@@ -27,13 +27,19 @@ const router = createRouter({
         },
         {
           path: '/random',
-          name: 'random',
-          component: () => import('@/views/random/RandomView.vue')
-        },
-        {
-          path: '/random/:slug',
-          name: 'random-detail',
-          component: () => import('@/views/random/RandomDraw.vue')
+          component: () => import('@/views/random/RandomView.vue'),
+          children: [
+            {
+              path: '/random/',
+              name: 'random-camapgin',
+              component: () => import('@/views/random/RandomCampaign.vue')
+            },
+            {
+              path: '/random/:slug',
+              name: 'random-detail',
+              component: () => import('@/views/random/RandomDraw.vue')
+            }
+          ]
         },
         {
           path: '/wheel',

@@ -14,8 +14,8 @@
                         <VBtn class="text-none" variant="outlined" rounded="lg" :loading="isSelecting"
                             @click="handleFileImport">+ Import
                             Coupon</VBtn>
-                        <VFileInput ref="uploader" accept=".csv" class="d-none" type="file" @change="onFileChanged" />
-                        <VBtn class="text-none ml-4" rounded="lg">+ Export Coupon</VBtn>
+                        <input ref="uploader" accept=".csv" type="file" class="d-none" @change="onFileChanged" />
+                        <VBtn class="text-none ml-4" rounded="lg" @click="ex">+ Export Coupon</VBtn>
                     </div>
                 </div>
                 <RandomCouponTable @handleSelectDataset="handleSelectDataset" />
@@ -32,7 +32,7 @@
                 <RandomPrizeTable />
             </VCol>
         </VRow>
-        <VRow>
+        <VRow justify="center">
             <RandomPrizeDialog :selectedCoupon="selectedCoupon" />
         </VRow>
     </VContainer>
@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import useCoupon from '@/composables/useCoupon';
 import useCampaign from '@/composables/useCampaign';
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
@@ -48,6 +48,7 @@ import CreatePrizeModal from '@/components/CreatePrizeModal.vue';
 import RandomPrizeTable from '@/components/random/RandomPrizeTable.vue';
 import RandomPrizeDialog from '@/components/random/RandomPrizeDialog.vue';
 import RandomCouponTable from '@/components/random/RandomCouponTable.vue';
+import { onMounted } from 'vue';
 
 const { campaignState, getCampaign } = useCampaign();
 const { addCoupon } = useCoupon();
@@ -57,14 +58,19 @@ const isSelecting = ref(false);
 const selectedFile = ref(null);
 const selectedCoupon = ref(null);
 
+let campaignId = '';
+
 const handleSelectDataset = (value: any) => {
-    console.log("🚀 ~ file: RandomDraw.vue:61 ~ handleSelectDataset ~ value:", value)
     selectedCoupon.value = value;
+}
+
+const ex = () => {
+    uploader.value.value = null;
+    console.log("🚀 ~ file: RandomDraw.vue:88 ~ onFileChanged ~ uploader.value:", uploader.value)
 }
 
 function handleFileImport() {
     isSelecting.value = true;
-
     window.addEventListener('focus', () => {
         isSelecting.value = false
     }, { once: true });
@@ -74,19 +80,16 @@ function handleFileImport() {
 
 async function onFileChanged(event: Event) {
     const files = event.target.files[0];
-    console.log("🚀 ~ file: RandomDraw.vue:71 ~ onFileChanged ~ files:", files)
     if (!files.type.match('text/csv')) {
         alert('alert')
         return;
     }
     if (files) {
         selectedFile.value = files;
-        event.target.files = null;
-        await addCoupon({ campaignId: route.params.slug.toString(), file: selectedFile.value })
-        await getCampaign(route.params.slug);
+        uploader.value.value = null;
+        await addCoupon({ campaignId: campaignId.toString(), file: selectedFile.value })
+        await getCampaign(campaignId.toString());
     }
-    console.log("🚀 ~ file: RandomDraw.vue:82 ~ onFileChanged ~ event.target.files:", event.target.files)
-
 };
 
 const items = [
@@ -100,16 +103,18 @@ const items = [
         disabled: false,
         href: '/random',
     },
-    {
-        title: campaignState.campaign?.title,
-        disabled: true,
-        href: '/random',
-    },
+
 ];
 
 
 onBeforeMount(async () => {
-    await getCampaign(route.params.slug);
+    campaignId = route.params.slug.toString();
+    await getCampaign(campaignId.toString());
+    items.push({
+        title: `${campaignState.campaign?.title}`,
+        disabled: true,
+        href: '/random',
+    },)
 })
 </script>
 

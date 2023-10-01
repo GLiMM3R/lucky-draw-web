@@ -62,6 +62,7 @@ const prizeCap = useField('prizeCap')
 
 const submit = handleSubmit(async (values) => {
     emit('handleSubmit', values)
+    handleReset();
 })
 
 

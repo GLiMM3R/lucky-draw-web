@@ -21,7 +21,8 @@
                                     :error-messages="amount.errorMessage.value" type="number" variant="outlined"
                                     rounded="lg" />
                                 <DropFile @getImage="getImage" />
-                                <v-btn color="primary" type="submit" rounded="lg" block class="my-4">Confirm</v-btn>
+                                <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none"
+                                    :loading="isLoading">Confirm</v-btn>
                             </VForm>
                         </VContainer>
                     </VCardItem>
@@ -39,10 +40,9 @@ import DropFile from './DropFile.vue';
 import { useToast } from 'vue-toast-notification';
 
 const $toast = useToast()
-const { addPrize, getPrizes } = usePrize();
+const { addPrize, getPrizes, isLoading } = usePrize();
 const props = defineProps(['campaignId'])
 const dialog = ref(false)
-const isLoading = ref(false)
 
 const file = ref<File>();
 
@@ -75,10 +75,10 @@ const getImage = (value: File) => {
 }
 
 const submit = handleSubmit(async (values) => {
-    console.log("🚀 ~ file: CreatePrizeModal.vue:78 ~ submit ~ values:", values)
     await addPrize({ campaignId: props.campaignId, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
     await getPrizes(props.campaignId)
     $toast.success('Create prize success!')
+    handleReset();
     dialog.value = false
 })
 

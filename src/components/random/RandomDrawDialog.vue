@@ -1,5 +1,5 @@
 <template>
-    <v-btn variant="elevated" rounded="lg" @click="dialog = !dialog">
+    <v-btn variant="elevated" rounded="lg" @click="handleDialog">
         Start Random
     </v-btn>
     <v-dialog v-model="dialog" class="overlay" persistent width="600">
@@ -32,16 +32,23 @@
 import { ref } from 'vue';
 import Lottery from '@/assets/images/lottery.png'
 import useRandom from '@/composables/useRandom';
+import { useToast } from 'vue-toast-notification';
 
-const { doRandom } = useRandom();
 const props = defineProps(['selectedPrize', 'selectedCoupon'])
+const $toast = useToast()
+const { doRandom } = useRandom();
 const dialog = ref(false)
-
 const winnerData = ref([])
 
+const handleDialog = () => {
+    if (!props.selectedPrize) {
+        $toast.warning('Select prize first!', { position: 'top' });
+        return;
+    }
+    dialog.value = !dialog.value
+}
+
 const handleRandom = async () => {
-    console.log(props.selectedPrize);
-    console.log(props.selectedCoupon);
     winnerData.value = await doRandom({ campaignId: props.selectedPrize.campaignId, prizeId: props.selectedPrize.id, couponId: props.selectedCoupon.id })
 }
 </script>

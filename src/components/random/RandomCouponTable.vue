@@ -15,7 +15,7 @@
                 </tr>
             </template>
             <template v-slot:body="{ items }">
-                <tr v-if="items.length" v-for="item in items" :key="item.raw.id">
+                <tr v-for="item in items" :key="item.raw.id">
                     <td style="border-bottom: none; text-align: center;">
                         <VCheckbox v-model="selectedCoupon" color="green" :value="item.raw" @change="handleSelectDataset" />
                     </td>
@@ -37,9 +37,6 @@
                         <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" />
                     </td>
                 </tr>
-                <div v-else class="text-center">
-                    No data
-                </div>
             </template>
         </VDataTable>
     </VSheet>
