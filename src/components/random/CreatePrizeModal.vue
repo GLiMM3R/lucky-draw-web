@@ -36,7 +36,7 @@
 import { ref } from 'vue';
 import { useForm, useField } from 'vee-validate'
 import usePrize from '@/composables/usePrize';
-import DropFile from './DropFile.vue';
+import DropFile from '../DropFile.vue';
 import { useToast } from 'vue-toast-notification';
 
 const $toast = useToast()

@@ -27,7 +27,8 @@
                 <template v-slot:body="{ items }">
                     <tr v-for="item in items" :key="item.key">
                         <td style="border-bottom: none; text-align: center;">
-                            <VCheckbox v-model="selectedPrize" color="green" :value="item.raw" />
+                            <VCheckbox v-model="selectedPrize" color="green" :value="item.raw"
+                                @change="handleSelectPrize" />
                         </td>
                         <td style="border-bottom: none; text-align: center;">{{
                             item.columns.rank }}
@@ -61,6 +62,8 @@
             </VDataTable>
             <VCardItem>
                 <div class="text-center mb-4">
+                    <RandomWinnerDialog v-if="!selectedPrize.isDone" :selectedPrize="selectedPrize"
+                        :selectedCoupon="props.selectedCoupon" />
                     <RandomDrawDialog :selectedPrize="selectedPrize" :selectedCoupon="props.selectedCoupon" />
                 </div>
             </VCardItem>
@@ -73,11 +76,13 @@ import { ref } from 'vue';
 import usePrize from '@/composables/usePrize';
 import RandomDrawDialog from './RandomDrawDialog.vue';
 import { useToast } from 'vue-toast-notification';
+import RandomWinnerDialog from './RandomWinnerDialog.vue';
 
 const { prizeState } = usePrize()
 const props = defineProps(['selectedCoupon'])
 const $toast = useToast();
 const dialog = ref(false)
+const canView = ref(false)
 const selectedPrize = ref(null)
 
 const handleDialog = () => {
@@ -87,6 +92,7 @@ const handleDialog = () => {
     }
     dialog.value = !dialog.value
 }
+
 
 const prizeHeaders = [
     {

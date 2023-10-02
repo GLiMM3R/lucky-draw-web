@@ -1,6 +1,6 @@
 <template>
     <v-btn variant="elevated" rounded="lg" @click="handleDialog" class="text-none">
-        Start Random
+        View
     </v-btn>
     <v-dialog v-model="dialog" class="overlay" persistent width="800">
         <div class="d-flex flex-column justify-center">
@@ -9,14 +9,26 @@
                     {{ props.selectedPrize.title }}
                 </VCardTitle>
             </VCard>
-            <VImg :src="Lottery" class="d-block mx-auto w-75 my-16" />
+            <div>
+                <VRow>
+                    <VCol v-for="winner in winnerState.winners" :key="winner.id" cols="6">
+                        <VCard>
+                            <VCardItem class="d-flex justify-center">
+                                <VImg :src="Winner" width="50" />
+                            </VCardItem>
+                            <VCardTitle class="text-center">
+                                {{ winner.winnerName }}
+                            </VCardTitle>
+                            <VCardTitle class="text-center text-h4 font-weight-bold">
+                                {{ winner.winnerPhone.slice(0, -2) + 'XX' }}
+                            </VCardTitle>
+                        </VCard>
+                    </VCol>
+                </VRow>
+            </div>
             <VRow justify="center" no-gutters>
                 <VCol class="d-flex justify-center">
                     <v-btn color="red" variant="flat" rounded="lg" @click="dialog = false">Exit</v-btn>
-                </VCol>
-                <VCol class="d-flex justify-center">
-                    <v-btn color="green-darken-1" rounded="lg" variant="elevated" @click="handleRandom">Start
-                        Random</v-btn>
                 </VCol>
             </VRow>
         </div>
@@ -25,27 +37,23 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Lottery from '@/assets/images/lottery.png'
-import useRandom from '@/composables/useRandom';
+import Winner from '@/assets/images/winner.png'
 import { useToast } from 'vue-toast-notification';
+import useWinner from '@/composables/useWinner';
 
 const props = defineProps(['selectedPrize', 'selectedCoupon'])
 const $toast = useToast()
-const { doRandom } = useRandom();
+const { winnerState, getWinnerRecord } = useWinner();
 const dialog = ref(false)
-const winnerData = ref([])
 
-
-const handleDialog = () => {
+const handleDialog = async () => {
     if (!props.selectedPrize) {
         $toast.warning('Select prize first!', { position: 'top' });
         return;
     }
-    dialog.value = !dialog.value
-}
 
-const handleRandom = async () => {
-    winnerData.value = await doRandom({ campaignId: props.selectedPrize.campaignId, prizeId: props.selectedPrize.id, couponId: props.selectedCoupon.id })
+    await getWinnerRecord(props.selectedPrize.campaignId, props.selectedPrize.id)
+    dialog.value = !dialog.value
 }
 
 </script>

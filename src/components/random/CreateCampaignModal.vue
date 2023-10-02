@@ -18,7 +18,7 @@
                                     :error-messages="prizeCap.errorMessage.value" type="number" variant="outlined"
                                     rounded="lg" />
                                 <v-btn color="primary" type="submit" rounded="lg" block class="my-4"
-                                    :loading="props.isLoading">Confirm</v-btn>
+                                    :loading="isLoading">Confirm</v-btn>
                             </VForm>
                         </VContainer>
                     </VCardItem>
@@ -29,18 +29,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
+import { ref } from 'vue';
 import { useForm, useField } from 'vee-validate'
+import useCampaign from '@/composables/useCampaign';
 
+const { addCampaign, isLoading } = useCampaign();
 const dialog = ref(false)
-const emit = defineEmits(['handleSubmit'])
-const props = defineProps(['isLoading'])
-
-watchEffect(() => {
-    if (!props.isLoading) {
-        dialog.value = false
-    }
-})
 
 const { handleSubmit, handleReset } = useForm({
     validationSchema: {
@@ -61,8 +55,9 @@ const title = useField('title')
 const prizeCap = useField('prizeCap')
 
 const submit = handleSubmit(async (values) => {
-    emit('handleSubmit', values)
+    await addCampaign({ title: values.title, prizeCap: Number(values.prizeCap), campaignType: 'random' })
     handleReset();
+    dialog.value = false
 })
 
 

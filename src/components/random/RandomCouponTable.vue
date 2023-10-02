@@ -20,7 +20,7 @@
                         <VCheckbox v-model="selectedCoupon" color="green" :value="item.raw" @change="handleSelectDataset" />
                     </td>
                     <td td style="border-bottom: none; text-align: center;"> {{
-                        item.columns.file.replace('coupon/', '') }}
+                        item.columns.file.replace(`coupon/${route.params.slug.toString()}/`, '') }}
                     </td>
                     <td style="border-bottom: none; text-align: center;">{{
                         new Date(item.columns.createdAt).toLocaleString()
@@ -44,8 +44,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import useCoupon from '@/composables/useCoupon';
 
+const route = useRoute();
 const { couponState } = useCoupon();
 const emit = defineEmits(['handleSelectDataset'])
 const selectedCoupon = ref(null);

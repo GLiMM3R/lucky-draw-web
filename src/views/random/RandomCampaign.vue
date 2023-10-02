@@ -23,7 +23,7 @@
                             <VCardTitle class="d-flex">
                                 <VTextField v-model="search" variant="outlined" density="comfortable"
                                     prepend-inner-icon="mdi-magnify" placeholder="Search..." />
-                                <CreateCampaignModal @handleSubmit="handleSubmit" :isLoading="isLoading" />
+                                <CreateCampaignModal />
                             </VCardTitle>
                             <RandomCampaignTable :campaigns="campaignState.campaigns" :search="search" />
                         </VSheet>
@@ -39,18 +39,14 @@ import LogoStatic from '@/assets/images/campaign_static.png'
 import LogoDone from '@/assets/images/done.png'
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import StaticCard from '@/components/StaticCard.vue';
-import CreateCampaignModal from '@/components/CreateCampaignModal.vue';
+import CreateCampaignModal from '@/components/random/CreateCampaignModal.vue';
 import RandomCampaignTable from '@/components/random/RandomCampaignTable.vue';
 import useCampaign from '@/composables/useCampaign';
 import { ref, onMounted } from 'vue';
 
-const { campaignState, addCampaign, getCampaigns, isLoading } = useCampaign();
+const { campaignState, getCampaigns, isLoading } = useCampaign();
 const tab = ref(null)
 const search = ref('')
-
-const handleSubmit = async (values: any) => {
-    await addCampaign({ title: values.title, prizeCap: Number(values.prizeCap), campaignType: 'random' })
-}
 
 onMounted(async () => {
     await getCampaigns('random');

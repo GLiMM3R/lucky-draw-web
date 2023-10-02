@@ -15,7 +15,7 @@
                             @click="handleFileImport">+ Import
                             Coupon</VBtn>
                         <input ref="uploader" accept=".csv" type="file" class="d-none" @change="onFileChanged" />
-                        <VBtn class="text-none ml-4" rounded="lg" @click="ex">+ Export Coupon</VBtn>
+                        <VBtn class="text-none ml-4" rounded="lg">+ Export Coupon</VBtn>
                     </div>
                 </div>
                 <RandomCouponTable @handleSelectDataset="handleSelectDataset" />
@@ -40,17 +40,16 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref } from 'vue';
-import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import useCoupon from '@/composables/useCoupon';
 import useCampaign from '@/composables/useCampaign';
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
-import CreatePrizeModal from '@/components/CreatePrizeModal.vue';
+import CreatePrizeModal from '@/components/random/CreatePrizeModal.vue';
 import RandomPrizeTable from '@/components/random/RandomPrizeTable.vue';
 import RandomPrizeDialog from '@/components/random/RandomPrizeDialog.vue';
 import RandomCouponTable from '@/components/random/RandomCouponTable.vue';
-import { onMounted } from 'vue';
 
-const { campaignState, getCampaign } = useCampaign();
+const { getCampaign } = useCampaign();
 const { addCoupon } = useCoupon();
 const route = useRoute();
 const uploader = ref(null);
@@ -58,15 +57,9 @@ const isSelecting = ref(false);
 const selectedFile = ref(null);
 const selectedCoupon = ref(null);
 
-let campaignId = '';
 
 const handleSelectDataset = (value: any) => {
     selectedCoupon.value = value;
-}
-
-const ex = () => {
-    uploader.value.value = null;
-    console.log("🚀 ~ file: RandomDraw.vue:88 ~ onFileChanged ~ uploader.value:", uploader.value)
 }
 
 function handleFileImport() {
@@ -87,8 +80,8 @@ async function onFileChanged(event: Event) {
     if (files) {
         selectedFile.value = files;
         uploader.value.value = null;
-        await addCoupon({ campaignId: campaignId.toString(), file: selectedFile.value })
-        await getCampaign(campaignId.toString());
+        await addCoupon({ campaignId: route.params.slug.toString(), file: selectedFile.value })
+        await getCampaign(route.params.slug.toString());
     }
 };
 
@@ -108,17 +101,17 @@ const items = [
 
 
 onBeforeMount(async () => {
-    campaignId = route.params.slug.toString();
-    await getCampaign(campaignId.toString());
-    items.push({
-        title: `${campaignState.campaign?.title}`,
-        disabled: true,
-        href: '/random',
-    },)
+    await getCampaign(route.params.slug.toString());
 })
 </script>
 
 <style scoped lang="scss">
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    padding-left: 2px;
+}
+
 .dataset-header {
     display: flex;
     justify-content: space-between;
