@@ -13,15 +13,7 @@
                 </VTabs>
                 <VWindow v-model="tab">
                     <VWindowItem v-for="n in 2" :key="n" :value="n" style="padding: 16px 4px;">
-                        <!-- <Suspense> -->
                         <RandomCampaignTable />
-                        <!-- <template #fallback>
-                                <VRow justify="center" class="py-8">
-                                    <v-progress-circular indeterminate color="primary" :size="50"
-                                        :width="5"></v-progress-circular>
-                                </VRow>
-                            </template>
-                        </Suspense> -->
                     </VWindowItem>
                 </VWindow>
             </VContainer>

@@ -2,16 +2,18 @@
     <VContainer>
         <VRow class="static">
             <VCol>
-                <RandomDataset :campaign="campaign" />
+                <RandomDataset v-if="campaign" :campaign="campaign" @handleUpload="handleUpload" />
             </VCol>
         </VRow>
         <VRow class="static">
             <VCol>
-                <RandomPrizeTable :campaign="campaign" />
+                <RandomPrizeTable v-if="campaign" :campaign="campaign" @handleSumitPrize="handleSumitPrize" />
             </VCol>
         </VRow>
         <VRow justify="center">
-            <RandomDrawDialog :campaign="campaign" />
+            <Suspense>
+                <RandomDrawDialog />
+            </Suspense>
         </VRow>
     </VContainer>
 </template>
@@ -22,13 +24,30 @@ import useCampaign from '@/composables/useCampaign';
 import RandomDataset from '@/components/random/RandomDataset.vue';
 import RandomDrawDialog from '@/components/random/RandomDrawDialog.vue';
 import RandomPrizeTable from '@/components/random/RandomPrizeTable.vue';
+import { watch } from 'vue';
+import { onMounted } from 'vue';
+import usePrize from '@/composables/usePrize';
 
-const { campaign, getCampaign } = useCampaign();
 const route = useRoute();
+const { campaign, getCampaign, deleteCampaign, uploadFileDataset } = useCampaign();
+const { addPrize } = usePrize();
 const slug = route.params.slug as string
-console.log("🚀 ~ file: RandomCampaignDetail.vue:29 ~ slug:", slug)
 
-await getCampaign(slug)
+onMounted(async () => {
+    await getCampaign(slug)
+})
+
+const handleUpload = async (values: any) => {
+    await uploadFileDataset(slug, values)
+    await getCampaign(slug)
+}
+
+const handleSumitPrize = async (values: any) => {
+    await addPrize({ campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: values.file })
+    await getCampaign(slug)
+}
+
+watch(() => slug, async (newSlug) => await getCampaign(newSlug))
 
 </script>
 

@@ -46,10 +46,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import useCampaign from '@/composables/useCampaign';
 
 const props = defineProps(['campaign'])
-const { uploadFileDataset } = useCampaign();
+const emit = defineEmits(['handleUpload'])
 
 const uploader = ref(null);
 const isSelecting = ref(false);
@@ -73,7 +72,7 @@ async function onFileChanged(event: Event) {
     if (files) {
         selectedFile.value = files;
         uploader.value.value = null;
-        await uploadFileDataset(route.params.slug.toString(), selectedFile.value)
+        emit('handleUpload', selectedFile.value)
     }
 };
 </script>

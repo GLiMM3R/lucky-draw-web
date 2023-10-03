@@ -1,9 +1,7 @@
 import type { Campaign } from '@/model/campaign'
-import { prizeStore } from '@/stores/prize'
 import request from '@/utils/request'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
-import useCampaigns from './useCampaigns'
 
 export interface CreateCampaign {
   title: string
@@ -11,12 +9,38 @@ export interface CreateCampaign {
   type: string
 }
 
+export interface UpdateCampaign {
+  id: string
+  title: string
+  prizeCap: number
+}
+
 export default function useCampaign() {
   const campaign = ref<Campaign | null>(null)
+  const campaigns = ref<Campaign[]>([])
 
-  const { campaigns, getCampaigns } = useCampaigns()
   const $toast = useToast()
   const isLoading = ref(false)
+
+  async function getCampaigns(type: string) {
+    campaigns.value = []
+    isLoading.value = true
+    const { data, status } = await request({
+      url: '/campaigns',
+      params: {
+        type,
+        field: 'createdBy'
+      }
+    })
+
+    if (status === 200) {
+      campaigns.value = data.data
+      isLoading.value = false
+    } else {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
 
   async function getCampaign(id: string) {
     campaign.value = null
@@ -45,9 +69,37 @@ export default function useCampaign() {
     })
 
     if (status === 201) {
-      await getCampaigns('random')
-      console.log('🚀 ~ file: useCampaign.ts:18 ~ useCampaign ~ campaigns:', campaigns.value)
+      isLoading.value = false
+    } else {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
 
+  async function updateCampaign(campaignData: UpdateCampaign) {
+    isLoading.value = true
+    const { data, status } = await request({
+      url: `/campaigns/${campaignData.id}`,
+      method: 'PATCH',
+      data: campaignData
+    })
+
+    if (status === 200) {
+      isLoading.value = false
+    } else {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
+
+  async function deleteCampaign(id: string) {
+    isLoading.value = true
+    const { data, status } = await request({
+      url: `/campaigns/${id}`,
+      method: 'DELETE'
+    })
+
+    if (status === 200) {
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -70,7 +122,6 @@ export default function useCampaign() {
     })
 
     if (status === 200) {
-      await getCampaign(id)
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -78,5 +129,15 @@ export default function useCampaign() {
     }
   }
 
-  return { campaign, addCampaign, getCampaign, uploadFileDataset, isLoading }
+  return {
+    campaign,
+    campaigns,
+    addCampaign,
+    getCampaign,
+    getCampaigns,
+    deleteCampaign,
+    updateCampaign,
+    uploadFileDataset,
+    isLoading
+  }
 }

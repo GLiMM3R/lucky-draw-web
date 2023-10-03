@@ -8,6 +8,7 @@ export interface Prize {
   image: String
   createdBy: User
   isActive: Boolean
+  isDone: Boolean
   createdAt: Date
   updatedAt: Date
 }

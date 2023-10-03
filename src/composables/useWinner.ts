@@ -1,11 +1,11 @@
-import { winnerStore } from '@/stores/winner'
+import type { Winner } from '@/model/winner'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
 
 export default function useWinner() {
   const $toast = useToast()
-  const { state: winnerState } = winnerStore()
+  const winners = ref<Winner[]>([])
   const isLoading = ref(false)
 
   async function getWinnerRecord(campaignId: string, prizeId: string) {
@@ -14,7 +14,7 @@ export default function useWinner() {
 
     if (status === 200) {
       isLoading.value = false
-      winnerState.winners = data.data
+      winners.value = data.data
     } else {
       isLoading.value = false
       $toast.error('Something went wrong')
@@ -22,5 +22,5 @@ export default function useWinner() {
     }
   }
 
-  return { winnerState, getWinnerRecord, isLoading }
+  return { winners, getWinnerRecord, isLoading }
 }

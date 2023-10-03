@@ -3,7 +3,7 @@
         <VCardTitle class="d-flex">
             <VTextField v-model="search" variant="outlined" density="comfortable" prepend-inner-icon="mdi-magnify"
                 placeholder="Search..." />
-            <CreateCampaignModal />
+            <CreateCampaignModal @handleSubmit="handleSubmit" />
         </VCardTitle>
         <VDataTable :headers="headers" :items="campaigns" :search="search" v-model="selected">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
@@ -19,26 +19,36 @@
                     </template>
                 </tr>
             </template>
-            <template v-slot:body="{ items }">
-                <tr v-for="item in items" :key="item.key" @click="handleSelect(item)">
-                    <td style="background-color: white; border-bottom: none; text-align: center;">{{
-                        item.columns.title }}
+            <template v-slot:item="{ item }">
+                <tr>
+                    <td @click="handleSelect(item)"
+                        style="background-color: white; border-bottom: none; text-align: center;">{{
+                            item.columns.title }}
                     </td>
-                    <td style="background-color: white; border-bottom: none; text-align: center;">{{
-                        new Date(item.columns.createdAt).toLocaleString()
-                    }}</td>
-                    <td style="background-color: white; border-bottom: none; text-align: center;">
+                    <td @click="handleSelect(item)"
+                        style="background-color: white; border-bottom: none; text-align: center;">{{
+                            new Date(item.columns.createdAt).toLocaleString()
+                        }}</td>
+                    <td @click="handleSelect(item)"
+                        style="background-color: white; border-bottom: none; text-align: center;">
                         {{ item.columns.createdBy.username }}</td>
-                    <td style="background-color: white; border-bottom: none; text-align: center;">
+                    <td @click="handleSelect(item)"
+                        style="background-color: white; border-bottom: none; text-align: center;">
                         <VChip rounded="sm" :color="getColor(item.columns.prizeCap)">
                             {{ item.columns.prizeCap }}
                         </VChip>
                     </td>
-                    <td style="background-color: white; border-bottom: none; text-align: center;">
-                        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" @click="() => { }" />
-                        <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" />
+                    <td style="background-color: white; border-bottom: none; text-align: center; display: flex;">
+                        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red"
+                            @click="handleDeleteCampaign(item)" />
+                        <div>
+                            <EditCampaignModal @handleUpdate="handleUpdate" :campaign="item.raw" />
+                        </div>
                     </td>
                 </tr>
+                <!-- <tr v-if="!campaigns">
+                    <td colspan="4" class="text-center">No dataset</td>
+                </tr> -->
             </template>
         </VDataTable>
     </VCard>
@@ -48,20 +58,38 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import CreateCampaignModal from './CreateCampaignModal.vue';
-import useCampaigns from '@/composables/useCampaigns';
+import EditCampaignModal from './EditCampaignModal.vue';
+import useCampaign from '@/composables/useCampaign';
+import { onMounted } from 'vue';
 
-const { campaigns, getCampaigns } = useCampaigns()
-await getCampaigns('random');
+const { campaigns, addCampaign, deleteCampaign, getCampaigns, updateCampaign } = useCampaign()
+
+onMounted(async () => {
+    await getCampaigns('random');
+})
 
 const router = useRouter();
 const selected = ref([]);
 const search = ref('');
 
-
-const handleSelect = async (item: any) => {
-    router.push(`/random/${item.raw.id}`)
+const handleSubmit = async (values: any) => {
+    await addCampaign({ title: values.title, prizeCap: Number(values.prizeCap), type: 'random' })
+    await getCampaigns('random')
 }
 
+const handleUpdate = async (values: any) => {
+    await updateCampaign({ id: values.id, title: values.title, prizeCap: Number(values.prizeCap) })
+    await getCampaigns('random')
+}
+
+const handleSelect = async (item: any) => {
+    await router.push(`/random/${item.raw.id}`)
+}
+
+const handleDeleteCampaign = async (item: any) => {
+    await deleteCampaign(item.raw.id)
+    await getCampaigns('random')
+}
 const headers = [
     {
         key: 'title',
