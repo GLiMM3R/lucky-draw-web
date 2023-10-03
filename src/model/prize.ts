@@ -1,10 +1,12 @@
+import type { User } from './user'
+
 export interface Prize {
   id: String
   title: String
   amount: Number
-  tier: Number
+  rank: Number
   image: String
-  createdBy: {}
+  createdBy: User
   isActive: Boolean
   createdAt: Date
   updatedAt: Date

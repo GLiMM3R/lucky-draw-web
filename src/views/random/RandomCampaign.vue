@@ -1,11 +1,5 @@
 <template>
     <VContainer>
-        <VRow>
-            <VCol>
-                <div class="title">Random Draw</div>
-                <Breadcrumbs :items="items" />
-            </VCol>
-        </VRow>
         <VRow class="static">
             <VCol cols="12" md="6" lg="4" xl="3" v-for="item, index in statics" :key="index">
                 <StaticCard :item="item" />
@@ -19,14 +13,15 @@
                 </VTabs>
                 <VWindow v-model="tab">
                     <VWindowItem v-for="n in 2" :key="n" :value="n" style="padding: 16px 4px;">
-                        <VSheet elevation="1" rounded="lg" color="white">
-                            <VCardTitle class="d-flex">
-                                <VTextField v-model="search" variant="outlined" density="comfortable"
-                                    prepend-inner-icon="mdi-magnify" placeholder="Search..." />
-                                <CreateCampaignModal />
-                            </VCardTitle>
-                            <RandomCampaignTable :campaigns="campaignState.campaigns" :search="search" />
-                        </VSheet>
+                        <!-- <Suspense> -->
+                        <RandomCampaignTable />
+                        <!-- <template #fallback>
+                                <VRow justify="center" class="py-8">
+                                    <v-progress-circular indeterminate color="primary" :size="50"
+                                        :width="5"></v-progress-circular>
+                                </VRow>
+                            </template>
+                        </Suspense> -->
                     </VWindowItem>
                 </VWindow>
             </VContainer>
@@ -35,22 +30,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import LogoStatic from '@/assets/images/campaign_static.png'
 import LogoDone from '@/assets/images/done.png'
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import StaticCard from '@/components/StaticCard.vue';
-import CreateCampaignModal from '@/components/random/CreateCampaignModal.vue';
 import RandomCampaignTable from '@/components/random/RandomCampaignTable.vue';
-import useCampaign from '@/composables/useCampaign';
-import { ref, onMounted } from 'vue';
 
-const { campaignState, getCampaigns, isLoading } = useCampaign();
 const tab = ref(null)
-const search = ref('')
-
-onMounted(async () => {
-    await getCampaigns('random');
-})
 
 const statics = [
     {
@@ -64,19 +50,6 @@ const statics = [
         logo: LogoDone
     },
 ]
-
-const items = [
-    {
-        title: 'Home',
-        disabled: false,
-        href: '/home',
-    },
-    {
-        title: 'Random Draw',
-        disabled: false,
-        href: '/random',
-    },
-];
 
 </script>
 

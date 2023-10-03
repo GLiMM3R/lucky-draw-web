@@ -37,7 +37,7 @@ const router = createRouter({
             {
               path: '/random/:slug',
               name: 'random-detail',
-              component: () => import('@/views/random/RandomDraw.vue')
+              component: () => import('@/views/random/RandomCampaignDetail.vue')
             }
           ]
         },

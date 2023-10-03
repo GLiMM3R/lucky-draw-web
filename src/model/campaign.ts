@@ -1,12 +1,14 @@
 import type { Coupon } from './coupon'
 import type { Prize } from './prize'
+import type { User } from './user'
 
 export interface Campaign {
   id: String
   title: String
   prizeCap: Number
-  campaignType: String
-  createdBy: {}
+  type: String
+  file: String
+  createdBy: User
   isActive: true
   createdAt: Date
   updatedAt: Date

@@ -1,6 +1,12 @@
 <template>
-    <VSheet rounded="lg" color="white" elevation="1">
-        <VDataTable :headers="prizeHeaders" :items="prizeState.prizes">
+    <div class="dataset-header">
+        <h2 class="title">Prize Tier</h2>
+        <div>
+            <CreatePrizeModal :campaignId="slug" />
+        </div>
+    </div>
+    <VCard rounded="lg" color="white" elevation="1">
+        <VDataTable :headers="prizeHeaders" :items="props.campaign?.prizes">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -44,13 +50,18 @@
                 </tr>
             </template>
         </VDataTable>
-    </VSheet>
+    </VCard>
 </template>
 
 <script setup lang="ts">
-import usePrize from '@/composables/usePrize';
+import { useRoute } from 'vue-router';
+import CreatePrizeModal from '@/components/random/CreatePrizeModal.vue';
 
-const { prizeState } = usePrize()
+const route = useRoute()
+
+const props = defineProps(['campaign'])
+const slug = route.params.slug as string
+
 const prizeHeaders = [
     {
         key: 'rank',
@@ -86,3 +97,17 @@ const getColor = (quota: number) => {
     else return 'green'
 };
 </script>
+
+<style scoped lang="scss">
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    padding-left: 2px;
+}
+
+.dataset-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+</style>

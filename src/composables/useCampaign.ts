@@ -1,45 +1,34 @@
-import { campaignStore } from '@/stores/campaign'
-import { couponStore } from '@/stores/coupon'
+import type { Campaign } from '@/model/campaign'
 import { prizeStore } from '@/stores/prize'
 import request from '@/utils/request'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
+import useCampaigns from './useCampaigns'
 
 export interface CreateCampaign {
   title: string
   prizeCap: number
-  campaignType: string
+  type: string
 }
 
 export default function useCampaign() {
-  const { state: campaignState } = campaignStore()
-  const { state: prizeState } = prizeStore()
-  const { state: couponState } = couponStore()
+  const campaign = ref<Campaign | null>(null)
+
+  const { campaigns, getCampaigns } = useCampaigns()
   const $toast = useToast()
   const isLoading = ref(false)
 
-  async function getCampaigns(type: string) {
-    isLoading.value = true
-    campaignState.campaign = null
-    const { data, status } = await request({ url: `/campaigns?type=${type}` })
-
-    if (status === 200) {
-      campaignState.campaigns = data.data
-      isLoading.value = false
-    } else {
-      isLoading.value = false
-      $toast.error('Something went wrong')
-    }
-  }
-
   async function getCampaign(id: string) {
+    campaign.value = null
     isLoading.value = true
-    const { data, status } = await request({ url: `/campaigns/${id}` })
-
+    const { data, status } = await request({
+      url: `/campaigns/${id}`,
+      params: {
+        field: ['prizes', 'createdBy']
+      }
+    })
     if (status === 200) {
-      campaignState.campaign = data.data
-      prizeState.prizes = data.data.prizes
-      couponState.coupons = data.data.coupon
+      campaign.value = data.data
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -57,6 +46,8 @@ export default function useCampaign() {
 
     if (status === 201) {
       await getCampaigns('random')
+      console.log('🚀 ~ file: useCampaign.ts:18 ~ useCampaign ~ campaigns:', campaigns.value)
+
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -64,5 +55,28 @@ export default function useCampaign() {
     }
   }
 
-  return { campaignState, addCampaign, getCampaigns, getCampaign, isLoading }
+  async function uploadFileDataset(id: string, file: File) {
+    isLoading.value = true
+
+    const { data, status } = await request({
+      url: `/campaigns/${id}`,
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      data: {
+        file: file
+      }
+    })
+
+    if (status === 200) {
+      await getCampaign(id)
+      isLoading.value = false
+    } else {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
+
+  return { campaign, addCampaign, getCampaign, uploadFileDataset, isLoading }
 }

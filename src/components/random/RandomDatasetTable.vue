@@ -1,6 +1,6 @@
 <template>
     <VSheet rounded="lg" color="white" elevation="1">
-        <VDataTable :headers="couponHeaders" :items="couponState.coupons" show-select>
+        <VDataTable :headers="couponHeaders" :items="campaignState.campaigns">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -16,9 +16,6 @@
             </template>
             <template v-slot:body="{ items }">
                 <tr v-for="item in items" :key="item.raw.id">
-                    <td style="border-bottom: none; text-align: center;">
-                        <VCheckbox v-model="selectedCoupon" color="green" :value="item.raw" @change="handleSelectDataset" />
-                    </td>
                     <td td style="border-bottom: none; text-align: center;"> {{
                         item.columns.file.replace(`coupon/${route.params.slug.toString()}/`, '') }}
                     </td>
@@ -27,11 +24,6 @@
                     }}</td>
                     <td style="border-bottom: none; text-align: center;">
                         {{ item.columns.createdBy.username }}</td>
-                    <td style="border-bottom: none; text-align: center;">
-                        <VChip v-if="item.columns.isNew" rounded="sm" color="green">
-                            {{ item.columns.isNew ? 'New' : '' }}
-                        </VChip>
-                    </td>
                     <td style="border-bottom: none; text-align: center;" class="td">
                         <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" @click="() => { }" />
                         <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" />
@@ -45,10 +37,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import useCoupon from '@/composables/useCoupon';
+import useCampaign from '@/composables/useCampaign';
 
 const route = useRoute();
-const { couponState } = useCoupon();
+const { campaignState } = useCampaign();
 const emit = defineEmits(['handleSelectDataset'])
 const selectedCoupon = ref(null);
 
@@ -68,10 +60,6 @@ const couponHeaders = [
     {
         key: 'createdBy',
         title: 'Create By'
-    },
-    {
-        key: 'isNew',
-        title: 'Status'
     },
     { title: '', key: "actions", sortable: false },
 ]

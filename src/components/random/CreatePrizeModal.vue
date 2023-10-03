@@ -38,9 +38,11 @@ import { useForm, useField } from 'vee-validate'
 import usePrize from '@/composables/usePrize';
 import DropFile from '../DropFile.vue';
 import { useToast } from 'vue-toast-notification';
+import useCampaign from '@/composables/useCampaign';
 
 const $toast = useToast()
-const { addPrize, getPrizes, isLoading } = usePrize();
+const { prizeState, addPrize, getPrizes, isLoading } = usePrize();
+const { campaignState } = useCampaign();
 const props = defineProps(['campaignId'])
 const dialog = ref(false)
 
@@ -55,8 +57,7 @@ const { handleSubmit, handleReset } = useForm({
         },
         rank(val: number) {
             if (val > 0) return true
-
-            return 'Rank > 0!'
+            return 'Rank must greater than 0'
         },
         amount(val: number) {
             if (val > 0) return true
@@ -76,7 +77,6 @@ const getImage = (value: File) => {
 
 const submit = handleSubmit(async (values) => {
     await addPrize({ campaignId: props.campaignId, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
-    await getPrizes(props.campaignId)
     $toast.success('Create prize success!')
     handleReset();
     dialog.value = false

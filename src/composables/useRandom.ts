@@ -5,7 +5,6 @@ import { useToast } from 'vue-toast-notification'
 export interface RequestRandom {
   campaignId: string
   prizeId: string
-  couponId: string
 }
 
 export default function useRandom() {
