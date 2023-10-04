@@ -29,7 +29,7 @@ import StaticCard from '@/components/StaticCard.vue';
 import CampaignTable from '@/components/CampaignTable.vue';
 
 const tab = ref(null)
-const type = 'random'
+const type = 'wheel'
 
 const statics = [
     {

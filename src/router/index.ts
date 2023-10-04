@@ -30,8 +30,8 @@ const router = createRouter({
           component: () => import('@/views/random/RandomView.vue'),
           children: [
             {
-              path: '/random/',
-              name: 'random-camapgin',
+              path: '/random',
+              name: 'random',
               component: () => import('@/views/random/RandomCampaign.vue')
             },
             {
@@ -43,8 +43,19 @@ const router = createRouter({
         },
         {
           path: '/wheel',
-          name: 'wheel',
-          component: () => import('@/views/wheel/WheelView.vue')
+          component: () => import('@/views/wheel/WheelView.vue'),
+          children: [
+            {
+              path: '/wheel',
+              name: 'wheel',
+              component: () => import('@/views/wheel/WheelCampaign.vue')
+            },
+            {
+              path: '/wheel/:slug',
+              name: 'wheel-detail',
+              component: () => import('@/views/wheel/WheelCampaignDetail.vue')
+            }
+          ]
         },
         {
           path: '/customization',

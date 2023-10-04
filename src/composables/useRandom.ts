@@ -13,14 +13,13 @@ export default function useRandom() {
   const $toast = useToast()
   const isLoading = ref(false)
 
-  async function randomDraw(randomData: RequestRandom) {
+  async function getWinnerRecord(campaignId: string, prizeId: string) {
     isLoading.value = true
-    const { data, status } = await request({ url: '/random', method: 'POST', data: randomData })
+    const { data, status } = await request({ url: `/winner-record/${campaignId}/${prizeId}` })
 
-    if (status === 201) {
+    if (status === 200) {
       isLoading.value = false
       winners.value = data.data
-      return data.data
     } else {
       isLoading.value = false
       $toast.error('Something went wrong')
@@ -28,5 +27,23 @@ export default function useRandom() {
     }
   }
 
-  return { winners, randomDraw, isLoading }
+  async function randomDraw(randomData: RequestRandom) {
+    isLoading.value = true
+    const { data, status } = await request({
+      url: '/random/lucky-draw',
+      method: 'POST',
+      data: randomData
+    })
+
+    if (status === 201) {
+      isLoading.value = false
+      winners.value = data.data
+    } else {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+      return
+    }
+  }
+
+  return { winners, getWinnerRecord, randomDraw, isLoading }
 }

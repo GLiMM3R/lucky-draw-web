@@ -3,7 +3,7 @@
         <VCardTitle class="d-flex">
             <VTextField v-model="search" variant="outlined" density="comfortable" prepend-inner-icon="mdi-magnify"
                 placeholder="Search..." />
-            <CreateCampaignModal @handleSubmit="handleSubmit" />
+            <CreateCampaignModal @handleSubmit="handleSubmit" :type="props.type" />
         </VCardTitle>
         <VDataTable :headers="headers" :items="campaigns" :search="search" v-model="selected">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
@@ -42,7 +42,7 @@
                         <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red"
                             @click="handleDeleteCampaign(item)" />
                         <div>
-                            <EditCampaignModal @handleUpdate="handleUpdate" :campaign="item.raw" />
+                            <EditCampaignModal @handleUpdate="handleUpdate" :campaign="item.raw" :type="props.type" />
                         </div>
                     </td>
                 </tr>
@@ -62,33 +62,34 @@ import EditCampaignModal from './EditCampaignModal.vue';
 import useCampaign from '@/composables/useCampaign';
 import { onMounted } from 'vue';
 
+const props = defineProps(['type'])
+const router = useRouter();
 const { campaigns, addCampaign, deleteCampaign, getCampaigns, updateCampaign } = useCampaign()
 
 onMounted(async () => {
-    await getCampaigns('random');
+    await getCampaigns(props.type);
 })
 
-const router = useRouter();
 const selected = ref([]);
 const search = ref('');
 
 const handleSubmit = async (values: any) => {
-    await addCampaign({ title: values.title, prizeCap: Number(values.prizeCap), type: 'random' })
-    await getCampaigns('random')
+    await addCampaign({ title: values.title, prizeCap: Number(values.prizeCap), type: props.type })
+    await getCampaigns(props.type)
 }
 
 const handleUpdate = async (values: any) => {
     await updateCampaign({ id: values.id, title: values.title, prizeCap: Number(values.prizeCap) })
-    await getCampaigns('random')
+    await getCampaigns(props.type)
 }
 
 const handleSelect = async (item: any) => {
-    await router.push(`/random/${item.raw.id}`)
+    await router.push(`/${props.type}/${item.raw.id}`)
 }
 
 const handleDeleteCampaign = async (item: any) => {
     await deleteCampaign(item.raw.id)
-    await getCampaigns('random')
+    await getCampaigns(props.type)
 }
 const headers = [
     {

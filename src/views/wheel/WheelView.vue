@@ -1,77 +1,39 @@
 <template>
-  wheel
-  <VBtn @click="getCampaigns">
-    click
-  </VBtn>
-  <v-table>
-    <thead>
-      <tr>
-        <th class="text-left">
-          Name
-        </th>
-        <th class="text-left">
-          Calories
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="item in desserts" :key="item.name">
-        <td>{{ item.name }}</td>
-        <td>{{ item.calories }}</td>
-      </tr>
-    </tbody>
-  </v-table>
+  <VContainer>
+    <VRow>
+      <VCol>
+        <div class="title">Wheel Draw</div>
+        <Breadcrumbs :items="items" />
+      </VCol>
+    </VRow>
+  </VContainer>
+  <RouterView>
+  </RouterView>
 </template>
 
 <script setup lang="ts">
-import useCampaign from '@/composables/useCampaign'
-import useUser from '@/composables/useUser'
-import { onMounted } from 'vue'
+import { RouterView } from 'vue-router';
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
 
-const { getCampaigns } = useCampaign()
-const desserts = [
+
+const items = [
   {
-    name: 'Frozen Yogurt',
-    calories: 159,
+    title: 'Home',
+    disabled: false,
+    href: '/home',
   },
   {
-    name: 'Ice cream sandwich',
-    calories: 237,
-  },
-  {
-    name: 'Eclair',
-    calories: 262,
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-  },
-  {
-    name: 'Jelly bean',
-    calories: 375,
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-  },
-  {
-    name: 'Honeycomb',
-    calories: 408,
-  },
-  {
-    name: 'Donut',
-    calories: 452,
-  },
-  {
-    name: 'KitKat',
-    calories: 518,
+    title: 'Wheel Draw',
+    disabled: false,
+    href: '/random',
   },
 ];
-onMounted(async () => {
-  await getCampaigns('random')
-})
 </script>
+
+<style scoped lang="scss">
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  padding-left: 2px;
+}
+</style>

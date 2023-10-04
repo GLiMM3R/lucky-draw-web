@@ -87,7 +87,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
-import DropFile from '../DropFile.vue';
+import DropFile from './DropFile.vue';
 
 const props = defineProps(['campaign'])
 const emit = defineEmits(['handleSumitPrize'])
