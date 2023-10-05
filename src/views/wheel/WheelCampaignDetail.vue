@@ -12,7 +12,7 @@
         </VRow>
         <VRow justify="center">
             <Suspense>
-                <RandomDrawDialog />
+                <WheelDialog v-if="campaign" :prizes="campaign.prizes" />
             </Suspense>
         </VRow>
     </VContainer>
@@ -22,7 +22,7 @@
 import { useRoute } from 'vue-router';
 import useCampaign from '@/composables/useCampaign';
 import RandomDataset from '@/components/random/RandomDataset.vue';
-import RandomDrawDialog from '@/components/random/RandomDrawDialog.vue';
+import WheelDialog from '@/components/wheel/WheelDialog.vue';
 import PrizeTable from '@/components/PrizeTable.vue';
 import { watch } from 'vue';
 import { onMounted } from 'vue';
