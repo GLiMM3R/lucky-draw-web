@@ -2,6 +2,7 @@ import useUser from '@/composables/useUser'
 import {
   getAccessToken,
   getRefreshToken,
+  isTokenExpired,
   removeAccessToken,
   removeRefreshToken
 } from '@/utils/token'

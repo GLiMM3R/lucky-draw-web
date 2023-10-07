@@ -1,8 +1,7 @@
-import { prizeStore } from '@/stores/prize'
+import { usePrizeStore } from '@/stores/prize'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
-import useCampaign from './useCampaign'
 
 export interface CreatePrize {
   campaignId: string
@@ -11,11 +10,19 @@ export interface CreatePrize {
   rank: number
   file: any
 }
+export interface UpdatePrize {
+  campaignId: string
+  title: string
+  amount: number
+  rank: number
+  file?: any
+}
 
 export default function usePrize() {
   const $toast = useToast()
-  const { state: prizeState } = prizeStore()
-  const { getCampaign } = useCampaign()
+  // const prize = ref<Prize | null>(null)
+  // const prizes = ref<Prize[]>([])
+  const prizeStore = usePrizeStore()
   const isLoading = ref(false)
 
   async function getPrizes(campaignId: string) {
@@ -23,7 +30,7 @@ export default function usePrize() {
     const { data, status } = await request({ url: `/prizes?${campaignId}` })
 
     if (status === 200) {
-      prizeState.prizes = data.data
+      prizeStore.prizes = data.data
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -33,10 +40,10 @@ export default function usePrize() {
 
   async function getPrize(id: string) {
     isLoading.value = true
-    const { data, status } = await request({ url: `/prizes?${id}` })
+    const { data, status } = await request({ url: `/prizes/${id}` })
 
     if (status === 200) {
-      prizeState.prizes = data.data
+      prizeStore.prize = data.data
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -63,7 +70,6 @@ export default function usePrize() {
     })
 
     if (status === 201) {
-      await getCampaign(prizeData.campaignId)
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -71,5 +77,32 @@ export default function usePrize() {
     }
   }
 
-  return { prizeState, addPrize, getPrize, getPrizes, isLoading }
+  async function updatePrize(id: string, prizeData: UpdatePrize) {
+    console.log('🚀 ~ file: usePrize.ts:81 ~ updatePrize ~ prizeData:', prizeData)
+    isLoading.value = true
+
+    const { data, status } = await request({
+      url: `/prizes/${id}`,
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      data: {
+        campaignId: prizeData.campaignId,
+        title: prizeData.title,
+        amount: prizeData.amount,
+        rank: prizeData.rank,
+        image: prizeData.file
+      }
+    })
+
+    if (status === 200) {
+      isLoading.value = false
+    } else {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
+
+  return { addPrize, getPrize, getPrizes, updatePrize, isLoading }
 }

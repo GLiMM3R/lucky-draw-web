@@ -1,16 +1,23 @@
-import { couponStore } from '@/stores/coupon'
+import type { Coupon } from '@/model/coupon'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
 
 export interface CreateCoupon {
   campaignId: string
-  file: any
+  name: string
+  phone: string
+}
+export interface UpdateCoupon {
+  campaignId: string
+  name: string
+  phone: string
 }
 
 export default function useCoupon() {
   const $toast = useToast()
-  const { state: couponState } = couponStore()
+  const coupon = ref<Coupon | null>(null)
+  const coupons = ref<Coupon[]>([])
   const isLoading = ref(false)
 
   async function getCoupons(campaignId: string) {
@@ -18,7 +25,7 @@ export default function useCoupon() {
     const { data, status } = await request({ url: `/coupons?${campaignId}` })
 
     if (status === 200) {
-      couponState.coupons = data.data
+      coupons.value = data.data
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -32,7 +39,7 @@ export default function useCoupon() {
 
     if (status === 200) {
       isLoading.value = false
-      couponState.coupon = data.data
+      coupon.value = data.data
     } else {
       isLoading.value = false
       $toast.error('Something went wrong')
@@ -45,15 +52,8 @@ export default function useCoupon() {
     const { data, status } = await request({
       url: '/coupons',
       method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      data: {
-        campaignId: couponData.campaignId,
-        file: couponData.file
-      }
+      data: couponData
     })
-    console.log('🚀 ~ file: useCoupon.ts:56 ~ addCoupon ~ data:', data)
 
     if (status === 201) {
       isLoading.value = false
@@ -63,5 +63,22 @@ export default function useCoupon() {
     }
   }
 
-  return { couponState, addCoupon, getCoupons, getCoupon, isLoading }
+  async function updateCoupon(id: string, couponData: UpdateCoupon) {
+    isLoading.value = true
+
+    const { data, status } = await request({
+      url: `/coupons/${id}`,
+      method: 'PATCH',
+      data: couponData
+    })
+
+    if (status === 200) {
+      isLoading.value = false
+    } else {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
+
+  return { coupon, coupons, addCoupon, getCoupons, getCoupon, updateCoupon, isLoading }
 }

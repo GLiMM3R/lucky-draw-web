@@ -1,40 +1,10 @@
 <template>
     <div class="dataset-header">
         <h2 class="title">Prize Tier</h2>
-        <div>
-            <VBtn rounded="lg" variant="outlined" class="text-none">+ Create Prize
-                <v-dialog v-model="dialog" activator="parent" width="400">
-                    <v-card>
-                        <template v-slot:append>
-                            <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
-                        </template>
-                        <v-card-title style="text-align: center">
-                            Create Prize
-                        </v-card-title>
-                        <VCardItem>
-                            <VContainer>
-                                <VForm @submit.prevent="submit">
-                                    <VTextField label="Prize Name" v-model="title.value.value"
-                                        :error-messages="title.errorMessage.value" variant="outlined" rounded="lg" />
-                                    <VTextField label="Rank" v-model="rank.value.value"
-                                        :error-messages="rank.errorMessage.value" type="number" variant="outlined"
-                                        rounded="lg" />
-                                    <VTextField label="Prize Amount" v-model="amount.value.value"
-                                        :error-messages="amount.errorMessage.value" type="number" variant="outlined"
-                                        rounded="lg" />
-                                    <DropFile @getImage="getImage" />
-                                    <v-btn color="primary" type="submit" rounded="lg" block
-                                        class="my-4 text-none">Confirm</v-btn>
-                                </VForm>
-                            </VContainer>
-                        </VCardItem>
-                    </v-card>
-                </v-dialog>
-            </VBtn>
-        </div>
+        <CreatePrizeModal />
     </div>
     <VCard rounded="lg" color="white" elevation="1">
-        <VDataTable :headers="prizeHeaders" :items="props.campaign?.prizes">
+        <VDataTable :headers="prizeHeaders" :items="props.prizes">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -49,7 +19,7 @@
                 </tr>
             </template>
             <template v-slot:item="{ item }">
-                <tr v-if="props.campaign">
+                <tr v-if="props.prizes">
                     <td style="border-bottom: none; text-align: center;">{{
                         item.columns.rank }}
                     </td>
@@ -73,7 +43,7 @@
                     </td>
                     <td style="border-bottom: none; text-align: center;">
                         <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" @click="() => { }" />
-                        <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" />
+                        <EditPrizeModal :prize="item.raw" />
                     </td>
                 </tr>
                 <tr v-else>
@@ -85,49 +55,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useField, useForm } from 'vee-validate';
-import DropFile from './DropFile.vue';
+import EditPrizeModal from './EditPrizeModal.vue';
+import CreatePrizeModal from './CreatePrizeModal.vue';
 
-const props = defineProps(['campaign'])
-const emit = defineEmits(['handleSumitPrize'])
-
-const dialog = ref(false)
-
-const file = ref<File>();
-
-const { handleSubmit, handleReset } = useForm({
-    validationSchema: {
-        title(val: string) {
-            if (val?.trim().length > 0) return true
-
-            return 'Title is required!'
-        },
-        rank(val: number) {
-            if (val > 0) return true
-            return 'Rank must greater than 0'
-        },
-        amount(val: number) {
-            if (val > 0) return true
-
-            return 'Prize amount > 0!'
-        }
-    }
-})
-
-const title = useField('title')
-const rank = useField('rank')
-const amount = useField('amount')
-
-const getImage = (value: File) => {
-    file.value = value
-}
-
-const submit = handleSubmit(async (values) => {
-    emit('handleSumitPrize', { title: values.title, rank: values.rank, amount: values.amount, file: file.value })
-    handleReset();
-    dialog.value = false
-})
+const props = defineProps(['prizes'])
 
 const prizeHeaders = [
     {

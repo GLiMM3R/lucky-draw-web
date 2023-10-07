@@ -1,4 +1,5 @@
 import type { Campaign } from '@/model/campaign'
+import { useCampaignStore } from '@/stores/campaign'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
@@ -16,14 +17,16 @@ export interface UpdateCampaign {
 }
 
 export default function useCampaign() {
-  const campaign = ref<Campaign | null>(null)
-  const campaigns = ref<Campaign[]>([])
+  // const campaign = ref<Campaign | null>(null)
+  // const campaigns = ref<Campaign[]>([])
+
+  const campaignStore = useCampaignStore()
 
   const $toast = useToast()
   const isLoading = ref(false)
 
   async function getCampaigns(type: string) {
-    campaigns.value = []
+    campaignStore.campaigns = []
     isLoading.value = true
     const { data, status } = await request({
       url: '/campaigns',
@@ -34,7 +37,7 @@ export default function useCampaign() {
     })
 
     if (status === 200) {
-      campaigns.value = data.data
+      campaignStore.campaigns = data.data
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -43,16 +46,16 @@ export default function useCampaign() {
   }
 
   async function getCampaign(id: string) {
-    campaign.value = null
+    campaignStore.campaign = null
     isLoading.value = true
     const { data, status } = await request({
       url: `/campaigns/${id}`,
       params: {
-        field: ['prizes', 'createdBy']
+        field: ['prizes', 'createdBy', 'coupon']
       }
     })
     if (status === 200) {
-      campaign.value = data.data
+      campaignStore.campaign = data.data
       isLoading.value = false
     } else {
       isLoading.value = false
@@ -130,8 +133,6 @@ export default function useCampaign() {
   }
 
   return {
-    campaign,
-    campaigns,
     addCampaign,
     getCampaign,
     getCampaigns,

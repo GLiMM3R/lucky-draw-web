@@ -5,7 +5,7 @@
                 placeholder="Search..." />
             <CreateCampaignModal @handleSubmit="handleSubmit" :type="props.type" />
         </VCardTitle>
-        <VDataTable :headers="headers" :items="campaigns" :search="search" v-model="selected">
+        <VDataTable :headers="headers" :items="campaigns" :search="search" v-model="selected" :hover="true">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -61,10 +61,14 @@ import CreateCampaignModal from './CreateCampaignModal.vue';
 import EditCampaignModal from './EditCampaignModal.vue';
 import useCampaign from '@/composables/useCampaign';
 import { onMounted } from 'vue';
+import { useCampaignStore } from '@/stores/campaign';
+import { storeToRefs } from 'pinia';
 
-const props = defineProps(['type'])
 const router = useRouter();
-const { campaigns, addCampaign, deleteCampaign, getCampaigns, updateCampaign } = useCampaign()
+const props = defineProps(['type'])
+const campaignStore = useCampaignStore();
+const { campaigns } = storeToRefs(campaignStore);
+const { addCampaign, deleteCampaign, getCampaigns, updateCampaign } = useCampaign()
 
 onMounted(async () => {
     await getCampaigns(props.type);

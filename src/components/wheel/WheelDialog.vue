@@ -3,14 +3,43 @@
         Start Random
     </v-btn>
     <v-dialog v-model="dialog" class="overlay" width="900">
-        <VRow justify="center">
-            <FortuneWheel style="width: 500px; max-width: 100%;" :verify="canvasVerify" :canvas="canvasOptions"
-                :prizes="prizes" @rotateStart="onCanvasRotateStart" @rotateEnd="onRotateEnd" />
-        </VRow>
-        <VRow justify="center">
-            <VCol class="d-flex justify-center">
-                <v-btn color="red" variant="flat" width="160" rounded="lg" @click="dialog = false">Exit</v-btn>
+        <VRow justify="center" v-if="!result">
+            <VCol>
+                <VRow justify="center">
+                    <VCard color="#028947" width="600px" rounded="pill">
+                        <VCardTitle class="text-center text-h4 py-4">
+                            Wheel Draw
+                        </VCardTitle>
+                    </VCard>
+                </VRow>
+                <VRow justify="center" class="my-8">
+                    <FortuneWheel style="width: 600px; max-width: 100%;" :verify="canvasVerify" :canvas="canvasOptions"
+                        :prizes="prizes" @rotateStart="onCanvasRotateStart" @rotateEnd="onRotateEnd" />
+                </VRow>
+                <VRow justify="center">
+                    <v-btn color="red" variant="flat" width="160" rounded="lg" @click="dialog = false">Exit</v-btn>
+                </VRow>
             </VCol>
+        </VRow>
+        <VRow justify="center" class="my-8" v-else>
+            <Transition>
+                <VCard color="#028947" width="500px" class="px-4 py-4" rounded="lg">
+                    <template v-slot:append>
+                        <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
+                    </template>
+                    <VCardItem>
+                        <VImg :src="Winner" width="80" class="mx-auto" />
+                    </VCardItem>
+                    <VCardTitle class="text-center text-h4 py-4">
+                        {{ prize?.title }}
+                    </VCardTitle>
+                    <VCardActions>
+                        <VBtn class="text-none" variant="elevated" rounded="lg" block color="#00AB55"
+                            @click="dialog = false">
+                            Confirm</VBtn>
+                    </VCardActions>
+                </VCard>
+            </Transition>
         </VRow>
     </v-dialog>
 </template>
@@ -19,13 +48,24 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import FortuneWheel from '@/components/fortuneWheel/FortuneWheel.vue';
+import Winner from '@/assets/images/winner.png'
 import type { PrizeConfig } from '@/components/FortuneWheel/types'
+import { useToast } from 'vue-toast-notification';
+import usePrize from '@/composables/usePrize';
 
 const props = defineProps(['prizes'])
+const $toast = useToast()
+const { prize, getPrize } = usePrize()
 
 const dialog = ref(false)
+const result = ref(false)
 
 const handleDialog = async () => {
+    if (props.prizes.length <= 0) {
+        $toast.warning('No prizes')
+        return;
+    }
+    result.value = false
     dialog.value = !dialog.value
 }
 
@@ -36,7 +76,7 @@ const canvasOptions = {
     borderColor: '#028947',
     borderWidth: 30,
     lineHeight: 30,
-    fontSize: 14
+    fontSize: 16
 }
 
 const bgColor = ['#fff', '#dd3832', '#fef151']
@@ -75,15 +115,14 @@ function onCanvasRotateStart(rotate: Function) {
             if (verifiedRes) {
                 rotate()
                 canvasVerify.value = true
-            } else {
-                alert('未通过验证')
             }
         })
         return
     }
 }
 
-function onRotateEnd(prize: PrizeConfig) {
-    alert(prize.name)
+async function onRotateEnd(prize: PrizeConfig) {
+    await getPrize(prize.value)
+    result.value = true
 }
 </script>

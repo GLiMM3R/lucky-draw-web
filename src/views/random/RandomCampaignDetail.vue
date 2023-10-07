@@ -2,12 +2,12 @@
     <VContainer>
         <VRow class="static">
             <VCol>
-                <RandomDataset v-if="campaign" :campaign="campaign" @handleUpload="handleUpload" />
+                <RandomDataset v-if="campaign" :campaign="campaign" />
             </VCol>
         </VRow>
         <VRow class="static">
             <VCol>
-                <PrizeTable v-if="campaign" :campaign="campaign" @handleSumitPrize="handleSumitPrize" />
+                <PrizeTable v-if="campaign?.prizes" :prizes="campaign.prizes" />
             </VCol>
         </VRow>
         <VRow justify="center">
@@ -19,33 +19,27 @@
 </template>
 
 <script setup lang="ts">
+import { watch, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
+import { useCampaignStore } from '@/stores/campaign';
 import useCampaign from '@/composables/useCampaign';
+
 import RandomDataset from '@/components/random/RandomDataset.vue';
 import RandomDrawDialog from '@/components/random/RandomDrawDialog.vue';
 import PrizeTable from '@/components/PrizeTable.vue';
-import { watch } from 'vue';
-import { onMounted } from 'vue';
-import usePrize from '@/composables/usePrize';
 
 const route = useRoute();
-const { campaign, getCampaign, deleteCampaign, uploadFileDataset } = useCampaign();
-const { addPrize } = usePrize();
 const slug = route.params.slug as string
+
+const campaignStore = useCampaignStore();
+const { campaign } = storeToRefs(campaignStore);
+const { getCampaign } = useCampaign();
 
 onMounted(async () => {
     await getCampaign(slug)
 })
 
-const handleUpload = async (values: any) => {
-    await uploadFileDataset(slug, values)
-    await getCampaign(slug)
-}
-
-const handleSumitPrize = async (values: any) => {
-    await addPrize({ campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: values.file })
-    await getCampaign(slug)
-}
 
 watch(() => slug, async (newSlug) => await getCampaign(newSlug))
 

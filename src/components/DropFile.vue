@@ -2,16 +2,17 @@
     <div>
         <div :class="['dropZone', dragging ? 'dropZone-over' : '']" @dragenter="dragging = true"
             @dragleave="dragging = false">
-            <div class="dropZone-info" @drag="onFileChange">
-                <div v-if="!selectFile">
-                    <span class="fa fa-cloud-upload dropZone-title"></span>
+            <div @drag="onFileChange">
+                <div v-if="selectFile" class="dropZone-info">
+                    <!-- <span class="fa fa-cloud-upload dropZone-title"></span> -->
                     <span class="dropZone-title">Select file</span>
                     <div class="dropZone-upload-limit-info">
                         <div>Drop file or click <span>browse</span> through</div>
                         <div>your machine</div>
                     </div>
+                    <VImg :src="previewImage" cover class="img" />
                 </div>
-                <div v-else>
+                <div v-else class="dropZone-info">
                     <VImg :src="previewImage" cover class="preview-img" />
                 </div>
                 <input type="file" @change="onFileChange">
@@ -23,20 +24,26 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useToast } from 'vue-toast-notification';
+import useImage from '@/composables/useImage'
 
+const { getImage } = useImage();
 const $toast = useToast();
 const selectFile = ref(null);
 const previewImage = ref('');
 const dragging = ref(false)
 const emit = defineEmits(['getImage'])
+const props = defineProps(['image'])
 
+if (props.image) {
+    previewImage.value = await getImage(props.image)
+}
 
 const onFileChange = (event: Event) => {
     var files = event.target.files || event.dataTransfer.files;
 
     if (!files.length) {
         dragging.value = false;
-        previewImage.value = ''
+        previewImage.value = null
         selectFile.value = null;
         return;
     }
@@ -77,11 +84,17 @@ const createFile = (file: File) => {
     position: relative;
     border: 2px dashed #eee;
     border-radius: 8px;
+
+    .img {
+        object-fit: cover;
+        height: 100%;
+        opacity: 0.8;
+    }
 }
 
 .preview-img {
-    // object-fit: cover;
-    width: 100%;
+    object-fit: cover;
+    height: 100%;
     opacity: 0.8;
 }
 

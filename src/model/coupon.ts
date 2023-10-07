@@ -1,8 +1,11 @@
+import type { User } from './user'
+
 export interface Coupon {
   id: string
-  file: string
+  name: string
+  phone: string
   campaignId: string
-  createdBy: Object
+  createdBy: User
   isNew: Boolean
   isActive: Boolean
   createdAt: Date

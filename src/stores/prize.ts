@@ -1,12 +1,10 @@
 import type { Prize } from '@/model/prize'
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
+import { ref } from 'vue'
 
-export const prizeStore = defineStore('prize', () => {
-  const state = reactive({
-    prize: null as Prize | null,
-    prizes: [] as Prize[]
-  })
+export const usePrizeStore = defineStore('prize', () => {
+  const prize = ref<Prize | null>(null)
+  const prizes = ref<Prize[]>([])
 
-  return { state }
+  return { prize, prizes }
 })

@@ -3,7 +3,6 @@
         Start Random
     </v-btn>
     <v-dialog v-model="dialog" class="overlay" persistent scrollable width="900">
-        <!-- <div class="d-flex flex-column justify-center"> -->
         <VCardTitle class="bg-primary py-2 rounded-pill w-50 mx-auto">
             <VCardTitle class="text-center text-h4 font-weight-bold">
                 Prize {{ selectedPrize + 1 }}
@@ -67,12 +66,19 @@ import useRandom from '@/composables/useRandom';
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 import useCampaign from '@/composables/useCampaign';
+import { useWinnerStore } from '@/stores/winner';
+import { storeToRefs } from 'pinia';
+import { useCampaignStore } from '@/stores/campaign';
 
-// const props = defineProps(['campaign'])
-const { winners, getWinnerRecord, randomDraw, isLoading } = useRandom();
 const route = useRoute();
-const { campaign, getCampaign } = useCampaign();
 const slug = route.params.slug as string
+
+const winnerStore = useWinnerStore();
+const campaignStore = useCampaignStore();
+const { winners } = storeToRefs(winnerStore)
+const { campaign } = storeToRefs(campaignStore)
+const { getWinnerRecord, randomDraw, isLoading } = useRandom();
+const { getCampaign } = useCampaign();
 
 const dialog = ref(false)
 const showResult = ref(false)
