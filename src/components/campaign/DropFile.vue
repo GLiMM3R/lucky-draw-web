@@ -10,7 +10,6 @@
                         <div>Drop file or click <span>browse</span> through</div>
                         <div>your machine</div>
                     </div>
-                    <VImg :src="previewImage" class="preview-img" />
                 </div>
                 <div v-else class="dropZone-info">
                     <VImg :src="previewImage" contain class="preview-img" />
@@ -27,7 +26,6 @@ import { useToast } from 'vue-toast-notification';
 import useImage from '@/composables/useImage'
 
 const emit = defineEmits(['getImage'])
-const props = defineProps(['image'])
 
 const { getImage } = useImage();
 const $toast = useToast();
@@ -35,10 +33,6 @@ const $toast = useToast();
 const selectFile = ref(null);
 const previewImage = ref('');
 const dragging = ref(false)
-
-if (props.image) {
-    previewImage.value = await getImage(props.image)
-}
 
 const onFileChange = (event: Event) => {
     var files = event.target.files || event.dataTransfer.files;

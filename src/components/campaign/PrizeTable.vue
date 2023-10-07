@@ -41,9 +41,14 @@
                             {{ item.columns.isDone ? 'Complete' : '' }}
                         </VChip>
                     </td>
-                    <td style="border-bottom: none; text-align: center;">
-                        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" @click="() => { }" />
-                        <EditPrizeModal :prize="item.raw" />
+                    <td style="border-bottom: none; text-align: center; display: flex; align-items: center;">
+                        <div>
+                            <ConfirmDialog message="Do you want to delete this?"
+                                @handleConfirm="handleConfirm(item.raw.id)" />
+                        </div>
+                        <div>
+                            <EditPrizeModal :prize="item.raw" />
+                        </div>
                     </td>
                 </tr>
                 <tr v-else>
@@ -57,9 +62,23 @@
 <script setup lang="ts">
 import EditPrizeModal from './EditPrizeModal.vue';
 import CreatePrizeModal from './CreatePrizeModal.vue';
+import ConfirmDialog from '../ConfirmDialog.vue';
+import usePrize from '@/composables/usePrize';
+import useCampaign from '@/composables/useCampaign';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const slug = route.params.slug as string
 
 const props = defineProps(['prizes'])
 
+const { deletePrize } = usePrize();
+const { getCampaign } = useCampaign();
+
+const handleConfirm = async (id: string) => {
+    await deletePrize(id)
+    await getCampaign(slug)
+}
 const prizeHeaders = [
     {
         key: 'rank',

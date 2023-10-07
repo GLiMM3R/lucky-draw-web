@@ -27,7 +27,7 @@ import useCampaign from '@/composables/useCampaign';
 
 import RandomDataset from '@/components/random/RandomDataset.vue';
 import RandomDrawDialog from '@/components/random/RandomDrawDialog.vue';
-import PrizeTable from '@/components/PrizeTable.vue';
+import PrizeTable from '@/components/campaign/PrizeTable.vue';
 
 const route = useRoute();
 const slug = route.params.slug as string

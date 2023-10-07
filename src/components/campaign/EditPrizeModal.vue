@@ -7,7 +7,7 @@
                 <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
             </template>
             <v-card-title style="text-align: center">
-                Create Prize
+                Edit Prize
             </v-card-title>
             <VCardItem>
                 <VContainer>
@@ -18,7 +18,9 @@
                             type="number" variant="outlined" rounded="lg" />
                         <VTextField label="Prize Amount" v-model="amount.value.value"
                             :error-messages="amount.errorMessage.value" type="number" variant="outlined" rounded="lg" />
-                        <DropFile @getImage="getImage" />
+                        <Suspense>
+                            <DropFile @getImage="getImage" :image="props.prize.image" />
+                        </Suspense>
                         <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none">Confirm</v-btn>
                     </VForm>
                 </VContainer>
@@ -30,25 +32,30 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate';
-import DropFile from './DropFile.vue';
-import usePrize from '@/composables/usePrize';
-import useCampaign from '@/composables/useCampaign';
-import { useRoute } from 'vue-router';
+import DropFile from '../DropFile.vue';
 import { usePrizeStore } from '@/stores/prize';
 import { storeToRefs } from 'pinia';
+import useCampaign from '@/composables/useCampaign';
+import usePrize from '@/composables/usePrize';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const slug = route.params.slug as string
 
+const props = defineProps(['prize'])
 const prizeStore = usePrizeStore();
-const { prizes } = storeToRefs(prizeStore);
+const { prizes } = storeToRefs(prizeStore)
 const { getCampaign } = useCampaign();
-const { addPrize } = usePrize();
-
+const { updatePrize } = usePrize();
 const dialog = ref(false)
 const file = ref<File>();
 
 const { handleSubmit, handleReset } = useForm({
+    initialValues: {
+        title: props.prize.title,
+        rank: props.prize.rank,
+        amount: props.prize.amount
+    },
     validationSchema: {
         title(val: string) {
             if (val?.trim().length > 0) return true
@@ -57,7 +64,7 @@ const { handleSubmit, handleReset } = useForm({
         },
         rank(val: number) {
             if (val < 0) return 'Value must greater than 0'
-            if (prizes.value.filter((item: any) => Number(item.rank) == val).length > 0) return 'Already exists'
+            if (props.prize.rank != val && prizes.value.filter((item: any) => Number(item.rank) == val).length > 0) return 'Already exists'
 
             return true
         },
@@ -78,7 +85,7 @@ const getImage = (value: File) => {
 }
 
 const submit = handleSubmit(async (values) => {
-    await addPrize({ campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: values.file })
+    await updatePrize(props.prize.id, { campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
     await getCampaign(slug)
     handleReset();
     dialog.value = false

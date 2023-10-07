@@ -1,11 +1,13 @@
 <template>
     <div class="dataset-header">
         <h2 class="title">Coupon</h2>
-        <CreateCouponModal />
+        <div>
+            <CreateCouponModal />
+        </div>
     </div>
     <VCard elevation="1" rounded="lg">
         <VDataTable :headers="headers" :items="props.coupon" :search="search" v-model="selected" item-value="id"
-            class="text-center" select-strategy="single" show-select :hover="true">
+            class="text-center" select-strategy="single" show-select :hover="true" @change="handleSelected">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -31,12 +33,14 @@
                 </VChip>
             </template>
             <template v-slot:item.actions="{ item }">
-                <!-- <td style="background-color: white; border-bottom: none; text-align: center; display: flex;"> -->
-                <div>
-                    <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" />
-                    <EditCouponModal :customer="item.raw" />
+                <div class="d-flex justify-center">
+                    <div>
+                        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" />
+                    </div>
+                    <div>
+                        <EditCouponModal :customer="item.raw" />
+                    </div>
                 </div>
-                <!-- </td> -->
             </template>
         </VDataTable>
     </VCard>
@@ -48,10 +52,13 @@ import EditCouponModal from './EditCouponModal.vue';
 import CreateCouponModal from './CreateCouponModal.vue';
 
 const props = defineProps(['coupon'])
+const emit = defineEmits(['handleSelectCoupon'])
 
 const selected = ref([]);
 const search = ref('');
-
+const handleSelected = () => {
+    emit('handleSelectCoupon', selected.value[0])
+}
 const headers = [
     {
         key: 'name',

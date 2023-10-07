@@ -79,7 +79,7 @@ async function onFileChanged(event: Event) {
     if (files) {
         selectedFile.value = files;
         uploader.value.value = null;
-        await uploadFileDataset(slug, values)
+        await uploadFileDataset(slug, selectedFile.value)
         await getCampaign(slug)
     }
 };

@@ -1,4 +1,5 @@
 import type { Winner } from '@/model/winner'
+import { useWinnerStore } from '@/stores/winner'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
@@ -9,17 +10,20 @@ export interface RequestRandom {
 }
 
 export default function useRandom() {
-  const winners = ref<Winner[]>([])
+  const winnerStore = useWinnerStore()
+
   const $toast = useToast()
   const isLoading = ref(false)
 
   async function getWinnerRecord(campaignId: string, prizeId: string) {
+    console.log('start')
     isLoading.value = true
     const { data, status } = await request({ url: `/winner-record/${campaignId}/${prizeId}` })
 
     if (status === 200) {
+      winnerStore.winners = data.data
       isLoading.value = false
-      winners.value = data.data
+      console.log('complete')
     } else {
       isLoading.value = false
       $toast.error('Something went wrong')
@@ -37,7 +41,7 @@ export default function useRandom() {
 
     if (status === 201) {
       isLoading.value = false
-      winners.value = data.data
+      winnerStore.winners = data.data
     } else {
       isLoading.value = false
       $toast.error('Something went wrong')
@@ -45,5 +49,5 @@ export default function useRandom() {
     }
   }
 
-  return { winners, getWinnerRecord, randomDraw, isLoading }
+  return { getWinnerRecord, randomDraw, isLoading }
 }

@@ -2,7 +2,7 @@
     <VContainer>
         <VRow class="static">
             <VCol>
-                <CustomerTable v-if="campaign?.coupon" :coupon="campaign.coupon" />
+                <CustomerTable v-if="campaign?.coupon" :coupon="campaign.coupon" @handleSelectCoupon="handleSelectCoupon" />
             </VCol>
         </VRow>
         <VRow class="static">
@@ -12,7 +12,7 @@
         </VRow>
         <VRow justify="center">
             <Suspense>
-                <WheelDialog v-if="campaign" :prizes="campaign.prizes" />
+                <WheelDialog v-if="campaign" :prizes="campaign.prizes" :coupon="selectedCoupon" />
             </Suspense>
         </VRow>
     </VContainer>
@@ -26,8 +26,9 @@ import { useCampaignStore } from '@/stores/campaign';
 import useCampaign from '@/composables/useCampaign';
 
 import WheelDialog from '@/components/wheel/WheelDialog.vue';
-import PrizeTable from '@/components/PrizeTable.vue';
+import PrizeTable from '@/components/campaign/PrizeTable.vue';
 import CustomerTable from '@/components/wheel/CustomerTable.vue';
+import { ref } from 'vue';
 
 const route = useRoute();
 const slug = route.params.slug as string
@@ -35,6 +36,11 @@ const slug = route.params.slug as string
 const campaignStore = useCampaignStore();
 const { campaign } = storeToRefs(campaignStore);
 const { getCampaign } = useCampaign();
+
+const selectedCoupon = ref('');
+const handleSelectCoupon = (value: string) => {
+    selectedCoupon.value = value;
+}
 
 onMounted(async () => {
     await getCampaign(slug)

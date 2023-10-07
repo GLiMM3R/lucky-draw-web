@@ -1,5 +1,5 @@
 <template>
-    <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" />
+    <v-btn class="text-none" rounded="lg" variant="outlined">+ Create Coupon</v-btn>
     <v-dialog v-model="dialog" activator="parent" width="400">
         <v-card>
             <template v-slot:append>
@@ -41,12 +41,12 @@ const dialog = ref(false)
 const { handleSubmit, handleReset } = useForm({
     validationSchema: {
         name(val: string) {
-            if (val?.trim().length > 0) return true
+            if (val?.length > 0) return true
 
             return 'Title is required!'
         },
         phoneNumber(val: string) {
-            if (val.toLowerCase().trim().length > 7) return true
+            if (val?.length > 7) return true
 
             return 'Phone number > 7!'
         },
@@ -60,6 +60,6 @@ const submit = handleSubmit(async (values) => {
     await addCoupon({ campaignId: slug, name: values.name, phone: values.phoneNumber })
     await getCampaign(slug)
     handleReset();
-    dialog.value = false
+    // dialog.value = false
 })
 </script>

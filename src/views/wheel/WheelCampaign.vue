@@ -26,7 +26,7 @@ import { ref } from 'vue';
 import LogoStatic from '@/assets/images/campaign_static.png'
 import LogoDone from '@/assets/images/done.png'
 import StaticCard from '@/components/StaticCard.vue';
-import CampaignTable from '@/components/CampaignTable.vue';
+import CampaignTable from '@/components/campaign/CampaignTable.vue';
 
 const tab = ref(null)
 const type = 'wheel'

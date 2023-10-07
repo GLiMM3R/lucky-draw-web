@@ -52,17 +52,26 @@ import Winner from '@/assets/images/winner.png'
 import type { PrizeConfig } from '@/components/FortuneWheel/types'
 import { useToast } from 'vue-toast-notification';
 import usePrize from '@/composables/usePrize';
+import { usePrizeStore } from '@/stores/prize';
+import { storeToRefs } from 'pinia';
 
-const props = defineProps(['prizes'])
+const props = defineProps(['prizes', 'coupon'])
 const $toast = useToast()
-const { prize, getPrize } = usePrize()
+
+const prizeStore = usePrizeStore()
+const { prize } = storeToRefs(prizeStore)
+const { getPrize } = usePrize()
 
 const dialog = ref(false)
 const result = ref(false)
 
-const handleDialog = async () => {
+const handleDialog = (rotate: Function) => {
     if (props.prizes.length <= 0) {
         $toast.warning('No prizes')
+        return;
+    }
+    if (!props.coupon) {
+        $toast.warning('Select coupon first')
         return;
     }
     result.value = false
@@ -86,6 +95,10 @@ let i = 0;
 const probability = (100 / props.prizes.length).toFixed(2);
 
 const prizes = props.prizes.map((item: any, index: number) => {
+    if (item.isDone) {
+        return
+    }
+
     const prize = {
         id: index + 1,
         name: item.title,
@@ -124,5 +137,9 @@ function onCanvasRotateStart(rotate: Function) {
 async function onRotateEnd(prize: PrizeConfig) {
     await getPrize(prize.value)
     result.value = true
+}
+
+const handleConfirm = () => {
+    
 }
 </script>

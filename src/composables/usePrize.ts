@@ -104,5 +104,17 @@ export default function usePrize() {
     }
   }
 
-  return { addPrize, getPrize, getPrizes, updatePrize, isLoading }
+  async function deletePrize(id: string) {
+    isLoading.value = true
+    const { data, status } = await request({ url: `/prizes/${id}`, method: 'DELETE' })
+
+    if (status === 200) {
+      isLoading.value = false
+    } else {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
+
+  return { addPrize, getPrize, getPrizes, updatePrize, deletePrize, isLoading }
 }

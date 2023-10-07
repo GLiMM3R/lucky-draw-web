@@ -2,14 +2,11 @@
     <v-btn variant="elevated" rounded="lg" @click="handleDialog" class="text-none">
         Start Random
     </v-btn>
-    <v-dialog v-model="dialog" class="overlay" persistent scrollable width="900">
+    <v-dialog v-if="showResult" v-model="dialog" class="overlay" persistent scrollable width="900">
         <VCardTitle class="bg-primary py-2 rounded-pill w-50 mx-auto">
-            <VCardTitle class="text-center text-h4 font-weight-bold">
-                Prize {{ selectedPrize + 1 }}
-            </VCardTitle>
-            <VCardSubtitle v-if="campaign" class="text-center text-h5">
+            <VCardTitle v-if="campaign" class="text-center text-h4 font-weight-bold">
                 {{ campaign.prizes[selectedPrize].title }}
-            </VCardSubtitle>
+            </VCardTitle>
         </VCardTitle>
         <v-item-group v-if="campaign" mandatory v-model="selectedPrize">
             <v-container>
@@ -28,7 +25,25 @@
                 </v-row>
             </v-container>
         </v-item-group>
-        <VImg v-if="!showResult" :src="Lottery" class="d-block mx-auto my-8" width="300" />
+        <WinnerTable :winners="winners" />
+        <VRow justify="center" no-gutters class="mt-8">
+            <VCol class="d-flex justify-center">
+                <v-btn color="red" variant="flat" rounded="lg" @click="dialog = false">Exit</v-btn>
+            </VCol>
+            <VCol class="d-flex justify-center">
+                <v-btn color="green-darken-1" rounded="lg" variant="elevated" @click="handleRandom"
+                    :loading="isLoading">Start
+                    Random</v-btn>
+            </VCol>
+        </VRow>
+    </v-dialog>
+    <v-dialog v-else v-model="dialog" class="overlay" persistent scrollable width="900">
+        <VCardTitle class="bg-primary py-2 rounded-pill w-50 mx-auto">
+            <VCardTitle v-if="campaign" class="text-center text-h4 font-weight-bold">
+                {{ campaign.prizes[selectedPrize].title }}
+            </VCardTitle>
+        </VCardTitle>
+        <VImg v-if="!isCompleted" :src="Lottery" class="d-block mx-auto my-8" width="300" />
         <VRow v-else class="my-4 overflow-auto">
             <VCol v-for="winner in winners" :key="winner.id">
                 <VCard>
@@ -46,15 +61,9 @@
         </VRow>
         <VRow justify="center" no-gutters>
             <VCol class="d-flex justify-center">
-                <v-btn color="red" variant="flat" rounded="lg" @click="dialog = false">Exit</v-btn>
-            </VCol>
-            <VCol class="d-flex justify-center">
-                <v-btn color="green-darken-1" rounded="lg" variant="elevated" @click="handleRandom"
-                    :loading="isLoading">Start
-                    Random</v-btn>
+                <v-btn color="red" variant="flat" rounded="lg" @click="handleClose">Exit</v-btn>
             </VCol>
         </VRow>
-        <!-- </div> -->
     </v-dialog>
 </template>
 
@@ -69,6 +78,7 @@ import useCampaign from '@/composables/useCampaign';
 import { useWinnerStore } from '@/stores/winner';
 import { storeToRefs } from 'pinia';
 import { useCampaignStore } from '@/stores/campaign';
+import WinnerTable from './WinnerTable.vue';
 
 const route = useRoute();
 const slug = route.params.slug as string
@@ -81,7 +91,8 @@ const { getWinnerRecord, randomDraw, isLoading } = useRandom();
 const { getCampaign } = useCampaign();
 
 const dialog = ref(false)
-const showResult = ref(false)
+const showResult = ref(true)
+const isCompleted = ref(false)
 const selectedPrize = ref(99)
 
 await getCampaign(slug)
@@ -89,10 +100,8 @@ await getCampaign(slug)
 watch(() => selectedPrize.value, async () => {
     if (campaign.value?.prizes[selectedPrize.value].isDone) {
         await getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
-        showResult.value = true
     } else {
-        winners.value = [];
-        showResult.value = false
+        winners.value = []
     }
 })
 
@@ -108,20 +117,33 @@ const handleDialog = async () => {
         return
     }
     selectedPrize.value = campaign.value?.prizes.length - 1
+    await getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
+
     dialog.value = !dialog.value
 }
 
+
+const handleClose = () => {
+    showResult.value = true
+    isCompleted.value = false
+}
 const handleRandom = async () => {
     if (selectedPrize.value === null) {
         alert('Select prize first!');
         return;
     }
+    if (campaign.value?.prizes[selectedPrize.value].isDone) {
+        alert('Already random');
+        return;
+    }
+    showResult.value = false
     await randomDraw({ campaignId: slug, prizeId: campaign.value?.prizes[selectedPrize.value].id as string })
-    await getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
-    showResult.value = true
-    await getCampaign(slug)
+    setTimeout(async () => {
+        await getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
+        await getCampaign(slug)
+        isCompleted.value = true
+    }, 3000);
 }
-
 </script>
 
 <style scoped lang="scss">
