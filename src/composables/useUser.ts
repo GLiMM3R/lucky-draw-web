@@ -45,7 +45,6 @@ export default function useUser() {
           Authorization: `Bearer ${getRefreshToken()}`
         }
       })
-      console.log('🚀 ~ file: useUser.ts:48 ~ refreshToken ~ data:', data)
 
       if (status == 200) {
         state.isAuthenticate = true

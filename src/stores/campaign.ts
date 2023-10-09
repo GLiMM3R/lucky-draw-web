@@ -1,4 +1,4 @@
-import type { Campaign } from '@/model/campaign'
+// import type { Campaign } from '@/model/campaign'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 

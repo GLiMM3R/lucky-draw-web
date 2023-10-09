@@ -51,7 +51,7 @@ export default function useCampaign() {
     const { data, status } = await request({
       url: `/campaigns/${id}`,
       params: {
-        field: ['prizes', 'createdBy', 'coupon']
+        field: ['prizes', 'createdBy', 'coupons']
       }
     })
     if (status === 200) {

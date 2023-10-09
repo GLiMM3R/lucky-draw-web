@@ -13,7 +13,7 @@
                 </VTabs>
                 <VWindow v-model="tab">
                     <VWindowItem v-for="n in 2" :key="n" :value="n" style="padding: 16px 4px;">
-                        <CampaignTable :type="type" />
+                        <CampaignTable type="wheel" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>

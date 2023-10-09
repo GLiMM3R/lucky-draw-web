@@ -13,5 +13,5 @@ export interface Campaign {
   createdAt: Date
   updatedAt: Date
   prizes: Prize[]
-  coupon: Coupon[]
+  coupons: Coupon[]
 }

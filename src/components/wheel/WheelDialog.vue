@@ -35,7 +35,7 @@
                     </VCardTitle>
                     <VCardActions>
                         <VBtn class="text-none" variant="elevated" rounded="lg" block color="#00AB55"
-                            @click="dialog = false">
+                            @click="handleConfirm">
                             Confirm</VBtn>
                     </VCardActions>
                 </VCard>
@@ -49,24 +49,28 @@
 import { ref } from 'vue'
 import FortuneWheel from '@/components/fortuneWheel/FortuneWheel.vue';
 import Winner from '@/assets/images/winner.png'
-import type { PrizeConfig } from '@/components/FortuneWheel/types'
 import { useToast } from 'vue-toast-notification';
 import usePrize from '@/composables/usePrize';
 import { usePrizeStore } from '@/stores/prize';
 import { storeToRefs } from 'pinia';
+import useCampaign from '@/composables/useCampaign';
+import useRandom from '@/composables/useRandom';
+import type { PrizeConfig } from '../fortuneWheel/types';
 
-const props = defineProps(['prizes', 'coupon'])
+const props = defineProps(['campaign', 'coupon'])
 const $toast = useToast()
 
 const prizeStore = usePrizeStore()
 const { prize } = storeToRefs(prizeStore)
 const { getPrize } = usePrize()
+const { wheelDraw } = useRandom()
+const { getCampaign } = useCampaign()
 
 const dialog = ref(false)
 const result = ref(false)
 
 const handleDialog = (rotate: Function) => {
-    if (props.prizes.length <= 0) {
+    if (props.campaign.prizes.length <= 0) {
         $toast.warning('No prizes')
         return;
     }
@@ -92,9 +96,9 @@ const bgColor = ['#fff', '#dd3832', '#fef151']
 let i = 0;
 
 
-const probability = (100 / props.prizes.length).toFixed(2);
+const probability = (100 / props.campaign.prizes.length).toFixed(2);
 
-const prizes = props.prizes.map((item: any, index: number) => {
+const prizes = props.campaign.prizes.map((item: any, index: number) => {
     if (item.isDone) {
         return
     }
@@ -139,7 +143,9 @@ async function onRotateEnd(prize: PrizeConfig) {
     result.value = true
 }
 
-const handleConfirm = () => {
-    
+const handleConfirm = async () => {
+    await wheelDraw({ campaignId: props.campaign.id, prizeId: prize.value?.id as string, couponId: props.coupon.id, winnerName: props.coupon.name, winnerPhone: props.coupon.phone })
+    dialog.value = false
+    await getCampaign(props.campaign.id)
 }
 </script>

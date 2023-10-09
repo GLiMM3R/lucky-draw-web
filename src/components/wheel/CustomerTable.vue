@@ -28,7 +28,7 @@
                 {{ new Date(item.columns.createdAt).toDateString() }}
             </template>
             <template v-slot:item.isNew="{ item }">
-                <VChip rounded="sm" :color="getColor(item.columns.isNew)">
+                <VChip v-if="item.columns.isNew" rounded="sm" :color="getColor(item.columns.isNew)">
                     {{ item.columns.isNew ? 'New' : '' }}
                 </VChip>
             </template>
@@ -57,7 +57,7 @@ const emit = defineEmits(['handleSelectCoupon'])
 const selected = ref([]);
 const search = ref('');
 const handleSelected = () => {
-    emit('handleSelectCoupon', selected.value[0])
+    emit('handleSelectCoupon', props.coupon.filter((item: any) => item.id == selected.value[0])[0])
 }
 const headers = [
     {

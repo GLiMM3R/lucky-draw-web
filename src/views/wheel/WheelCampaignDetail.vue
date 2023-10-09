@@ -2,7 +2,8 @@
     <VContainer>
         <VRow class="static">
             <VCol>
-                <CustomerTable v-if="campaign?.coupon" :coupon="campaign.coupon" @handleSelectCoupon="handleSelectCoupon" />
+                <CustomerTable v-if="campaign?.coupons" :coupon="campaign.coupons"
+                    @handleSelectCoupon="handleSelectCoupon" />
             </VCol>
         </VRow>
         <VRow class="static">
@@ -12,7 +13,7 @@
         </VRow>
         <VRow justify="center">
             <Suspense>
-                <WheelDialog v-if="campaign" :prizes="campaign.prizes" :coupon="selectedCoupon" />
+                <WheelDialog v-if="campaign" :campaign="campaign" :coupon="selectedCoupon" />
             </Suspense>
         </VRow>
     </VContainer>

@@ -5,6 +5,7 @@ export interface Prize {
   title: String
   amount: Number
   rank: Number
+  leftAmount: Number
   image: String
   createdBy: User
   isActive: Boolean

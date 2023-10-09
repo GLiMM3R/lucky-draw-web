@@ -8,12 +8,15 @@
         <VRow>
             <VContainer>
                 <VTabs v-model="tab" color="primary" align-tabs="start">
-                    <VTab :value="1">New</VTab>
-                    <VTab :value="2">Done</VTab>
+                    <VTab value="wheel">Wheel</VTab>
+                    <VTab value="random">Random</VTab>
                 </VTabs>
                 <VWindow v-model="tab">
-                    <VWindowItem v-for="n in 2" :key="n" :value="n" style="padding: 16px 4px;">
-                        <CampaignTable :type="type" />
+                    <VWindowItem value="wheel" style="padding: 16px 4px;">
+                        <CampaignTable type="random" />
+                    </VWindowItem>
+                    <VWindowItem value="random" style="padding: 16px 4px;">
+                        <CampaignTable type="random" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>

@@ -42,12 +42,12 @@ const { handleSubmit, handleReset } = useForm({
     },
     validationSchema: {
         name(val: string) {
-            if (val?.trim().length > 0) return true
+            if (val) return true
 
             return 'Title is required!'
         },
         phoneNumber(val: string) {
-            if (val.trim().length > 7) return true
+            if (val) return true
 
             return 'Phone number > 7!'
         },

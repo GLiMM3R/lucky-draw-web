@@ -9,6 +9,14 @@ export interface RequestRandom {
   prizeId: string
 }
 
+interface RequestWheel {
+  campaignId: string
+  prizeId: string
+  couponId: string
+  winnerName: string
+  winnerPhone: string
+}
+
 export default function useRandom() {
   const winnerStore = useWinnerStore()
 
@@ -16,14 +24,12 @@ export default function useRandom() {
   const isLoading = ref(false)
 
   async function getWinnerRecord(campaignId: string, prizeId: string) {
-    console.log('start')
     isLoading.value = true
     const { data, status } = await request({ url: `/winner-record/${campaignId}/${prizeId}` })
 
     if (status === 200) {
       winnerStore.winners = data.data
       isLoading.value = false
-      console.log('complete')
     } else {
       isLoading.value = false
       $toast.error('Something went wrong')
@@ -49,5 +55,22 @@ export default function useRandom() {
     }
   }
 
-  return { getWinnerRecord, randomDraw, isLoading }
+  async function wheelDraw(requestWheel: RequestWheel) {
+    isLoading.value = true
+    const { data, status } = await request({
+      url: '/random/wheel-draw',
+      method: 'POST',
+      data: requestWheel
+    })
+
+    if (status === 201) {
+      isLoading.value = false
+    } else {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+      return
+    }
+  }
+
+  return { getWinnerRecord, randomDraw, wheelDraw, isLoading }
 }

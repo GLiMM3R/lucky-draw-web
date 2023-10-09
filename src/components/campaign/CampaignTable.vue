@@ -27,7 +27,7 @@
                     </td>
                     <td @click="handleSelect(item)"
                         style="background-color: white; border-bottom: none; text-align: center;">{{
-                            new Date(item.columns.createdAt).toLocaleString()
+                            new Date(item.columns.createdAt).toDateString()
                         }}</td>
                     <td @click="handleSelect(item)"
                         style="background-color: white; border-bottom: none; text-align: center;">

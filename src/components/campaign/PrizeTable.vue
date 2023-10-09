@@ -4,7 +4,7 @@
         <CreatePrizeModal />
     </div>
     <VCard rounded="lg" color="white" elevation="1">
-        <VDataTable :headers="prizeHeaders" :items="props.prizes">
+        <VDataTable :headers="prizeHeaders" :items="campaign?.prizes" class="text-center">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -18,42 +18,42 @@
                     </template>
                 </tr>
             </template>
-            <template v-slot:item="{ item }">
-                <tr v-if="props.prizes">
-                    <td style="border-bottom: none; text-align: center;">{{
-                        item.columns.rank }}
-                    </td>
-                    <td style="border-bottom: none; text-align: center;">{{
-                        item.columns.title }}
-                    </td>
-                    <td style="border-bottom: none; text-align: center;">{{
-                        new Date(item.columns.createdAt).toLocaleString()
-                    }}</td>
-                    <td style="border-bottom: none; text-align: center;">
-                        {{ item.columns.createdBy.username }}</td>
-                    <td style="border-bottom: none; text-align: center;">
-                        <VChip rounded="sm" :color="getColor(item.columns.amount)">
-                            {{ item.columns.amount }}
-                        </VChip>
-                    </td>
-                    <td style="border-bottom: none; text-align: center;">
-                        <VChip v-if="item.columns.isDone" rounded="sm" :color="getColor(item.columns.prizeCap)">
-                            {{ item.columns.isDone ? 'Complete' : '' }}
-                        </VChip>
-                    </td>
-                    <td style="border-bottom: none; text-align: center; display: flex; align-items: center;">
-                        <div>
-                            <ConfirmDialog message="Do you want to delete this?"
-                                @handleConfirm="handleConfirm(item.raw.id)" />
-                        </div>
-                        <div>
-                            <EditPrizeModal :prize="item.raw" />
-                        </div>
-                    </td>
-                </tr>
-                <tr v-else>
-                    <td colspan="4" class="text-center">No dataset</td>
-                </tr>
+            <template v-slot:item.rank="{ item }">
+                {{ item.columns.rank }}
+            </template>
+            <template v-slot:item.title="{ item }">
+                {{ item.columns.title }}
+            </template>
+            <template v-slot:item.createdAt="{ item }">
+                {{ new Date(item.columns.createdAt).toDateString() }}
+            </template>
+            <template v-slot:item.createdBy="{ item }">
+                {{ item.columns.createdBy.username }}
+            </template>
+            <template v-slot:item.amount="{ item }">
+                <VChip rounded="sm" :color="getColor(item.columns.amount)">
+                    {{ item.columns.amount }}
+                </VChip>
+            </template>
+            <template v-slot:item.leftAmount="{ item }">
+                <VChip rounded="sm" :color="getColor(item.columns.leftAmount)">
+                    {{ item.columns.leftAmount }}
+                </VChip>
+            </template>
+            <template v-slot:item.isDone="{ item }">
+                <VChip v-if="item.columns.isDone" rounded="sm" :color="getColor(item.columns.prizeCap)">
+                    {{ item.columns.isDone ? 'Complete' : '' }}
+                </VChip>
+            </template>
+            <template v-slot:item.actions="{ item }">
+                <div style="border-bottom: none; text-align: center; display: flex; align-items: center;">
+                    <div>
+                        <ConfirmDialog message="Do you want to delete this?" @handleConfirm="handleConfirm(item.raw.id)" />
+                    </div>
+                    <div>
+                        <EditPrizeModal :prize="item.raw" />
+                    </div>
+                </div>
             </template>
         </VDataTable>
     </VCard>
@@ -66,14 +66,21 @@ import ConfirmDialog from '../ConfirmDialog.vue';
 import usePrize from '@/composables/usePrize';
 import useCampaign from '@/composables/useCampaign';
 import { useRoute } from 'vue-router';
+import { useCampaignStore } from '@/stores/campaign';
+import { storeToRefs } from 'pinia';
 
 const route = useRoute();
 const slug = route.params.slug as string
 
-const props = defineProps(['prizes'])
+const campaignStore = useCampaignStore();
+const { campaign } = storeToRefs(campaignStore)
+
+const props = defineProps(['prizes', 'type'])
 
 const { deletePrize } = usePrize();
 const { getCampaign } = useCampaign();
+
+// await getCampaign(slug)
 
 const handleConfirm = async (id: string) => {
     await deletePrize(id)
@@ -99,6 +106,10 @@ const prizeHeaders = [
     {
         key: 'amount',
         title: 'Prize Amount'
+    },
+    {
+        key: 'leftAmount',
+        title: 'Prize Left'
     },
     {
         key: 'isDone',
