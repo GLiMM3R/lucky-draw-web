@@ -14,7 +14,6 @@ export default function useUser() {
 
   async function login(username: string, password: string) {
     isLoading.value = true
-
     try {
       const { data, status } = await request({
         url: '/auth/signin',

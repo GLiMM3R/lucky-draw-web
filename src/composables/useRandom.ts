@@ -1,4 +1,3 @@
-import type { Winner } from '@/model/winner'
 import { useWinnerStore } from '@/stores/winner'
 import request from '@/utils/request'
 import { ref } from 'vue'
@@ -25,12 +24,12 @@ export default function useRandom() {
 
   async function getWinnerRecord(campaignId: string, prizeId: string) {
     isLoading.value = true
-    const { data, status } = await request({ url: `/winner-record/${campaignId}/${prizeId}` })
+    try {
+      const response = await request({ url: `/winner-record/${campaignId}/${prizeId}` })
 
-    if (status === 200) {
-      winnerStore.winners = data.data
+      winnerStore.winners = response.data.data
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
       return
@@ -39,36 +38,34 @@ export default function useRandom() {
 
   async function randomDraw(randomData: RequestRandom) {
     isLoading.value = true
-    const { data, status } = await request({
-      url: '/random/lucky-draw',
-      method: 'POST',
-      data: randomData
-    })
+    try {
+      const response = await request({
+        url: '/random/lucky-draw',
+        method: 'POST',
+        data: randomData
+      })
 
-    if (status === 201) {
+      winnerStore.winners = response.data.data
       isLoading.value = false
-      winnerStore.winners = data.data
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
-      return
     }
   }
 
   async function wheelDraw(requestWheel: RequestWheel) {
     isLoading.value = true
-    const { data, status } = await request({
-      url: '/random/wheel-draw',
-      method: 'POST',
-      data: requestWheel
-    })
+    try {
+      const response = await request({
+        url: '/random/wheel-draw',
+        method: 'POST',
+        data: requestWheel
+      })
 
-    if (status === 201) {
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
-      return
     }
   }
 

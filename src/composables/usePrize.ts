@@ -27,12 +27,12 @@ export default function usePrize() {
 
   async function getPrizes(campaignId: string) {
     isLoading.value = true
-    const { data, status } = await request({ url: `/prizes?${campaignId}` })
+    try {
+      const response = await request({ url: `/prizes?${campaignId}` })
 
-    if (status === 200) {
-      prizeStore.prizes = data.data
+      prizeStore.prizes = response.data.data
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
@@ -40,12 +40,12 @@ export default function usePrize() {
 
   async function getPrize(id: string) {
     isLoading.value = true
-    const { data, status } = await request({ url: `/prizes/${id}` })
+    try {
+      const response = await request({ url: `/prizes/${id}` })
 
-    if (status === 200) {
-      prizeStore.prize = data.data
+      prizeStore.prize = response.data.data
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
@@ -53,52 +53,49 @@ export default function usePrize() {
 
   async function addPrize(prizeData: CreatePrize) {
     isLoading.value = true
+    try {
+      const response = await request({
+        url: '/prizes',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        data: {
+          campaignId: prizeData.campaignId,
+          title: prizeData.title,
+          amount: prizeData.amount,
+          rank: prizeData.rank,
+          image: prizeData.file
+        }
+      })
 
-    const { data, status } = await request({
-      url: '/prizes',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      data: {
-        campaignId: prizeData.campaignId,
-        title: prizeData.title,
-        amount: prizeData.amount,
-        rank: prizeData.rank,
-        image: prizeData.file
-      }
-    })
-
-    if (status === 201) {
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
   }
 
   async function updatePrize(id: string, prizeData: UpdatePrize) {
-    console.log('🚀 ~ file: usePrize.ts:81 ~ updatePrize ~ prizeData:', prizeData)
     isLoading.value = true
+    try {
+      const response = await request({
+        url: `/prizes/${id}`,
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        data: {
+          campaignId: prizeData.campaignId,
+          title: prizeData.title,
+          amount: prizeData.amount,
+          rank: prizeData.rank,
+          image: prizeData.file
+        }
+      })
 
-    const { data, status } = await request({
-      url: `/prizes/${id}`,
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      data: {
-        campaignId: prizeData.campaignId,
-        title: prizeData.title,
-        amount: prizeData.amount,
-        rank: prizeData.rank,
-        image: prizeData.file
-      }
-    })
-
-    if (status === 200) {
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
@@ -106,11 +103,11 @@ export default function usePrize() {
 
   async function deletePrize(id: string) {
     isLoading.value = true
-    const { data, status } = await request({ url: `/prizes/${id}`, method: 'DELETE' })
+    try {
+      const response = await request({ url: `/prizes/${id}`, method: 'DELETE' })
 
-    if (status === 200) {
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }

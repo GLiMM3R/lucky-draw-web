@@ -12,15 +12,14 @@ export default function useWinner() {
 
   async function getWinnerRecord(campaignId: string, prizeId: string) {
     isLoading.value = true
-    const { data, status } = await request({ url: `/winner-record/${campaignId}/${prizeId}` })
+    try {
+      const response = await request({ url: `/winner-record/${campaignId}/${prizeId}` })
 
-    if (status === 200) {
+      winnerStore.winners = response.data.data
       isLoading.value = false
-      winnerStore.winners = data.data
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
-      return
     }
   }
 

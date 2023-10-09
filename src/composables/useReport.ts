@@ -7,13 +7,13 @@ export default function useReport() {
   const isLoading = ref(false)
 
   const getReport = async (id: string) => {
-    const response = await request({
-      url: `/reports/${id}`,
-      method: 'GET',
-      responseType: 'blob'
-    })
+    try {
+      const response = await request({
+        url: `/reports/${id}`,
+        method: 'GET',
+        responseType: 'blob'
+      })
 
-    if (response.status === 200) {
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       link.href = url
@@ -21,10 +21,9 @@ export default function useReport() {
       document.body.appendChild(link)
       link.click()
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
-      return
     }
   }
 

@@ -16,14 +16,13 @@ export default function useImage() {
 
   async function getImage(source: string) {
     isLoading.value = true
-    const response = await request({ url: `/files/${source}`, responseType: 'blob' })
+    try {
+      const response = await request({ url: `/files/${source}`, responseType: 'blob' })
 
-    if (response.status === 200) {
       isLoading.value = false
       const imageBlob = await blobToData(response.data)
       return imageBlob
-      //   return new File([response.data], fileName, { type: mimeType });
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }

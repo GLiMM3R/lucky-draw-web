@@ -13,10 +13,10 @@
                 </VTabs>
                 <VWindow v-model="tab">
                     <VWindowItem value="wheel" style="padding: 16px 4px;">
-                        <ReportTable type="wheel" />
+                        <ReportTable :campaigns="campaigns.filter((item) => item.type == 'wheel')" />
                     </VWindowItem>
                     <VWindowItem value="random" style="padding: 16px 4px;">
-                        <ReportTable type="random" />
+                        <ReportTable :campaigns="campaigns.filter((item) => item.type == 'random')" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>
@@ -30,9 +30,18 @@ import Wheel from '@/assets/images/wheel.png'
 import Lottery from '@/assets/images/lottery.png'
 import { ref } from 'vue';
 import ReportTable from '@/components/report/ReportTable.vue';
+import { useCampaignStore } from '@/stores/campaign';
+import { storeToRefs } from 'pinia';
+import useCampaign from '@/composables/useCampaign';
+import { onMounted } from 'vue';
+
+const campaignStore = useCampaignStore();
+const { campaigns } = storeToRefs(campaignStore);
+const { getCampaigns } = useCampaign();
 
 const tab = ref('')
 
+onMounted(async () => await getCampaigns())
 const statics = [
     {
         value: '8.2',

@@ -4,7 +4,7 @@
             <VTextField v-model="search" variant="outlined" density="comfortable" prepend-inner-icon="mdi-magnify"
                 placeholder="Search..." />
         </VCardTitle>
-        <VDataTable :headers="headers" :items="campaigns" :search="search" v-model="selected" :hover="true"
+        <VDataTable :headers="headers" :items="props.campaigns" :search="search" v-model="selected" :hover="true"
             class="text-center">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
@@ -37,27 +37,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import useCampaign from '@/composables/useCampaign';
-import { onMounted } from 'vue';
-import { useCampaignStore } from '@/stores/campaign';
-import { storeToRefs } from 'pinia';
 import useReport from '@/composables/useReport';
 
-const router = useRouter();
-const props = defineProps(['type'])
-const campaignStore = useCampaignStore();
-const { campaigns } = storeToRefs(campaignStore);
-const { getCampaigns, } = useCampaign()
+const props = defineProps(['campaigns'])
 const { getReport, } = useReport()
 
 const handleDownloadReport = async (id: string) => {
     await getReport(id)
 }
 
-onMounted(async () => {
-    await getCampaigns(props.type);
-})
 
 const selected = ref([]);
 const search = ref('');

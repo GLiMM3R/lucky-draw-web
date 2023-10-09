@@ -25,39 +25,44 @@ export default function useCampaign() {
   const $toast = useToast()
   const isLoading = ref(false)
 
-  async function getCampaigns(type: string) {
+  async function getCampaigns(type?: string) {
     campaignStore.campaigns = []
     isLoading.value = true
-    const { data, status } = await request({
-      url: '/campaigns',
-      params: {
-        type,
-        field: 'createdBy'
-      }
-    })
+    try {
+      const response = await request({
+        url: '/campaigns',
+        params: {
+          type,
+          field: 'createdBy'
+        }
+      })
 
-    if (status === 200) {
-      campaignStore.campaigns = data.data
+      campaignStore.campaigns = response.data.data
+      console.log(
+        '🚀 ~ file: useCampaign.ts:41 ~ getCampaigns ~ campaignStore.campaigns:',
+        campaignStore.campaigns
+      )
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
   }
 
   async function getCampaign(id: string) {
-    campaignStore.campaign = null
+    // campaignStore.campaign = null
     isLoading.value = true
-    const { data, status } = await request({
-      url: `/campaigns/${id}`,
-      params: {
-        field: ['prizes', 'createdBy', 'coupons']
-      }
-    })
-    if (status === 200) {
-      campaignStore.campaign = data.data
+    try {
+      const response = await request({
+        url: `/campaigns/${id}`,
+        params: {
+          field: ['prizes', 'createdBy', 'coupons']
+        }
+      })
+
+      campaignStore.campaign = response.data.data
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
@@ -65,15 +70,15 @@ export default function useCampaign() {
 
   async function addCampaign(campaignData: CreateCampaign) {
     isLoading.value = true
-    const { data, status } = await request({
-      url: '/campaigns',
-      method: 'POST',
-      data: campaignData
-    })
+    try {
+      const response = await request({
+        url: '/campaigns',
+        method: 'POST',
+        data: campaignData
+      })
 
-    if (status === 201) {
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
@@ -81,15 +86,15 @@ export default function useCampaign() {
 
   async function updateCampaign(campaignData: UpdateCampaign) {
     isLoading.value = true
-    const { data, status } = await request({
-      url: `/campaigns/${campaignData.id}`,
-      method: 'PATCH',
-      data: campaignData
-    })
+    try {
+      const response = await request({
+        url: `/campaigns/${campaignData.id}`,
+        method: 'PATCH',
+        data: campaignData
+      })
 
-    if (status === 200) {
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
@@ -97,14 +102,14 @@ export default function useCampaign() {
 
   async function deleteCampaign(id: string) {
     isLoading.value = true
-    const { data, status } = await request({
-      url: `/campaigns/${id}`,
-      method: 'DELETE'
-    })
+    try {
+      const response = await request({
+        url: `/campaigns/${id}`,
+        method: 'DELETE'
+      })
 
-    if (status === 200) {
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
@@ -112,21 +117,20 @@ export default function useCampaign() {
 
   async function uploadFileDataset(id: string, file: File) {
     isLoading.value = true
+    try {
+      const response = await request({
+        url: `/campaigns/${id}`,
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        data: {
+          file: file
+        }
+      })
 
-    const { data, status } = await request({
-      url: `/campaigns/${id}`,
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      data: {
-        file: file
-      }
-    })
-
-    if (status === 200) {
       isLoading.value = false
-    } else {
+    } catch (error) {
       isLoading.value = false
       $toast.error('Something went wrong')
     }
