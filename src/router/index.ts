@@ -1,4 +1,3 @@
-import useUser from '@/composables/useUser'
 import {
   getAccessToken,
   getRefreshToken,
@@ -31,7 +30,7 @@ const router = createRouter({
           component: () => import('@/views/random/RandomView.vue'),
           children: [
             {
-              path: '/random',
+              path: '',
               name: 'random',
               component: () => import('@/views/random/RandomCampaign.vue')
             },
@@ -47,7 +46,7 @@ const router = createRouter({
           component: () => import('@/views/wheel/WheelView.vue'),
           children: [
             {
-              path: '/wheel',
+              path: '',
               name: 'wheel',
               component: () => import('@/views/wheel/WheelCampaign.vue')
             },
@@ -74,7 +73,6 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const { state } = useUser()
   if ((!getAccessToken() || !getRefreshToken()) && to.name !== 'login') next({ name: 'login' })
   else next()
 })

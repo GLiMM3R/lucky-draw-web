@@ -35,18 +35,16 @@ import { useField, useForm } from 'vee-validate';
 import DropFile from '../DropFile.vue';
 import { usePrizeStore } from '@/stores/prize';
 import { storeToRefs } from 'pinia';
-import useCampaign from '@/composables/useCampaign';
-import usePrize from '@/composables/usePrize';
 import { useRoute } from 'vue-router';
+import { useCampaignStore } from '@/stores/campaign';
 
 const route = useRoute();
 const slug = route.params.slug as string
 
 const props = defineProps(['prize'])
+const campaignStore = useCampaignStore();
 const prizeStore = usePrizeStore();
 const { prizes } = storeToRefs(prizeStore)
-const { getCampaign } = useCampaign();
-const { updatePrize } = usePrize();
 const dialog = ref(false)
 const file = ref<File>();
 
@@ -85,8 +83,8 @@ const getImage = (value: File) => {
 }
 
 const submit = handleSubmit(async (values) => {
-    await updatePrize(props.prize.id, { campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
-    await getCampaign(slug)
+    await prizeStore.updatePrize(props.prize.id, { campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
+    await campaignStore.getCampaign(slug)
     handleReset();
     dialog.value = false
 })

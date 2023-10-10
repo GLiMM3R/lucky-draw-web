@@ -24,7 +24,6 @@ import { watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import { useCampaignStore } from '@/stores/campaign';
-import useCampaign from '@/composables/useCampaign';
 
 import WheelDialog from '@/components/wheel/WheelDialog.vue';
 import PrizeTable from '@/components/campaign/PrizeTable.vue';
@@ -36,7 +35,6 @@ const slug = route.params.slug as string
 
 const campaignStore = useCampaignStore();
 const { campaign } = storeToRefs(campaignStore);
-const { getCampaign } = useCampaign();
 
 const selectedCoupon = ref('');
 const handleSelectCoupon = (value: string) => {
@@ -44,11 +42,8 @@ const handleSelectCoupon = (value: string) => {
 }
 
 onMounted(async () => {
-    await getCampaign(slug)
+    await campaignStore.getCampaign(slug)
 })
-
-watch(() => slug, async (newSlug) => await getCampaign(newSlug))
-
 </script>
 
 <style scoped lang="scss">

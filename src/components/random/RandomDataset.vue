@@ -9,7 +9,7 @@
             <VBtn class="text-none ml-4" rounded="lg">+ Export Coupon</VBtn>
         </div>
     </div>
-    <VCard rounded="lg" color="white" elevation="1">
+    <VCard rounded="lg" color="white" class="shadow">
         <v-table>
             <thead>
                 <tr style="background-color: #F4F6F8; color: #637381;">
@@ -47,14 +47,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import useCampaign from '@/composables/useCampaign';
+import { useCampaignStore } from '@/stores/campaign';
 
 const props = defineProps(['campaign'])
+const campaignStore = useCampaignStore();
 
 const route = useRoute();
 const slug = route.params.slug as string
-
-const { getCampaign, uploadFileDataset } = useCampaign();
 
 
 const uploader = ref(null);
@@ -79,8 +78,8 @@ async function onFileChanged(event: Event) {
     if (files) {
         selectedFile.value = files;
         uploader.value.value = null;
-        await uploadFileDataset(slug, selectedFile.value)
-        await getCampaign(slug)
+        await campaignStore.uploadFileDataset(slug, selectedFile.value)
+        await campaignStore.getCampaign(slug)
     }
 };
 
@@ -97,5 +96,9 @@ async function onFileChanged(event: Event) {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
+}
+
+.shadow {
+    box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
 </style>

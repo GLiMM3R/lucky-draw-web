@@ -28,11 +28,11 @@
 import { ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
 import { useRoute } from 'vue-router';
-import useCampaign from '@/composables/useCampaign';
-import useCoupon from '@/composables/useCoupon';
+import { useCampaignStore } from '@/stores/campaign';
+import { useCouponStore } from '@/stores/coupon';
 
-const { getCampaign } = useCampaign();
-const { addCoupon } = useCoupon();
+const campaignStore = useCampaignStore();
+const couponStore = useCouponStore();;
 const route = useRoute();
 const slug = route.params.slug as string
 
@@ -57,8 +57,8 @@ const name = useField('name')
 const phoneNumber = useField('phoneNumber')
 
 const submit = handleSubmit(async (values) => {
-    await addCoupon({ campaignId: slug, name: values.name, phone: values.phoneNumber })
-    await getCampaign(slug)
+    await couponStore.addCoupon({ campaignId: slug, name: values.name, phone: values.phoneNumber })
+    await campaignStore.getCampaign(slug)
     handleReset();
     // dialog.value = false
 })

@@ -50,21 +50,19 @@ import { ref } from 'vue'
 import FortuneWheel from '@/components/fortuneWheel/FortuneWheel.vue';
 import Winner from '@/assets/images/winner.png'
 import { useToast } from 'vue-toast-notification';
-import usePrize from '@/composables/usePrize';
 import { usePrizeStore } from '@/stores/prize';
 import { storeToRefs } from 'pinia';
-import useCampaign from '@/composables/useCampaign';
-import useRandom from '@/composables/useRandom';
 import type { PrizeConfig } from '../fortuneWheel/types';
+import { useCampaignStore } from '@/stores/campaign';
+import { useDrawStore } from '@/stores/draw';
 
 const props = defineProps(['campaign', 'coupon'])
 const $toast = useToast()
 
 const prizeStore = usePrizeStore()
+const campaignStore = useCampaignStore();
+const drawStore = useDrawStore()
 const { prize } = storeToRefs(prizeStore)
-const { getPrize } = usePrize()
-const { wheelDraw } = useRandom()
-const { getCampaign } = useCampaign()
 
 const dialog = ref(false)
 const result = ref(false)
@@ -139,13 +137,13 @@ function onCanvasRotateStart(rotate: Function) {
 }
 
 async function onRotateEnd(prize: PrizeConfig) {
-    await getPrize(prize.value)
+    await prizeStore.getPrize(prize.value)
     result.value = true
 }
 
 const handleConfirm = async () => {
-    await wheelDraw({ campaignId: props.campaign.id, prizeId: prize.value?.id as string, couponId: props.coupon.id, winnerName: props.coupon.name, winnerPhone: props.coupon.phone })
+    await drawStore.wheelDraw({ campaignId: props.campaign.id, prizeId: prize.value?.id as string, couponId: props.coupon.id, winnerName: props.coupon.name, winnerPhone: props.coupon.phone })
     dialog.value = false
-    await getCampaign(props.campaign.id)
+    await campaignStore.getCampaign(props.campaign.id)
 }
 </script>

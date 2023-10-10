@@ -2,21 +2,21 @@
     <VContainer>
         <VRow class="static">
             <VCol cols="12" md="6" lg="4" xl="3" v-for="item, index in statics" :key="index">
-                <StaticCard :item="item" />
+                <StatisticCard :item="item" />
             </VCol>
         </VRow>
         <VRow>
             <VContainer>
                 <VTabs v-model="tab" color="primary" align-tabs="start">
-                    <VTab value="wheel">Wheel</VTab>
-                    <VTab value="random">Random</VTab>
+                    <VTab value="wheel">Wheel Draw</VTab>
+                    <VTab value="random">Random Draw</VTab>
                 </VTabs>
                 <VWindow v-model="tab">
                     <VWindowItem value="wheel" style="padding: 16px 4px;">
-                        <ReportTable :campaigns="campaigns.filter((item) => item.type == 'wheel')" />
+                        <ReportTable :campaigns="wheelCampaign" />
                     </VWindowItem>
                     <VWindowItem value="random" style="padding: 16px 4px;">
-                        <ReportTable :campaigns="campaigns.filter((item) => item.type == 'random')" />
+                        <ReportTable :campaigns="randomCampaign" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>
@@ -25,23 +25,21 @@
 </template>
   
 <script setup lang="ts">
-import StaticCard from '@/components/StaticCard.vue';
+import StatisticCard from '@/components/StatisticCard.vue';
 import Wheel from '@/assets/images/wheel.png'
 import Lottery from '@/assets/images/lottery.png'
 import { ref } from 'vue';
 import ReportTable from '@/components/report/ReportTable.vue';
 import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
-import useCampaign from '@/composables/useCampaign';
 import { onMounted } from 'vue';
 
 const campaignStore = useCampaignStore();
-const { campaigns } = storeToRefs(campaignStore);
-const { getCampaigns } = useCampaign();
+const { campaigns, randomCampaign, wheelCampaign } = storeToRefs(campaignStore);
 
 const tab = ref('')
 
-onMounted(async () => await getCampaigns())
+onMounted(async () => await campaignStore.getCampaigns())
 const statics = [
     {
         value: '8.2',

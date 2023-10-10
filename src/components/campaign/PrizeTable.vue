@@ -3,7 +3,7 @@
         <h2 class="title">Prize Tier</h2>
         <CreatePrizeModal />
     </div>
-    <VCard rounded="lg" color="white" elevation="1">
+    <VCard rounded="lg" color="white" class="shadow">
         <VDataTable :headers="prizeHeaders" :items="campaign?.prizes" class="text-center">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
@@ -63,28 +63,21 @@
 import EditPrizeModal from './EditPrizeModal.vue';
 import CreatePrizeModal from './CreatePrizeModal.vue';
 import ConfirmDialog from '../ConfirmDialog.vue';
-import usePrize from '@/composables/usePrize';
-import useCampaign from '@/composables/useCampaign';
 import { useRoute } from 'vue-router';
 import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
+import { usePrizeStore } from '@/stores/prize';
 
 const route = useRoute();
 const slug = route.params.slug as string
 
 const campaignStore = useCampaignStore();
+const prizeStore = usePrizeStore();
 const { campaign } = storeToRefs(campaignStore)
 
-const props = defineProps(['prizes', 'type'])
-
-const { deletePrize } = usePrize();
-const { getCampaign } = useCampaign();
-
-// await getCampaign(slug)
-
 const handleConfirm = async (id: string) => {
-    await deletePrize(id)
-    await getCampaign(slug)
+    await prizeStore.deletePrize(id)
+    await campaignStore.getCampaign(slug)
 }
 const prizeHeaders = [
     {
@@ -137,5 +130,9 @@ const getColor = (quota: number) => {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
+}
+
+.shadow {
+    box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
 </style>

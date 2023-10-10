@@ -10,5 +10,8 @@ export default {
   },
   VDataTable: {
     color: 'white'
+  },
+  VCard: {
+    // elevation: '6'
   }
 }

@@ -1,7 +1,8 @@
-import { useWinnerStore } from '@/stores/winner'
+import { defineStore } from 'pinia'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
+import type { Winner } from '@/model/winner'
 
 export interface RequestRandom {
   campaignId: string
@@ -16,10 +17,10 @@ interface RequestWheel {
   winnerPhone: string
 }
 
-export default function useRandom() {
-  const winnerStore = useWinnerStore()
-
+export const useDrawStore = defineStore('draw', () => {
   const $toast = useToast()
+  const winners = ref<Winner[]>([])
+
   const isLoading = ref(false)
 
   async function getWinnerRecord(campaignId: string, prizeId: string) {
@@ -27,7 +28,7 @@ export default function useRandom() {
     try {
       const response = await request({ url: `/winner-record/${campaignId}/${prizeId}` })
 
-      winnerStore.winners = response.data.data
+      winners.value = response.data.data
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -45,7 +46,7 @@ export default function useRandom() {
         data: randomData
       })
 
-      winnerStore.winners = response.data.data
+      winners.value = response.data.data
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -70,4 +71,4 @@ export default function useRandom() {
   }
 
   return { getWinnerRecord, randomDraw, wheelDraw, isLoading }
-}
+})

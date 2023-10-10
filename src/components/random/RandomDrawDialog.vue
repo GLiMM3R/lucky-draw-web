@@ -45,7 +45,7 @@
         </VCardTitle>
         <VImg v-if="!isCompleted" :src="Lottery" class="d-block mx-auto my-8" width="300" />
         <VRow v-else class="my-4 overflow-auto">
-            <VCol v-for="winner in winners" :key="winner.id">
+            <VCol v-for="winner in winners" :key="winner.id" cols="6">
                 <VCard>
                     <VCardItem class="d-flex justify-center">
                         <VImg :src="Winner" width="50" />
@@ -71,42 +71,41 @@
 import { ref } from 'vue';
 import Lottery from '@/assets/images/lottery.png'
 import Winner from '@/assets/images/winner.png'
-import useRandom from '@/composables/useRandom';
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
-import useCampaign from '@/composables/useCampaign';
 import { useWinnerStore } from '@/stores/winner';
 import { storeToRefs } from 'pinia';
 import { useCampaignStore } from '@/stores/campaign';
 import WinnerTable from './WinnerTable.vue';
+import { useDrawStore } from '@/stores/draw';
 
 const route = useRoute();
 const slug = route.params.slug as string
 
 const winnerStore = useWinnerStore();
 const campaignStore = useCampaignStore();
+const drawStore = useDrawStore();
 const { winners } = storeToRefs(winnerStore)
 const { campaign } = storeToRefs(campaignStore)
-const { getWinnerRecord, randomDraw, isLoading } = useRandom();
-const { getCampaign } = useCampaign();
+const { isLoading } = storeToRefs(drawStore)
 
 const dialog = ref(false)
 const showResult = ref(true)
 const isCompleted = ref(false)
 const selectedPrize = ref(99)
 
-await getCampaign(slug)
+await campaignStore.getCampaign(slug)
 
 watch(() => selectedPrize.value, async () => {
     if (campaign.value?.prizes[selectedPrize.value].isDone) {
-        await getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
+        await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
     } else {
         winners.value = []
     }
 })
 
 const handleDialog = async () => {
-    await getCampaign(slug)
+    await campaignStore.getCampaign(slug)
 
     if (campaign.value?.prizes.length === 0) {
         alert('No prizes')
@@ -117,7 +116,7 @@ const handleDialog = async () => {
         return
     }
     selectedPrize.value = campaign.value?.prizes.length - 1
-    await getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
+    await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
 
     dialog.value = !dialog.value
 }
@@ -137,10 +136,10 @@ const handleRandom = async () => {
         return;
     }
     showResult.value = false
-    await randomDraw({ campaignId: slug, prizeId: campaign.value?.prizes[selectedPrize.value].id as string })
+    await drawStore.randomDraw({ campaignId: slug, prizeId: campaign.value?.prizes[selectedPrize.value].id as string })
     setTimeout(async () => {
-        await getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
-        await getCampaign(slug)
+        await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
+        await campaignStore.getCampaign(slug)
         isCompleted.value = true
     }, 3000);
 }

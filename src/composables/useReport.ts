@@ -6,7 +6,7 @@ export default function useReport() {
   const $toast = useToast()
   const isLoading = ref(false)
 
-  const getReport = async (id: string) => {
+  const getReport = async (id: string, title: string) => {
     try {
       const response = await request({
         url: `/reports/${id}`,
@@ -17,7 +17,7 @@ export default function useReport() {
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       link.href = url
-      link.setAttribute('download', response.data)
+      link.setAttribute('download', `${title}.xlsx`)
       document.body.appendChild(link)
       link.click()
       isLoading.value = false

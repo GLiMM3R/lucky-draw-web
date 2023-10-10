@@ -1,5 +1,5 @@
 <template>
-    <VCard>
+    <VCard rounded="lg" class="shadow">
         <VDataTable :headers="prizeHeaders" :items="props.winners" class="text-center">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
@@ -54,3 +54,9 @@ const prizeHeaders = [
     { title: '', key: "actions", sortable: false },
 ]
 </script>
+
+<style scoped>
+.shadow {
+    box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
+}
+</style>

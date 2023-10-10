@@ -1,11 +1,11 @@
 <template>
-    <VCard elevation="1" rounded="lg">
+    <VCard rounded="lg" class="shadow">
         <VCardTitle class="d-flex">
             <VTextField v-model="search" variant="outlined" density="comfortable" prepend-inner-icon="mdi-magnify"
                 placeholder="Search..." />
-            <CreateCampaignModal @handleSubmit="handleSubmit" :type="props.type" />
+            <CreateCampaignModal @handleSubmit="handleSubmit" type="wheel" />
         </VCardTitle>
-        <VDataTable :headers="headers" :items="campaigns" :search="search" v-model="selected" :hover="true">
+        <VDataTable :headers="headers" :items="props.campaigns" :search="search" v-model="selected" :hover="true">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -59,32 +59,23 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import CreateCampaignModal from './CreateCampaignModal.vue';
 import EditCampaignModal from './EditCampaignModal.vue';
-import useCampaign from '@/composables/useCampaign';
-import { onMounted } from 'vue';
 import { useCampaignStore } from '@/stores/campaign';
-import { storeToRefs } from 'pinia';
 
 const router = useRouter();
-const props = defineProps(['type'])
+const props = defineProps(['campaigns', 'type'])
 const campaignStore = useCampaignStore();
-const { campaigns } = storeToRefs(campaignStore);
-const { addCampaign, deleteCampaign, getCampaigns, updateCampaign } = useCampaign()
-
-onMounted(async () => {
-    await getCampaigns(props.type);
-})
 
 const selected = ref([]);
 const search = ref('');
 
 const handleSubmit = async (values: any) => {
-    await addCampaign({ title: values.title, prizeCap: Number(values.prizeCap), type: props.type })
-    await getCampaigns(props.type)
+    await campaignStore.addCampaign({ title: values.title, prizeCap: Number(values.prizeCap), type: props.type })
+    await campaignStore.getCampaigns()
 }
 
 const handleUpdate = async (values: any) => {
-    await updateCampaign({ id: values.id, title: values.title, prizeCap: Number(values.prizeCap) })
-    await getCampaigns(props.type)
+    await campaignStore.updateCampaign({ id: values.id, title: values.title, prizeCap: Number(values.prizeCap) })
+    await campaignStore.getCampaigns()
 }
 
 const handleSelect = async (item: any) => {
@@ -92,8 +83,8 @@ const handleSelect = async (item: any) => {
 }
 
 const handleDeleteCampaign = async (item: any) => {
-    await deleteCampaign(item.raw.id)
-    await getCampaigns(props.type)
+    await campaignStore.deleteCampaign(item.raw.id)
+    await campaignStore.getCampaigns()
 }
 const headers = [
     {
@@ -127,5 +118,9 @@ const getColor = (quota: number) => {
 <style scoped lang="scss">
 .row-table:hover {
     background-color: #028947;
+}
+
+.shadow {
+    box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
 </style>

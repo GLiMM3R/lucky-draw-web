@@ -5,7 +5,7 @@
             <CreateCouponModal />
         </div>
     </div>
-    <VCard elevation="1" rounded="lg">
+    <VCard class="shadow" rounded="lg">
         <VDataTable :headers="headers" :items="props.coupon" :search="search" v-model="selected" item-value="id"
             class="text-center" select-strategy="single" show-select :hover="true" @change="handleSelected">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
@@ -96,5 +96,9 @@ const getColor = (status: boolean) => {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
+}
+
+.shadow {
+    box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
 </style>

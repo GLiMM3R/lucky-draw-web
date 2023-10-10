@@ -1,5 +1,5 @@
 <template>
-    <VCard elevation="1" rounded="lg">
+    <VCard class="shadow" rounded="lg">
         <VCardTitle class="d-flex">
             <VTextField v-model="search" variant="outlined" density="comfortable" prepend-inner-icon="mdi-magnify"
                 placeholder="Search..." />
@@ -29,7 +29,7 @@
                 {{ item.columns.createdBy.username }}
             </template>
             <template v-slot:item.actions="{ item }">
-                <v-btn size="small" variant="text" icon="mdi-tray-arrow-down" @click="handleDownloadReport(item.raw.id)" />
+                <v-btn size="small" variant="text" icon="mdi-tray-arrow-down" @click="handleDownloadReport(item.raw)" />
             </template>
         </VDataTable>
     </VCard>
@@ -42,8 +42,8 @@ import useReport from '@/composables/useReport';
 const props = defineProps(['campaigns'])
 const { getReport, } = useReport()
 
-const handleDownloadReport = async (id: string) => {
-    await getReport(id)
+const handleDownloadReport = async (item: any) => {
+    await getReport(item.id, item.title)
 }
 
 
@@ -78,5 +78,9 @@ const getColor = (quota: number) => {
 <style scoped lang="scss">
 .row-table:hover {
     background-color: #028947;
+}
+
+.shadow {
+    box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
 </style>
