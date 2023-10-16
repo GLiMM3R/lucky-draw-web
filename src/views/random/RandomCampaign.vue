@@ -1,7 +1,7 @@
 <template>
     <VContainer>
         <VRow class="static">
-            <VCol cols="12" md="6" lg="4" xl="3" v-for="item, index in statics" :key="index">
+            <VCol cols="12" sm="6" md="6" lg="4" xl="3" v-for="item, index in statics" :key="index">
                 <StatisticCard :item="item" />
             </VCol>
         </VRow>

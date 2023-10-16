@@ -13,14 +13,15 @@
         </VRow>
         <VRow justify="center">
             <Suspense>
-                <WheelDialog v-if="campaign" :campaign="campaign" :coupon="selectedCoupon" />
+                <WheelDialog v-if="campaign" :campaign="campaign" :coupon="selectedCoupon"
+                    @resetSelectCoupon="resetSelectCoupon" />
             </Suspense>
         </VRow>
     </VContainer>
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import { useCampaignStore } from '@/stores/campaign';
@@ -37,8 +38,13 @@ const campaignStore = useCampaignStore();
 const { campaign } = storeToRefs(campaignStore);
 
 const selectedCoupon = ref('');
+
 const handleSelectCoupon = (value: string) => {
     selectedCoupon.value = value;
+}
+
+const resetSelectCoupon = () => {
+    selectedCoupon.value = '';
 }
 
 onMounted(async () => {

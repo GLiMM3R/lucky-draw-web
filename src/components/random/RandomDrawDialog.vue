@@ -3,17 +3,10 @@
         {{ $t('button.startRandom') }}
     </v-btn>
     <v-dialog v-if="showResult" v-model="dialog" class="overlay" persistent scrollable width="900">
-        <VCard width="auto" class="bg-primary py-4 rounded-pill w-75 mx-auto">
-            <!-- <div class="d-flex flex-no-wrap justify-space-between align-center px-4"> -->
-            <!-- <div> -->
-            <VCardTitle v-if="campaign" class="text-center text-h4 font-weight-bold">
+        <VCard width="auto" class="bg-primary  rounded-lg">
+            <VCardTitle v-if="campaign" class="text-center py-8 text-h3 font-weight-bold">
                 {{ campaign.prizes[selectedPrize].title }}
             </VCardTitle>
-            <!-- </div> -->
-            <!-- <v-avatar class="ma-1" size="80" rounded="pill">
-                    <VImg :src="prizeImage" />
-                </v-avatar> -->
-            <!-- </div> -->
         </VCard>
         <v-item-group v-if="campaign" mandatory v-model="selectedPrize">
             <v-container>
@@ -48,9 +41,9 @@
                 {{ campaign.prizes[selectedPrize].title }}
             </VCardTitle>
         </VCardTitle>
-        <VImg v-if="!isCompleted" :src="Random" class="d-block mx-auto my-8 rounded-xl" width="600px" />
+        <VImg v-if="!isCompleted" :src="Random" class="d-block mx-auto my-8 rounded-xl" width="600px" height="600px" />
         <VRow v-else class="my-4 overflow-auto" justify="center">
-            <VCol v-for="winner in winners" :key="winner.id" cols="4">
+            <VCol v-for="winner in winners" :key="winner.id" cols="6">
                 <VCard>
                     <VCardItem class="d-flex justify-center">
                         <VImg :src="Winner" width="50" />
@@ -74,9 +67,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Lottery from '@/assets/images/lottery.png'
+// import Lottery from '@/assets/images/lottery.png'
 import Winner from '@/assets/images/winner.png'
 import Random from '@/assets/images/random2.gif'
+// import Random from '@/assets/images/random3.gif'
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
@@ -152,15 +146,17 @@ const handleRandom = async () => {
     }
     showResult.value = false
     await drawStore.randomDraw({ campaignId: slug, prizeId: campaign.value?.prizes[selectedPrize.value].id as string })
-    await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
-    await campaignStore.getCampaign(slug)
-    isCompleted.value = true
+    setTimeout(async () => {
+        await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
+        await campaignStore.getCampaign(slug)
+        isCompleted.value = true
+    }, 3000);
 }
 </script>
 
 <style scoped lang="scss">
 .v-overlay--active {
     backdrop-filter: blur(2px);
-    background: rgb(0 0 0 / 0.8);
+    background: rgb(0 0 0 / 1);
 }
 </style>

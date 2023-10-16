@@ -59,7 +59,7 @@
             "search": "Search..."
         },
         "label": {
-            "campaignName": "Campagin Name",
+            "campaignName": "Campaign Name",
             "winningQuota": "Winning Quota",
             "prizeName": "Prize Name",
             "prizeRank": "Prize Rank",
@@ -89,8 +89,8 @@
         "viewall": "View All"
     },
     "modalTitle": {
-        "createCampaign": "Create Campagin",
-        "editCampagin": "Edit Campagin",
+        "createCampaign": "Create Campaign",
+        "editCampaign": "Edit Campaign",
         "createPrize": "Create Prize",
         "editPrize": "Edit Prize",
         "createCustomer": "Create Customer",

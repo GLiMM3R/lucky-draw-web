@@ -47,42 +47,47 @@
 
             <template v-slot:item="{ item }">
                 <tr>
-                    <td @click="handleSelect(item)"
-                        style="background-color: white; border-bottom: none; text-align: center;">{{
-                            item.columns.title }}
+                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">{{
+                        item.columns.title }}
                     </td>
-                    <td @click="handleSelect(item)"
-                        style="background-color: white; border-bottom: none; text-align: center;">{{
-                            new Date(item.columns.createdAt).toDateString()
-                        }}</td>
-                    <td @click="handleSelect(item)"
-                        style="background-color: white; border-bottom: none; text-align: center;">
+                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">{{
+                        new Date(item.columns.createdAt).toDateString()
+                    }}</td>
+                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">
                         {{ item.columns.createdBy.username }}</td>
-                    <td @click="handleSelect(item)"
-                        style="background-color: white; border-bottom: none; text-align: center;">
+                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">
                         <VChip rounded="sm" :color="getColor(item.columns.prizeCap)">
                             {{ item.columns.prizeCap }}
                         </VChip>
                     </td>
-                    <td @click="handleSelect(item)"
-                        style="background-color: white; border-bottom: none; text-align: center;">
+                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">
                         <VChip rounded="sm" :color="getColor(item.columns.isDone)">
                             {{ item.columns.isDone ? 'Completed' : 'In progress' }}
                         </VChip>
                     </td>
-                    <td style="background-color: white; border-bottom: none;">
-                        <div style="border-bottom: none; text-align: center; display: flex; justify-content: center;">
+                    <td style="background-color: white;">
+                        <div style="text-align: center; display: flex; justify-content: center;">
                             <div>
                                 <ConfirmDialog message="Do you want to delete this?" icon="mdi-trash-can-outline"
                                     color="red" @handleConfirm="handleDeleteCampaign(item)" />
                             </div>
                             <div>
-                                <EditCampaignModal @handleUpdate="handleUpdate" :campaign="item.raw" :type="props.type" />
-                            </div>
-                            <div>
-                                <ConfirmDialog message="Do you want to complete this campaign?"
-                                    icon="mdi-checkbox-marked-circle-outline"
-                                    @handleConfirm="handleFinishCampaign(item.raw)" />
+                                <v-menu>
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn variant="text" size="small" icon="mdi-dots-vertical" v-bind="props"></v-btn>
+                                    </template>
+                                    <v-list>
+                                        <v-list-item>
+                                            <EditCampaignModal @handleUpdate="handleUpdate" :campaign="item.raw"
+                                                :type="props.type" />
+                                        </v-list-item>
+                                        <v-list-item>
+                                            <ConfirmDialog message="Do you want to complete this campaign?"
+                                                buttonText="Finish Campaign"
+                                                @handleConfirm="handleFinishCampaign(item.raw)" />
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
                             </div>
                         </div>
                     </td>
@@ -125,7 +130,11 @@ const handleFinishCampaign = async (values: any) => {
 }
 
 const handleSelect = async (item: any) => {
-    await router.push(`/${props.type}/${item.raw.id}`)
+    if (!item.raw.isDone) {
+        await router.push(`/${props.type}/${item.raw.id}`)
+    } else if (item.raw.isDone) {
+        await router.push(`/${props.type}/${item.raw.id}`)
+    }
 }
 
 const handleDeleteCampaign = async (item: any) => {

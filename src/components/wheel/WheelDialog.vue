@@ -13,8 +13,26 @@
                     </VCard>
                 </VRow>
                 <VRow justify="center" class="my-8">
-                    <FortuneWheel style="width: 600px; max-width: 100%;" :verify="canvasVerify" :canvas="canvasOptions"
-                        :prizes="prizes" @rotateStart="onCanvasRotateStart" @rotateEnd="onRotateEnd" />
+                    <Roulette v-if="wheelActive" ref="wheel" :items="items" :first-item-index="firstItemIndex"
+                        :centered-indicator="wheelData.wheelSettings.centeredIndicator"
+                        :indicator-position="wheelData.wheelSettings.indicatorPosition" :size="wheelData.wheelSettings.size"
+                        :display-shadow="wheelData.wheelSettings.displayShadow"
+                        :display-border="wheelData.wheelSettings.displayBorder"
+                        :display-indicator="wheelData.wheelSettings.displayIndicator"
+                        :duration="wheelData.wheelSettings.duration"
+                        :result-variation="wheelData.wheelSettings.resultVariation" :easing="wheelData.wheelSettings.easing"
+                        :counter-clockwise="wheelData.wheelSettings.counterClockwise"
+                        :horizontal-content="wheelData.wheelSettings.horizontalContent"
+                        :base-display="wheelData.wheelSettings.baseDisplay" :base-size="wheelData.wheelSettings.baseSize"
+                        :base-display-indicator="wheelData.wheelSettings.baseDisplayIndicator"
+                        :base-display-shadow="wheelData.wheelSettings.baseDisplayShadow"
+                        :base-background="wheelData.wheelSettings.baseBackground" @click="launchWheel"
+                        @wheel-start="wheelStartedCallback" @wheel-end="wheelEndedCallback">
+                        <template #baseContent>
+                            <div v-if="wheelData.wheelSettings.baseHtmlContent"
+                                v-html="wheelData.wheelSettings.baseHtmlContent" />
+                        </template>
+                    </Roulette>
                 </VRow>
                 <VRow justify="center">
                     <v-btn color="red" variant="flat" width="160" rounded="lg" @click="dialog = false">{{ $t('button.exit')
@@ -48,18 +66,18 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import FortuneWheel from '@/components/fortuneWheel/FortuneWheel.vue';
+import Roulette from '@/components/wheel/Roulette.vue'
 import Winner from '@/assets/images/winner.png'
 import { useToast } from 'vue-toast-notification';
 import { usePrizeStore } from '@/stores/prize';
 import { storeToRefs } from 'pinia';
-import type { PrizeConfig } from '../fortuneWheel/types';
 import { useCampaignStore } from '@/stores/campaign';
 import { useDrawStore } from '@/stores/draw';
 import { useI18n } from "vue-i18n";
 
 const i18n = useI18n();
 const props = defineProps(['campaign', 'coupon'])
+const emits = defineEmits(['resetSelectCoupon'])
 const $toast = useToast()
 
 const prizeStore = usePrizeStore()
@@ -69,7 +87,53 @@ const { prize } = storeToRefs(prizeStore)
 
 const dialog = ref(false)
 const result = ref(false)
+const wheel = ref(null)
+const wheelActive = ref(true)
 
+const wheelData = {
+    firstItemIndex: { value: 0 },
+    wheelSettings: {
+        centeredIndicator: true,
+        indicatorPosition: "top",
+        size: 700,
+        displayShadow: true,
+        duration: 5,
+        resultVariation: 70,
+        easing: "bounce",
+        counterClockwise: true,
+        horizontalContent: false,
+        displayBorder: false,
+        displayIndicator: true,
+        baseDisplay: true,
+        baseSize: 100,
+        baseDisplayShadow: true,
+        baseDisplayIndicator: true,
+        baseBackground: "#EEAA33",
+        baseHtmlContent: "<strong>Go!</strong>",
+    }
+}
+
+function launchWheel() {
+    wheel.value.launchWheel();
+};
+
+function onHardReset() {
+    wheelActive.value = false;
+    // this.result = null;
+    setTimeout(() => {
+        wheelActive.value = true;
+    }, 10);
+};
+
+function wheelStartedCallback(resultItem: any) {
+    console.log("wheel started !", resultItem);
+};
+
+async function wheelEndedCallback(resultItem: any) {
+    console.log("wheel ended !", resultItem);
+    await prizeStore.getPrize(resultItem.id)
+    result.value = true
+}
 const handleDialog = (rotate: Function) => {
     if (props.campaign.prizes.length <= 0) {
         $toast.warning(i18n.t('alert.noPrize'))
@@ -83,71 +147,32 @@ const handleDialog = (rotate: Function) => {
     dialog.value = !dialog.value
 }
 
-const canvasVerify = ref(false)
-const verifyDuration = 2
-const canvasOptions = {
-    btnWidth: 100,
-    borderColor: '#028947',
-    borderWidth: 20,
-    lineHeight: 30,
-    fontSize: 14,
-    fontFamily: 'Poppins, Noto Sans Serif'
-}
-
-const bgColor = ['#fff', '#dd3832', '#fef151']
-let i = 0;
-
-
-const probability = (100 / props.campaign.prizes.length).toFixed(2);
-
-const prizes = props.campaign.prizes.map((item: any, index: number) => {
+const items = props.campaign.prizes.map((item: any, index: number) => {
     if (item.isDone) {
         return
     }
 
-    const prize = {
-        id: index + 1,
-        name: item.title,
-        value: item.id,
-        bgColor: bgColor[i++],
-        color: '#000',
-        probability
-    }
-
-    if (i === 3) i = 0;
+    const prize = { id: item.id, name: item.title, htmlContent: item.title, textColor: "", background: "" }
 
     return prize;
 })
-
-function testRequest(verified: boolean, duration: number) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(verified)
-        }, duration)
-    })
-}
-
-function onCanvasRotateStart(rotate: Function) {
-    if (canvasVerify.value) {
-        const verified = true
-        testRequest(verified, verifyDuration * 1000).then((verifiedRes) => {
-            if (verifiedRes) {
-                rotate()
-                canvasVerify.value = true
-            }
-        })
-        return
-    }
-}
-
-async function onRotateEnd(prize: PrizeConfig) {
-    await prizeStore.getPrize(prize.value)
-    result.value = true
-}
 
 const handleConfirm = async () => {
     await drawStore.wheelDraw({ campaignId: props.campaign.id, prizeId: prize.value?.id as string, couponId: props.coupon.id, winnerName: props.coupon.name, winnerPhone: props.coupon.phone })
     dialog.value = false
     await campaignStore.getCampaign(props.campaign.id)
+    onHardReset()
+    resetSelectCoupon()
+}
+
+function resetSelectCoupon() {
+    emits('resetSelectCoupon')
 }
 </script>
+
+<style scoped lang="scss">
+.v-overlay--active {
+    backdrop-filter: blur(2px);
+    background: rgb(0 0 0 / 0.8);
+}
+</style>
