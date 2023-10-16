@@ -1,11 +1,11 @@
 <template>
     <VContainer>
-        <VRow class="static">
+        <VRow>
             <VCol>
                 <RandomDataset v-if="campaign" :campaign="campaign" />
             </VCol>
         </VRow>
-        <VRow class="static">
+        <VRow>
             <VCol>
                 <PrizeTable v-if="campaign?.prizes" :prizes="campaign.prizes" />
             </VCol>

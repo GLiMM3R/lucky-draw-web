@@ -2,11 +2,6 @@
     <VContainer>
         <VRow>
             <VCol>
-                <RandomDataset v-if="campaign" :campaign="campaign" />
-            </VCol>
-        </VRow>
-        <VRow>
-            <VCol>
                 <CampaignReportTable :source="winners" />
             </VCol>
         </VRow>

@@ -8,7 +8,7 @@
         <VRow>
             <VContainer>
                 <VTabs v-model="tab" color="primary" align-tabs="start">
-                    <VTab value="all">{{ $t('tab.all') }}</VTab>
+                    <VTab value="all">{{ $t('tab.current') }}</VTab>
                     <VTab value="done">{{ $t('tab.done') }}</VTab>
                 </VTabs>
                 <VWindow v-model="tab">
@@ -40,7 +40,7 @@ const { campaigns } = storeToRefs(campaignStore)
 
 const tab = ref(null)
 
-const wheelCampaign = computed(() => campaigns.value.filter((item) => item.type === 'wheel'))
+const wheelCampaign = computed(() => campaigns.value.filter((item) => item.type === 'wheel' && item.isDone === false))
 const wheelCampaignIsDone = computed(() => campaigns.value.filter((item) => item.type === 'wheel' && item.isDone === true))
 
 const statics = [

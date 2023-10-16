@@ -4,7 +4,7 @@
         <CreatePrizeModal />
     </div>
     <VCard rounded="lg" color="white" class="shadow">
-        <VDataTable :headers="prizeHeaders" :items="props.prizes" class="text-center">
+        <VDataTable :headers="headers" :items="props.prizes" class="text-center">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -66,55 +66,65 @@ import CreatePrizeModal from './CreatePrizeModal.vue';
 import ConfirmDialog from '../ConfirmDialog.vue';
 import { useRoute } from 'vue-router';
 import { useCampaignStore } from '@/stores/campaign';
-import { storeToRefs } from 'pinia';
 import { usePrizeStore } from '@/stores/prize';
 import { useI18n } from "vue-i18n";
+import { computed } from 'vue';
 
 const i18n = useI18n();
 const route = useRoute();
 const slug = route.params.slug as string
 
-const props = defineProps(['prizes'])
+const props = defineProps(['prizes', 'type'])
 
 const campaignStore = useCampaignStore();
 const prizeStore = usePrizeStore();
-// const { campaign } = storeToRefs(campaignStore)
 
 const handleConfirm = async (id: string) => {
     await prizeStore.deletePrize(id)
     await campaignStore.getCampaign(slug)
 }
-const prizeHeaders = [
-    {
-        key: 'rank',
-        title: i18n.t('table.header.prize.rank')
-    },
-    {
-        key: 'title',
-        title: i18n.t('table.header.prize.title')
-    },
-    {
-        key: 'createdAt',
-        title: i18n.t('table.header.prize.createdAt')
-    },
-    {
-        key: 'createdBy',
-        title: i18n.t('table.header.prize.createdBy')
-    },
-    {
-        key: 'amount',
-        title: i18n.t('table.header.prize.prizeAmount')
-    },
-    {
-        key: 'leftAmount',
-        title: i18n.t('table.header.prize.prizeLeft')
-    },
-    {
-        key: 'isDone',
-        title: i18n.t('table.header.prize.status')
-    },
-    { title: '', key: "actions", sortable: false },
-]
+
+const headers = computed(() => {
+    const prizeHeaders = [
+        {
+            key: 'rank',
+            title: i18n.t('table.header.prize.rank')
+        },
+        {
+            key: 'title',
+            title: i18n.t('table.header.prize.title')
+        },
+        {
+            key: 'createdAt',
+            title: i18n.t('table.header.prize.createdAt')
+        },
+        {
+            key: 'createdBy',
+            title: i18n.t('table.header.prize.createdBy')
+        },
+        {
+            key: 'amount',
+            title: i18n.t('table.header.prize.prizeAmount')
+        },
+        {
+            key: 'isDone',
+            title: i18n.t('table.header.prize.status')
+        },
+        { title: '', key: "actions", sortable: false },
+    ]
+
+    if (props.type === 'wheel') {
+        const obj = {
+            key: 'leftAmount',
+            title: i18n.t('table.header.prize.prizeLeft')
+        };
+        prizeHeaders.splice(5, 0, obj)
+
+        return prizeHeaders
+    } else {
+        return prizeHeaders
+    }
+})
 
 const getColor = (quota: number) => {
     if (quota < 1) return 'grey'

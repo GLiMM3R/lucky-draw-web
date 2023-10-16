@@ -9,7 +9,7 @@
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
-                        <td style="background-color: rgb(128, 128, 128, 0.1); text-align: center; cursor: pointer;">
+                        <td style="background-color: rgba(128, 128, 128, 0.1); text-align: center; cursor: pointer;">
                             <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{
                                 column.title }}</span>
                             <template v-if="isSorted(column)">
@@ -60,11 +60,11 @@
                             {{ item.columns.prizeCap }}
                         </VChip>
                     </td>
-                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">
+                    <!-- <td @click="handleSelect(item)" style="background-color: white; text-align: center;">
                         <VChip rounded="sm" :color="getColor(item.columns.isDone)">
                             {{ item.columns.isDone ? 'Completed' : 'In progress' }}
                         </VChip>
-                    </td>
+                    </td> -->
                     <td style="background-color: white;">
                         <div style="text-align: center; display: flex; justify-content: center;">
                             <div>
@@ -133,7 +133,7 @@ const handleSelect = async (item: any) => {
     if (!item.raw.isDone) {
         await router.push(`/${props.type}/${item.raw.id}`)
     } else if (item.raw.isDone) {
-        await router.push(`/${props.type}/${item.raw.id}`)
+        await router.push(`/${props.type}/${item.raw.id}/report`)
     }
 }
 
@@ -159,10 +159,10 @@ const headers = [
         key: 'prizeCap',
         title: i18n.t('table.header.campaign.prizeCap')
     },
-    {
-        key: 'isDone',
-        title: i18n.t('table.header.campaign.status')
-    },
+    // {
+    //     key: 'isDone',
+    //     title: i18n.t('table.header.campaign.status')
+    // },
     { title: '', key: "actions", sortable: false },
 ]
 

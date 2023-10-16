@@ -46,7 +46,7 @@
             <VCol v-for="winner in winners" :key="winner.id" cols="6">
                 <VCard>
                     <VCardItem class="d-flex justify-center">
-                        <VImg :src="Winner" width="50" />
+                        <VImg :src="prizeImage ?? Winner" width="50" />
                     </VCardItem>
                     <VCardTitle class="text-center">
                         {{ winner.winnerName }}
@@ -98,16 +98,14 @@ const isCompleted = ref(false)
 const selectedPrize = ref(99)
 const prizeImage = ref('');
 
-
-
 await campaignStore.getCampaign(slug)
 
 watch(() => selectedPrize.value, async () => {
     if (campaign.value?.prizes[selectedPrize.value].isDone) {
         await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
-        if (campaign.value?.prizes[selectedPrize.value].image) {
-            prizeImage.value = await getImage(campaign.value?.prizes[selectedPrize.value].image as string)
-        }
+        // if (campaign.value?.prizes[selectedPrize.value].image) {
+        //     prizeImage.value = await getImage(campaign.value?.prizes[selectedPrize.value].image as string)
+        // }
     } else {
         winners.value = []
     }
@@ -148,6 +146,7 @@ const handleRandom = async () => {
     await drawStore.randomDraw({ campaignId: slug, prizeId: campaign.value?.prizes[selectedPrize.value].id as string })
     setTimeout(async () => {
         await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
+        prizeImage.value = await getImage(campaign.value?.prizes[selectedPrize.value].image as string)
         await campaignStore.getCampaign(slug)
         isCompleted.value = true
     }, 3000);

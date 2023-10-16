@@ -81,7 +81,7 @@ const getImage = (value: File) => {
 }
 
 const submit = handleSubmit(async (values) => {
-    await prizeStore.addPrize({ campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: values.file })
+    await prizeStore.addPrize({ campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
     await campaignStore.getCampaign(slug)
     handleReset();
     dialog.value = false

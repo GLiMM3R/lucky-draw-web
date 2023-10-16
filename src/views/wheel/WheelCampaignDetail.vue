@@ -8,7 +8,7 @@
         </VRow>
         <VRow class="static">
             <VCol>
-                <PrizeTable v-if="campaign?.prizes" :prizes="campaign.prizes" />
+                <PrizeTable v-if="campaign?.prizes" :prizes="campaign.prizes" type="wheel" />
             </VCol>
         </VRow>
         <VRow justify="center">

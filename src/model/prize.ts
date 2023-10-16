@@ -1,4 +1,5 @@
 import type { User } from './user'
+import type { Winner } from './winner'
 
 export interface Prize {
   id: String

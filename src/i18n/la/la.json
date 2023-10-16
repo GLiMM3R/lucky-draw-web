@@ -43,6 +43,7 @@
             "winner": {
                 "no": "ອັນດັບ",
                 "winnerName": "ຊື່ຜູ້ໂຊກດີ",
+                "winnerPhone": "ເບີໂທລະສັບ",
                 "createdAt": "ວັນທີສ້າງ",
                 "status": "ສະຖານະ"
             }
@@ -73,7 +74,8 @@
     "tab": {
         "new": "ໃໝ່",
         "done": "ສຳເລັດ",
-        "all": "ທັງໝົດ"
+        "all": "ທັງໝົດ",
+        "current": "ປະຈຸບັນ"
     },
     "button": {
         "newCampaign": "ແຄມເປນໃໝ່",

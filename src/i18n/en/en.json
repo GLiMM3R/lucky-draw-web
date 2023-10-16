@@ -43,6 +43,7 @@
             "winner": {
                 "no": "NO",
                 "winnerName": "Winner Name",
+                "winnerPhone": "Winner Phone",
                 "createdAt": "Create Date",
                 "status": "Status"
             }
@@ -73,7 +74,8 @@
     "tab": {
         "new": "New",
         "done": "Done",
-        "all": "All"
+        "all": "All",
+        "current": "Current"
     },
     "button": {
         "newCampaign": "New Campaign",

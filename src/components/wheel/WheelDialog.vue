@@ -13,7 +13,7 @@
                     </VCard>
                 </VRow>
                 <VRow justify="center" class="my-8">
-                    <Roulette v-if="wheelActive" ref="wheel" :items="items" :first-item-index="firstItemIndex"
+                    <Roulette v-if="wheelActive" ref="wheel" :items="items" :first-item-index="wheelData.firstItemIndex"
                         :centered-indicator="wheelData.wheelSettings.centeredIndicator"
                         :indicator-position="wheelData.wheelSettings.indicatorPosition" :size="wheelData.wheelSettings.size"
                         :display-shadow="wheelData.wheelSettings.displayShadow"
@@ -47,7 +47,7 @@
                         <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
                     </template>
                     <VCardItem>
-                        <VImg :src="Winner" width="80" class="mx-auto" />
+                        <VImg :src="prizeImage ?? Winner" width="80" class="mx-auto" />
                     </VCardItem>
                     <VCardTitle class="text-center text-h4 py-4">
                         {{ prize?.title }}
@@ -74,6 +74,7 @@ import { storeToRefs } from 'pinia';
 import { useCampaignStore } from '@/stores/campaign';
 import { useDrawStore } from '@/stores/draw';
 import { useI18n } from "vue-i18n";
+import useImage from '@/composables/useImage';
 
 const i18n = useI18n();
 const props = defineProps(['campaign', 'coupon'])
@@ -89,6 +90,9 @@ const dialog = ref(false)
 const result = ref(false)
 const wheel = ref(null)
 const wheelActive = ref(true)
+const prizeImage = ref('');
+
+const { getImage } = useImage();
 
 const wheelData = {
     firstItemIndex: { value: 0 },
@@ -132,6 +136,7 @@ function wheelStartedCallback(resultItem: any) {
 async function wheelEndedCallback(resultItem: any) {
     console.log("wheel ended !", resultItem);
     await prizeStore.getPrize(resultItem.id)
+    prizeImage.value = await getImage(prize.value?.image as string)
     result.value = true
 }
 const handleDialog = (rotate: Function) => {

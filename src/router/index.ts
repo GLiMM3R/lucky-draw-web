@@ -38,6 +38,11 @@ const router = createRouter({
               path: '/random/:slug',
               name: 'random-detail',
               component: () => import('@/views/random/RandomCampaignDetail.vue')
+            },
+            {
+              path: '/random/:slug/report',
+              name: 'random-report',
+              component: () => import('@/views/random/RandomCampaignReport.vue')
             }
           ]
         },
@@ -54,6 +59,11 @@ const router = createRouter({
               path: '/wheel/:slug',
               name: 'wheel-detail',
               component: () => import('@/views/wheel/WheelCampaignDetail.vue')
+            },
+            {
+              path: '/wheel/:slug/report',
+              name: 'wheel-report',
+              component: () => import('@/views/wheel/WheelCampaignReport.vue')
             }
           ]
         },

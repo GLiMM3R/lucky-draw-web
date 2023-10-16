@@ -2,8 +2,8 @@
     <div class="dataset-header">
         <h2 class="title">{{ $t('table.title.coupon') }}</h2>
         <div>
-            <VBtn class="text-none" variant="outlined" rounded="lg" prepend-icon='mdi-plus' :loading="isSelecting"
-                @click="handleFileImport">
+            <VBtn v-if="props.campaign.isDone === false" class="text-none" variant="outlined" rounded="lg"
+                prepend-icon='mdi-plus' :loading="isSelecting" @click="handleFileImport">
                 {{ $t('button.importCoupon') }}</VBtn>
             <input ref="uploader" accept=".csv" type="file" class="d-none" @change="onFileChanged" />
             <VBtn class="text-none ml-4" prepend-icon='mdi-plus' rounded="lg" @click="handleDownload">{{
@@ -13,7 +13,7 @@
     <VCard rounded="lg" color="white" class="shadow">
         <v-table>
             <thead>
-                <tr style="background-color: #F4F6F8; color: #637381;">
+                <tr style="background-color: rgba(128, 128, 128, 0.1); color: #637381;">
                     <th class=" text-center border-0">
                         {{ $t('table.header.dataset.title') }}
                     </th>
@@ -33,8 +33,9 @@
                     </td>
                     <td>{{ new Date(props.campaign.createdAt).toLocaleString() ?? '' }}</td>
                     <td>{{ props.campaign.createdBy.username ?? '' }}</td>
-                    <td><v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" @click="() => { }" />
-                        <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" />
+                    <td v-if="$props.campaign.isDone === false">
+                        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" @click="() => { }" />
+                        <!-- <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" /> -->
                     </td>
                 </tr>
                 <tr v-else>
@@ -54,6 +55,7 @@ import useCsv from '@/composables/useCsv';
 const props = defineProps(['campaign'])
 const campaignStore = useCampaignStore();
 const { downloadCsv } = useCsv();
+console.log(props.campaign);
 
 const route = useRoute();
 const slug = route.params.slug as string
