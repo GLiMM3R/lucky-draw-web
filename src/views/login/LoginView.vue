@@ -12,16 +12,17 @@
               Login
             </VCardTitle>
             <VCardItem>
-              <VLabel class="mb-2" style="color: white">Username</VLabel>
+              <VLabel class="mb-2" style="color: white">{{ $t('textfield.label.username') }}</VLabel>
               <VTextField v-model="username.value.value" :error-messages="username.errorMessage.value" variant="outlined"
                 bgColor="white" rounded="lg" density="compact" />
-              <VLabel class="mb-2" style="color: white">Password</VLabel>
+              <VLabel class="mb-2" style="color: white">{{ $t('textfield.label.password') }}</VLabel>
               <VTextField v-model="password.value.value" :error-messages="password.errorMessage.value"
                 :type="isShowPassword ? 'text' : 'password'" variant="outlined" bgColor="white" rounded="lg"
                 density="compact" :append-inner-icon="isShowPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                 @click:append-inner="showPassword" />
               <div class="d-flex justify-center">
-                <VBtn type="submit" :loading="isLoading" color="#12BA68" rounded="lg" class="my-6" width="140px">Login
+                <VBtn type="submit" :loading="isLoading" color="#12BA68" rounded="lg" class="my-6" width="140px">{{
+                  $t('button.login') }}
                 </VBtn>
               </div>
             </VCardItem>
@@ -36,10 +37,12 @@
 import { ref } from 'vue'
 import { useForm, useField } from 'vee-validate'
 import SplashScreen from '@/components/SplashScreen.vue'
-import useUser from '@/composables/useUser'
+import { useUserStore } from '@/stores/user'
 import Logo from '@/assets/images/jmart.png'
+import { storeToRefs } from 'pinia'
 
-const { login, isLoading } = useUser()
+const userStore = useUserStore()
+const { isLoading } = storeToRefs(userStore)
 
 const loading = ref(true)
 const isShowPassword = ref(false)
@@ -65,7 +68,7 @@ const username = useField('username')
 const password = useField('password')
 
 const submit = handleSubmit(async (values) => {
-  await login(values.username, values.password)
+  await userStore.login(values.username, values.password)
 })
 
 setTimeout(() => {

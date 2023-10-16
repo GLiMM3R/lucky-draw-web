@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import request from '@/utils/request'
 import { useToast } from 'vue-toast-notification'
+import { useI18n } from 'vue-i18n'
 
 export interface CreateCampaign {
   title: string
@@ -12,19 +13,18 @@ export interface CreateCampaign {
 
 export interface UpdateCampaign {
   id: string
-  title: string
-  prizeCap: number
+  title?: string
+  prizeCap?: number
+  isDone?: boolean
 }
 
 export const useCampaignStore = defineStore('campaign', () => {
   const $toast = useToast()
+  const i18n = useI18n()
 
   const campaign = ref<Campaign | null>(null)
   const campaigns = ref<Campaign[]>([])
   const isLoading = ref(false)
-
-  const wheelCampaign = computed(() => campaigns.value.filter((item) => item.type === 'wheel'))
-  const randomCampaign = computed(() => campaigns.value.filter((item) => item.type === 'random'))
 
   async function getCampaigns() {
     campaigns.value = []
@@ -60,7 +60,7 @@ export const useCampaignStore = defineStore('campaign', () => {
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
-      $toast.error('Something went wrong')
+      $toast.error(i18n.t('alert.apiError'))
     }
   }
 
@@ -76,7 +76,7 @@ export const useCampaignStore = defineStore('campaign', () => {
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
-      $toast.error('Something went wrong')
+      $toast.error(i18n.t('alert.apiError'))
     }
   }
 
@@ -92,7 +92,7 @@ export const useCampaignStore = defineStore('campaign', () => {
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
-      $toast.error('Something went wrong')
+      $toast.error(i18n.t('alert.apiError'))
     }
   }
 
@@ -107,7 +107,7 @@ export const useCampaignStore = defineStore('campaign', () => {
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
-      $toast.error('Something went wrong')
+      $toast.error(i18n.t('alert.apiError'))
     }
   }
 
@@ -128,15 +128,13 @@ export const useCampaignStore = defineStore('campaign', () => {
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
-      $toast.error('Something went wrong')
+      $toast.error(i18n.t('alert.apiError'))
     }
   }
 
   return {
     campaign,
     campaigns,
-    wheelCampaign,
-    randomCampaign,
     addCampaign,
     getCampaign,
     getCampaigns,

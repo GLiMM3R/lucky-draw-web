@@ -14,17 +14,18 @@
                     </template>
                 </tr>
             </template>
-            <template v-slot:item.index="{ index }" style="border-bottom: none;">
+            <template v-slot:item.id="{ item, index }" style="border-bottom: none;">
                 {{ index + 1 }}
             </template>
             <template v-slot:item.name="{ item }" style="border-bottom: none;">
                 {{ item.columns.name }}
             </template>
             <template v-slot:item.createdAt="{ item }" style="border-bottom: none;">
-                {{ item.columns.createdAt }}
+                {{ new Date(item.columns.createdAt).toDateString()
+                }}
             </template>
             <template v-slot:item.status="{ item }" style="border-bottom: none;">
-                <VChip color="yellow">
+                <VChip color="orange">
                     Winner
                 </VChip>
             </template>
@@ -33,23 +34,26 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
+const i18n = useI18n();
 const props = defineProps(['winners'])
 const prizeHeaders = [
     {
-        key: 'index',
-        title: 'NO'
+        key: 'id',
+        title: i18n.t('table.header.winner.no')
     },
     {
         key: 'winnerName',
-        title: 'Winner Name'
+        title: i18n.t('table.header.winner.winnerName')
     },
     {
         key: 'createdAt',
-        title: 'Create Date'
+        title: i18n.t('table.header.winner.createdAt')
     },
     {
         key: 'status',
-        title: 'Status'
+        title: i18n.t('table.header.winner.status')
     },
     { title: '', key: "actions", sortable: false },
 ]

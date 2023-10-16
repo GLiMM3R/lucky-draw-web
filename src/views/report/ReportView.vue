@@ -13,10 +13,10 @@
                 </VTabs>
                 <VWindow v-model="tab">
                     <VWindowItem value="wheel" style="padding: 16px 4px;">
-                        <ReportTable :campaigns="wheelCampaign" />
+                        <ReportTable :campaigns="wheel" />
                     </VWindowItem>
                     <VWindowItem value="random" style="padding: 16px 4px;">
-                        <ReportTable :campaigns="randomCampaign" />
+                        <ReportTable :campaigns="random" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>
@@ -33,9 +33,13 @@ import ReportTable from '@/components/report/ReportTable.vue';
 import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
+import { computed } from 'vue';
 
 const campaignStore = useCampaignStore();
-const { campaigns, randomCampaign, wheelCampaign } = storeToRefs(campaignStore);
+const { campaigns } = storeToRefs(campaignStore);
+
+const random = computed(() => campaigns.value.filter((item) => item.type === 'random' && item.isDone === true))
+const wheel = computed(() => campaigns.value.filter((item) => item.type === 'wheel' && item.isDone === true))
 
 const tab = ref('')
 

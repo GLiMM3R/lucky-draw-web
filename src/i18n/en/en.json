@@ -1,0 +1,112 @@
+{
+    "menuitem": {
+        "home": "Home",
+        "report": "Report",
+        "random": "Random Draw",
+        "wheel": "Wheel Draw",
+        "customization": "Customization",
+        "general": "General"
+    },
+    "table": {
+        "title": {
+            "coupon": "Coupon Data Set",
+            "prize": "Prize"
+        },
+        "header": {
+            "campaign": {
+                "title": "Campaign Name",
+                "createdAt": "Create Date",
+                "createdBy": "Create By",
+                "prizeCap": "Winning Quota",
+                "status": "Status"
+            },
+            "prize": {
+                "rank": "Prize Rank",
+                "title": "Prize Name",
+                "createdAt": "Create Date",
+                "createdBy": "Create By",
+                "prizeAmount": "Prize Amount",
+                "prizeLeft": "Prize Left",
+                "status": "Status"
+            },
+            "coupon": {
+                "title": "Customer Name",
+                "createdAt": "Create Date",
+                "createdBy": "Create By",
+                "status": "Status"
+            },
+            "dataset": {
+                "title": "Dataset Name",
+                "createdAt": "Create Date",
+                "createdBy": "Create By"
+            },
+            "winner": {
+                "no": "NO",
+                "winnerName": "Winner Name",
+                "createdAt": "Create Date",
+                "status": "Status"
+            }
+        }
+    },
+    "report": {
+        "statisticTitle": {
+            "wheel": "Total Winner of Wheel Draw Campagin",
+            "random": "Total Winner of Random Draw Campagin"
+        }
+    },
+    "textfield": {
+        "placeholder": {
+            "search": "Search..."
+        },
+        "label": {
+            "campaignName": "Campagin Name",
+            "winningQuota": "Winning Quota",
+            "prizeName": "Prize Name",
+            "prizeRank": "Prize Rank",
+            "prizeAmount": "Prize Amount",
+            "customerName": "Customer Name",
+            "customerPhone": "Customer Phone",
+            "username": "Username",
+            "password": "Password"
+        }
+    },
+    "tab": {
+        "new": "New",
+        "done": "Done",
+        "all": "All"
+    },
+    "button": {
+        "newCampaign": "New Campaign",
+        "createPrize": "Create Prize",
+        "importCoupon": "Import Coupon",
+        "exportCoupon": "Export Coupon",
+        "createCustomer": "Create Customer",
+        "confirm": "Confirm",
+        "randomNow": "Random Now",
+        "exit": "Exit",
+        "startRandom": "Start Random",
+        "login": "Login",
+        "viewall": "View All"
+    },
+    "modalTitle": {
+        "createCampaign": "Create Campagin",
+        "editCampagin": "Edit Campagin",
+        "createPrize": "Create Prize",
+        "editPrize": "Edit Prize",
+        "createCustomer": "Create Customer",
+        "editCustomer": "Edit Customer"
+    },
+    "validate": {
+        "campaignTitle": "Please input campaign title!",
+        "prizeCap": "Winning Quota must greater than 0!",
+        "customerName": "Please input customer name!",
+        "customerPhone": "Customer phone must greater than 7!"
+    },
+    "alert": {
+        "apiError": "Something went wrong!",
+        "selectCoupon": "Select dataset first!",
+        "noPrize": "Prize is empty!",
+        "noCustomer": "Select customer!",
+        "alreadyRandom": "This prize already randomed!"
+    }
+}

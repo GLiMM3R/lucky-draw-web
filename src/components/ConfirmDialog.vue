@@ -1,9 +1,11 @@
 <template>
     <div class="text-center">
-        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" @click="dialog = true" />
-
+        <v-btn size="small" variant="text" :icon="$props.icon" :color="$props.color" @click="dialog = true" />
         <v-dialog v-model="dialog" width="400">
             <v-card>
+                <v-card-title class="bg-warning">
+                    Confirm?
+                </v-card-title>
                 <v-card-text class="text-center">
                     {{ props.message }}
                 </v-card-text>
@@ -20,7 +22,7 @@
 import { ref } from 'vue'
 const dialog = ref(false)
 
-const props = defineProps(['message'])
+const props = defineProps(['message', 'icon', 'color'])
 const emit = defineEmits(['handleConfirm'])
 
 const handleConfirm = () => {

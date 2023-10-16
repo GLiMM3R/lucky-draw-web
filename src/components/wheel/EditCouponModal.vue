@@ -6,17 +6,18 @@
                 <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
             </template>
             <v-card-title style="text-align: center">
-                Edit Coupon
+                {{ $t('modalTitle.editCustomer') }}
             </v-card-title>
             <VCardItem>
                 <VContainer>
                     <VForm @submit.prevent="submit">
-                        <VTextField label="Customer Name" v-model="name.value.value"
+                        <VTextField :label="$t('textfield.label.customerName')" v-model="name.value.value"
                             :error-messages="name.errorMessage.value" variant="outlined" rounded="lg" />
-                        <VTextField label="Phone Number" v-model="phoneNumber.value.value"
+                        <VTextField :label="$t('textfield.label.customerPhone')" v-model="phoneNumber.value.value"
                             :error-messages="phoneNumber.errorMessage.value" type="number" variant="outlined"
                             rounded="lg" />
-                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4">Confirm</v-btn>
+                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4">{{ $t('button.confirm')
+                        }}</v-btn>
                     </VForm>
                 </VContainer>
             </VCardItem>
@@ -28,7 +29,9 @@
 import { ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
 import { useRoute } from 'vue-router';
+import { useI18n } from "vue-i18n";
 
+const i18n = useI18n();
 const route = useRoute();
 const slug = route.params.slug as string
 const props = defineProps(['customer'])
@@ -44,12 +47,12 @@ const { handleSubmit, handleReset } = useForm({
         name(val: string) {
             if (val) return true
 
-            return 'Title is required!'
+            return i18n.t('validate.customerName')
         },
         phoneNumber(val: string) {
-            if (val) return true
+            if (val?.length >= 7) return true
 
-            return 'Phone number > 7!'
+            return i18n.t('validate.customerPhone')
         },
     }
 })

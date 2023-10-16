@@ -1,24 +1,25 @@
 <template>
-    <v-btn variant="outlined" rounded="lg" class="text-none"> + Create Prize
+    <v-btn variant="outlined" rounded="lg" prepend-icon='mdi-plus' class="text-none">{{ $t('button.createPrize') }}
         <v-dialog v-model="dialog" activator="parent" width="400">
             <v-card>
                 <template v-slot:append>
                     <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
                 </template>
                 <v-card-title style="text-align: center">
-                    Create Prize
+                    {{ $t('modalTitle.createPrize') }}
                 </v-card-title>
                 <VCardItem>
                     <VContainer>
                         <VForm @submit.prevent="submit">
-                            <VTextField label="Prize Name" v-model="title.value.value"
+                            <VTextField :label="$t('textfield.label.prizeName')" v-model="title.value.value"
                                 :error-messages="title.errorMessage.value" variant="outlined" rounded="lg" />
-                            <VTextField label="Rank" v-model="rank.value.value" :error-messages="rank.errorMessage.value"
-                                type="number" variant="outlined" rounded="lg" />
-                            <VTextField label="Prize Amount" v-model="amount.value.value"
+                            <VTextField :label="$t('textfield.label.prizeRank')" v-model="rank.value.value"
+                                :error-messages="rank.errorMessage.value" type="number" variant="outlined" rounded="lg" />
+                            <VTextField :label="$t('textfield.label.prizeAmount')" v-model="amount.value.value"
                                 :error-messages="amount.errorMessage.value" type="number" variant="outlined" rounded="lg" />
                             <DropFile @getImage="getImage" />
-                            <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none">Confirm</v-btn>
+                            <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none">{{
+                                $t('button.confirm') }}</v-btn>
                         </VForm>
                     </VContainer>
                 </VCardItem>

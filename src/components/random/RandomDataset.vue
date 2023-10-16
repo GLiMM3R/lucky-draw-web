@@ -1,12 +1,13 @@
 <template>
     <div class="dataset-header">
-        <h2 class="title">Coupon Data Set</h2>
+        <h2 class="title">{{ $t('table.title.coupon') }}</h2>
         <div>
-            <VBtn class="text-none" variant="outlined" rounded="lg" :loading="isSelecting" @click="handleFileImport">+
-                Import
-                Coupon</VBtn>
+            <VBtn class="text-none" variant="outlined" rounded="lg" prepend-icon='mdi-plus' :loading="isSelecting"
+                @click="handleFileImport">
+                {{ $t('button.importCoupon') }}</VBtn>
             <input ref="uploader" accept=".csv" type="file" class="d-none" @change="onFileChanged" />
-            <VBtn class="text-none ml-4" rounded="lg">+ Export Coupon</VBtn>
+            <VBtn class="text-none ml-4" prepend-icon='mdi-plus' rounded="lg" @click="handleDownload">{{
+                $t('button.exportCoupon') }}</VBtn>
         </div>
     </div>
     <VCard rounded="lg" color="white" class="shadow">
@@ -14,13 +15,13 @@
             <thead>
                 <tr style="background-color: #F4F6F8; color: #637381;">
                     <th class=" text-center border-0">
-                        Dataset Name
+                        {{ $t('table.header.dataset.title') }}
                     </th>
                     <th class="text-center border-0">
-                        Create Date
+                        {{ $t('table.header.dataset.createdAt') }}
                     </th>
                     <th class="text-center border-0">
-                        Create By
+                        {{ $t('table.header.dataset.createdBy') }}
                     </th>
                     <th class="text-center border-0">
                     </th>
@@ -48,9 +49,11 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCampaignStore } from '@/stores/campaign';
+import useCsv from '@/composables/useCsv';
 
 const props = defineProps(['campaign'])
 const campaignStore = useCampaignStore();
+const { downloadCsv } = useCsv();
 
 const route = useRoute();
 const slug = route.params.slug as string
@@ -83,6 +86,9 @@ async function onFileChanged(event: Event) {
     }
 };
 
+async function handleDownload() {
+    await downloadCsv(props.campaign.file, props.campaign.file.replace(`coupon/${props.campaign.id}/`, ''));
+}
 </script>
 
 <style scoped lang="scss">

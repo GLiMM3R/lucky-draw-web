@@ -8,15 +8,15 @@
         <VRow>
             <VContainer>
                 <VTabs v-model="tab" color="primary" align-tabs="start">
-                    <VTab value="wheel">New</VTab>
-                    <VTab value="random">Done</VTab>
+                    <VTab value="all">{{ $t('tab.all') }}</VTab>
+                    <VTab value="done">{{ $t('tab.done') }}</VTab>
                 </VTabs>
                 <VWindow v-model="tab">
-                    <VWindowItem value="wheel" style="padding: 16px 4px;">
+                    <VWindowItem value="all" style="padding: 16px 4px;">
                         <CampaignTable :campaigns="randomCampaign" type="random" />
                     </VWindowItem>
-                    <VWindowItem value="random" style="padding: 16px 4px;">
-                        <CampaignTable :campaigns="randomCampaign" type="random" />
+                    <VWindowItem value="done" style="padding: 16px 4px;">
+                        <CampaignTable :campaigns="randomCampaignIsDone" type="random" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>
@@ -32,21 +32,28 @@ import StatisticCard from '@/components/StatisticCard.vue';
 import CampaignTable from '@/components/campaign/CampaignTable.vue';
 import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
+import { useI18n } from "vue-i18n";
+import { computed } from 'vue';
 
+const i18n = useI18n();
 const campaignStore = useCampaignStore()
-const { randomCampaign } = storeToRefs(campaignStore)
+const { campaigns } = storeToRefs(campaignStore)
 
 const tab = ref(null)
+
+
+const randomCampaign = computed(() => campaigns.value.filter((item) => item.type === 'random'))
+const randomCampaignIsDone = computed(() => campaigns.value.filter((item) => item.type === 'random' && item.isDone === true))
 
 const statics = [
     {
         value: '8.2',
-        text: 'New Campagins',
+        text: i18n.t('button.newCampaign'),
         logo: LogoStatic
     },
     {
         value: '124',
-        text: 'Done',
+        text: i18n.t('tab.done'),
         logo: LogoDone
     },
 ]

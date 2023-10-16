@@ -7,21 +7,22 @@
                 <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
             </template>
             <v-card-title style="text-align: center">
-                Edit Prize
+                {{ $t('modalTitle.editPrize') }}
             </v-card-title>
             <VCardItem>
                 <VContainer>
                     <VForm @submit.prevent="submit">
-                        <VTextField label="Prize Name" v-model="title.value.value"
+                        <VTextField :label="$t('textfield.label.prizeName')" v-model="title.value.value"
                             :error-messages="title.errorMessage.value" variant="outlined" rounded="lg" />
-                        <VTextField label="Rank" v-model="rank.value.value" :error-messages="rank.errorMessage.value"
-                            type="number" variant="outlined" rounded="lg" />
-                        <VTextField label="Prize Amount" v-model="amount.value.value"
+                        <VTextField :label="$t('textfield.label.prizeRank')" v-model="rank.value.value"
+                            :error-messages="rank.errorMessage.value" type="number" variant="outlined" rounded="lg" />
+                        <VTextField :label="$t('textfield.label.prizeAmount')" v-model="amount.value.value"
                             :error-messages="amount.errorMessage.value" type="number" variant="outlined" rounded="lg" />
                         <Suspense>
                             <DropFile @getImage="getImage" :image="props.prize.image" />
                         </Suspense>
-                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none">Confirm</v-btn>
+                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none">{{
+                            $t('button.confirm') }}</v-btn>
                     </VForm>
                 </VContainer>
             </VCardItem>

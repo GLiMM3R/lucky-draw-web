@@ -1,10 +1,10 @@
 <template>
     <div class="dataset-header">
-        <h2 class="title">Prize Tier</h2>
+        <h2 class="title">{{ $t('table.title.prize') }}</h2>
         <CreatePrizeModal />
     </div>
     <VCard rounded="lg" color="white" class="shadow">
-        <VDataTable :headers="prizeHeaders" :items="campaign?.prizes" class="text-center">
+        <VDataTable :headers="prizeHeaders" :items="props.prizes" class="text-center">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -48,7 +48,8 @@
             <template v-slot:item.actions="{ item }">
                 <div style="border-bottom: none; text-align: center; display: flex; align-items: center;">
                     <div>
-                        <ConfirmDialog message="Do you want to delete this?" @handleConfirm="handleConfirm(item.raw.id)" />
+                        <ConfirmDialog message="Do you want to delete this?" icon="mdi-trash-can-outline" color="red"
+                            @handleConfirm="handleConfirm(item.raw.id)" />
                     </div>
                     <div>
                         <EditPrizeModal :prize="item.raw" />
@@ -67,13 +68,17 @@ import { useRoute } from 'vue-router';
 import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
 import { usePrizeStore } from '@/stores/prize';
+import { useI18n } from "vue-i18n";
 
+const i18n = useI18n();
 const route = useRoute();
 const slug = route.params.slug as string
 
+const props = defineProps(['prizes'])
+
 const campaignStore = useCampaignStore();
 const prizeStore = usePrizeStore();
-const { campaign } = storeToRefs(campaignStore)
+// const { campaign } = storeToRefs(campaignStore)
 
 const handleConfirm = async (id: string) => {
     await prizeStore.deletePrize(id)
@@ -82,31 +87,31 @@ const handleConfirm = async (id: string) => {
 const prizeHeaders = [
     {
         key: 'rank',
-        title: 'Prize Rank'
+        title: i18n.t('table.header.prize.rank')
     },
     {
         key: 'title',
-        title: 'Prize Name'
+        title: i18n.t('table.header.prize.title')
     },
     {
         key: 'createdAt',
-        title: 'Create Date'
+        title: i18n.t('table.header.prize.createdAt')
     },
     {
         key: 'createdBy',
-        title: 'Create By'
+        title: i18n.t('table.header.prize.createdBy')
     },
     {
         key: 'amount',
-        title: 'Prize Amount'
+        title: i18n.t('table.header.prize.prizeAmount')
     },
     {
         key: 'leftAmount',
-        title: 'Prize Left'
+        title: i18n.t('table.header.prize.prizeLeft')
     },
     {
         key: 'isDone',
-        title: 'Status'
+        title: i18n.t('table.header.prize.status')
     },
     { title: '', key: "actions", sortable: false },
 ]

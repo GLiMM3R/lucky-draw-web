@@ -1,6 +1,6 @@
 <template>
     <v-btn variant="elevated" rounded="lg" @click="handleDialog" class="text-none">
-        Start Random
+        {{ $t('button.startRandom') }}
     </v-btn>
     <v-dialog v-model="dialog" class="overlay" width="900">
         <VRow justify="center" v-if="!result">
@@ -17,7 +17,8 @@
                         :prizes="prizes" @rotateStart="onCanvasRotateStart" @rotateEnd="onRotateEnd" />
                 </VRow>
                 <VRow justify="center">
-                    <v-btn color="red" variant="flat" width="160" rounded="lg" @click="dialog = false">Exit</v-btn>
+                    <v-btn color="red" variant="flat" width="160" rounded="lg" @click="dialog = false">{{ $t('button.exit')
+                    }}</v-btn>
                 </VRow>
             </VCol>
         </VRow>
@@ -36,7 +37,7 @@
                     <VCardActions>
                         <VBtn class="text-none" variant="elevated" rounded="lg" block color="#00AB55"
                             @click="handleConfirm">
-                            Confirm</VBtn>
+                            {{ $t('button.confirm') }}</VBtn>
                     </VCardActions>
                 </VCard>
             </Transition>
@@ -55,7 +56,9 @@ import { storeToRefs } from 'pinia';
 import type { PrizeConfig } from '../fortuneWheel/types';
 import { useCampaignStore } from '@/stores/campaign';
 import { useDrawStore } from '@/stores/draw';
+import { useI18n } from "vue-i18n";
 
+const i18n = useI18n();
 const props = defineProps(['campaign', 'coupon'])
 const $toast = useToast()
 
@@ -69,11 +72,11 @@ const result = ref(false)
 
 const handleDialog = (rotate: Function) => {
     if (props.campaign.prizes.length <= 0) {
-        $toast.warning('No prizes')
+        $toast.warning(i18n.t('alert.noPrize'))
         return;
     }
     if (!props.coupon) {
-        $toast.warning('Select coupon first')
+        $toast.warning(i18n.t('alert.noCustomer'))
         return;
     }
     result.value = false
@@ -85,9 +88,10 @@ const verifyDuration = 2
 const canvasOptions = {
     btnWidth: 100,
     borderColor: '#028947',
-    borderWidth: 30,
+    borderWidth: 20,
     lineHeight: 30,
-    fontSize: 16
+    fontSize: 14,
+    fontFamily: 'Poppins, Noto Sans Serif'
 }
 
 const bgColor = ['#fff', '#dd3832', '#fef151']

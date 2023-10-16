@@ -1,0 +1,112 @@
+{
+    "menuitem": {
+        "home": "ໜ້າຫຼັກ",
+        "report": "ລາຍງານ",
+        "random": "ສຸ່ມຈັບລາງວັນ",
+        "wheel": "ວົງລໍ້   ",
+        "customization": "Customization",
+        "general": "ທົ່ວໄປ"
+    },
+    "table": {
+        "title": {
+            "coupon": "ຂໍ້ມູນຄູປອງ",
+            "prize": "ລາງວັນ"
+        },
+        "header": {
+            "campaign": {
+                "title": "ຊື່ແຄມເປນ",
+                "createdAt": "ວັນທີສ້າງ",
+                "createdBy": "ສ້າງໂດຍ",
+                "prizeCap": "ໂຄຕ້າຊະນະ",
+                "status": "ສະຖານະ"
+            },
+            "prize": {
+                "rank": "ອັນດັບ",
+                "title": "ຊື່ລາງວັນ",
+                "createdAt": "ວັນທີສ້າງ",
+                "createdBy": "ສ້າງໂດຍ",
+                "prizeAmount": "ຈຳນວນ",
+                "prizeLeft": "ຍັງເຫຼືອ",
+                "status": "ສະຖານະ"
+            },
+            "coupon": {
+                "title": "ຊື່ລູກຄ້າ",
+                "createdAt": "ວັນທີສ້າງ",
+                "createdBy": "ສ້າງໂດຍ",
+                "status": "ສະຖານະ"
+            },
+            "dataset": {
+                "title": "ຊື່ຊຸດຂໍ້ມູນ",
+                "createdAt": "ວັນທີສ້າງ",
+                "createdBy": "ສ້າງໂດຍ"
+            },
+            "winner": {
+                "no": "ອັນດັບ",
+                "winnerName": "ຊື່ຜູ້ໂຊກດີ",
+                "createdAt": "ວັນທີສ້າງ",
+                "status": "ສະຖານະ"
+            }
+        }
+    },
+    "report": {
+        "statisticTitle": {
+            "wheel": "ຈຳນວນຜູ້ຊະນະແຄມເປນວົງລໍ້ສ່ຽງໂຊກ",
+            "random": "ຈຳນວນຜູ້ຊະນະແຄມເປນສຸ່ມສ່ຽງໂຊກ"
+        }
+    },
+    "textfield": {
+        "placeholder": {
+            "search": "ຄົ້ນຫາ..."
+        },
+        "label": {
+            "campaignName": "ຊື່ແຄມເປນ",
+            "winningQuota": "ໂຄຕ້າຊະນະ",
+            "prizeName": "ຊື່ລາງວັນ",
+            "prizeRank": "ອັນດັບ",
+            "prizeAmount": "ຈຳນວນ",
+            "customerName": "ຊື່ລູກຄ້າ",
+            "customerPhone": "ເບີໂທລູກຄ້າ",
+            "username": "ຊື່ຜູ້ໃຊ້",
+            "password": "ລະຫັດຜ່ານ"
+        }
+    },
+    "tab": {
+        "new": "ໃໝ່",
+        "done": "ສຳເລັດ",
+        "all": "ທັງໝົດ"
+    },
+    "button": {
+        "newCampaign": "ແຄມເປນໃໝ່",
+        "createPrize": "ສ້າງລາງວັນ",
+        "importCoupon": "ນຳເຂົ້າຄູປອງ",
+        "exportCoupon": "ສົ່ງອອກຄູປອງ",
+        "createCustomer": "ສ້າງລູກຄ້າ",
+        "confirm": "ຢືນຢັນ",
+        "randomNow": "ສຸ່ມ",
+        "exit": "ອອກ",
+        "startRandom": "ເລີ່ມສຸ່ມ",
+        "login": "ເຂົ້າສູ່ລະບົບ",
+        "viewall": "ທັງໝົດ"
+    },
+    "modalTitle": {
+        "createCampaign": "ສ້າງແຄມເປນ",
+        "editCampaign": "ແກ້ໄຂແຄມເປນ",
+        "createPrize": "ສ້າງລາງວັນ",
+        "editPrize": "ແກ້ໄຂລາງວັນ",
+        "createCustomer": "ສ້າງລູກຄ້າ",
+        "editCustomer": "ແກ້ໄຂລູກຄ້າ"
+    },
+    "validate": {
+        "campaignTitle": "ກະລຸນາປ້ອນຊື່ແຄມເປນ",
+        "prizeCap": "ໂຄຕ້າຊະນະຕ້ອງຫຼາຍກວ່າ 0!",
+        "customerName": "ກະລຸນາປ້ອນຊື່ລູກຄ້າ!",
+        "customerPhone": "ເບີໂທລູກຄ້າຕ້ອງຫຼາຍກວ່າ 7!"
+    },
+    "alert": {
+        "apiError": "ມີບາງຢ່າງຜິດພາດ!",
+        "selectCoupon": "ເລືອກຊຸດຂໍ້ມູນກ່ອນ!",
+        "noPrize": "ບໍ່ມີລາຍການຂອງລາງວັນ",
+        "noCustomer": "ເລືອກລາຍຊື່ຜູ້ໂຊກດີ!",
+        "alreadyRandom": "ລາຍການນີ້ໄດ້ທຳການສຸ່ມແລ້ວ!"
+    }
+}

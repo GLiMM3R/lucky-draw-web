@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import request from '@/utils/request'
 import { getRefreshToken, setAccessToken, setRefreshToken } from '@/utils/token'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
 
-export const userStore = defineStore('user', () => {
+export const useUserStore = defineStore('user', () => {
   const router = useRouter()
   const isAuthenticate = ref(false)
   const $toast = useToast()

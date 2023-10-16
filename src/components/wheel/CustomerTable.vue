@@ -1,6 +1,6 @@
 <template>
     <div class="dataset-header">
-        <h2 class="title">Coupon</h2>
+        <h2 class="title">{{ $t('table.title.coupon') }}</h2>
         <div>
             <CreateCouponModal />
         </div>
@@ -50,7 +50,9 @@
 import { ref } from 'vue';
 import EditCouponModal from './EditCouponModal.vue';
 import CreateCouponModal from './CreateCouponModal.vue';
+import { useI18n } from "vue-i18n";
 
+const i18n = useI18n();
 const props = defineProps(['coupon'])
 const emit = defineEmits(['handleSelectCoupon'])
 
@@ -62,19 +64,19 @@ const handleSelected = () => {
 const headers = [
     {
         key: 'name',
-        title: 'Customer Name',
+        title: i18n.t('table.header.coupon.title'),
     },
     {
         key: 'createdAt',
-        title: 'Create Date'
+        title: i18n.t('table.header.coupon.createdAt')
     },
     {
         key: 'createdBy.username',
-        title: 'Create By'
+        title: i18n.t('table.header.coupon.createdBy')
     },
     {
         key: 'isNew',
-        title: 'Status',
+        title: i18n.t('table.header.coupon.status')
     },
     { title: '', key: "actions", sortable: false },
 

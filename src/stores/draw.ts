@@ -70,5 +70,5 @@ export const useDrawStore = defineStore('draw', () => {
     }
   }
 
-  return { getWinnerRecord, randomDraw, wheelDraw, isLoading }
+  return { getWinnerRecord, randomDraw, wheelDraw, winners, isLoading }
 })

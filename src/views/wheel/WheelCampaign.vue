@@ -8,12 +8,15 @@
         <VRow>
             <VContainer>
                 <VTabs v-model="tab" color="primary" align-tabs="start">
-                    <VTab :value="1">New</VTab>
-                    <VTab :value="2">Done</VTab>
+                    <VTab value="all">{{ $t('tab.all') }}</VTab>
+                    <VTab value="done">{{ $t('tab.done') }}</VTab>
                 </VTabs>
                 <VWindow v-model="tab">
-                    <VWindowItem v-for="n in 2" :key="n" :value="n" style="padding: 16px 4px;">
+                    <VWindowItem value="all" style="padding: 16px 4px;">
                         <CampaignTable :campaigns="wheelCampaign" type="wheel" />
+                    </VWindowItem>
+                    <VWindowItem value="done" style="padding: 16px 4px;">
+                        <CampaignTable :campaigns="wheelCampaignIsDone" type="wheel" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>
@@ -22,28 +25,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import LogoStatic from '@/assets/images/campaign_static.png'
 import LogoDone from '@/assets/images/done.png'
 import StatisticCard from '@/components/StatisticCard.vue';
 import CampaignTable from '@/components/campaign/CampaignTable.vue';
 import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
+import { useI18n } from "vue-i18n";
 
+const i18n = useI18n();
 const campaignStore = useCampaignStore()
-const { wheelCampaign } = storeToRefs(campaignStore)
+const { campaigns } = storeToRefs(campaignStore)
 
 const tab = ref(null)
+
+const wheelCampaign = computed(() => campaigns.value.filter((item) => item.type === 'wheel'))
+const wheelCampaignIsDone = computed(() => campaigns.value.filter((item) => item.type === 'wheel' && item.isDone === true))
 
 const statics = [
     {
         value: '8.2',
-        text: 'New Campagins',
+        text: i18n.t('button.newCampaign'),
         logo: LogoStatic
     },
     {
         value: '124',
-        text: 'Done',
+        text: i18n.t('tab.done'),
         logo: LogoDone
     },
 ]

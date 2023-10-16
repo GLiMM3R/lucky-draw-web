@@ -11,10 +11,10 @@
                     </VCol>
                 </VRow>
                 <VRow>
-                    <HomeCampaignTable title="Wheel Draw" url="/wheel" :campaigns="randomCampaign" :isLoading="isLoading" />
+                    <HomeCampaignTable title="Random Draw" url="/random" :campaigns="random" :isLoading="isLoading" />
                 </VRow>
                 <VRow>
-                    <HomeCampaignTable title="Wheel Draw" url="/wheel" :campaigns="wheelCampaign" :isLoading="isLoading" />
+                    <HomeCampaignTable title="Wheel Draw" url="/wheel" :campaigns="wheel" :isLoading="isLoading" />
                 </VRow>
             </VCol>
             <VCol cols="3">
@@ -41,9 +41,13 @@ import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 import DoughnutChart from '@/components/home/DoughnutChart.vue';
+import { computed } from 'vue';
 
 const cmapaignStore = useCampaignStore();
-const { randomCampaign, wheelCampaign, isLoading } = storeToRefs(cmapaignStore)
+const { campaigns, isLoading } = storeToRefs(cmapaignStore)
+
+const random = computed(() => campaigns.value.filter((item) => item.type === 'random').slice(0, 5))
+const wheel = computed(() => campaigns.value.filter((item) => item.type === 'wheel').slice(0, 5))
 
 onMounted(async () => {
     await cmapaignStore.getCampaigns();

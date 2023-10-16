@@ -1,5 +1,5 @@
 <template>
-    <VBtn rounded="lg" class="text-none mt-2 ml-4">+ New Campaign
+    <VBtn rounded="lg" prepend-icon='mdi-plus' class="text-none mt-2 ml-4">{{ $t('button.newCampaign') }}
     </VBtn>
     <v-dialog v-model="dialog" activator="parent" width="400">
         <v-card>
@@ -7,17 +7,19 @@
                 <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
             </template>
             <v-card-title style="text-align: center">
-                Create Campaign
+                {{ $t('modalTitle.createCampaign') }}
             </v-card-title>
             <VCardItem>
                 <VContainer>
                     <VForm @submit.prevent="submit">
-                        <VTextField label="Campaign name" v-model="title.value.value"
+                        <VTextField :label="$t('textfield.label.campaignName')" v-model="title.value.value"
                             :error-messages="title.errorMessage.value" variant="outlined" rounded="lg" />
-                        <VTextField label="Winning quota" v-model="prizeCap.value.value" :disabled="isDisabled"
-                            :error-messages="prizeCap.errorMessage.value" type="number" variant="outlined" rounded="lg" />
-                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4"
-                            :loading="props.isLoading">Confirm</v-btn>
+                        <VTextField :label="$t('textfield.label.winningQuota')" v-model="prizeCap.value.value"
+                            :disabled="isDisabled" :error-messages="prizeCap.errorMessage.value" type="number"
+                            variant="outlined" rounded="lg" />
+                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none"
+                            :loading="props.isLoading">{{
+                                $t('button.confirm') }}</v-btn>
                     </VForm>
                 </VContainer>
             </VCardItem>
@@ -28,12 +30,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useForm, useField } from 'vee-validate'
+import { useI18n } from "vue-i18n";
+import { computed } from 'vue';
 
+const i18n = useI18n();
 const props = defineProps(['isLoading', 'type'])
 const emit = defineEmits(['handleSubmit'])
 const dialog = ref(false)
 
-const isDisabled = props.type !== 'random'
+const isDisabled = computed(() => props.type !== 'random')
 
 const { handleSubmit, handleReset } = useForm({
     initialValues: {
@@ -43,12 +48,12 @@ const { handleSubmit, handleReset } = useForm({
         title(val: string) {
             if (val?.trim().length > 0) return true
 
-            return 'Title is required!'
+            return i18n.t('validate.campaignTitle')
         },
         prizeCap(val: number) {
             if (val > 0) return true
 
-            return 'Winning quota > 0!'
+            return i18n.t('validate.prizeCap')
         }
     }
 })

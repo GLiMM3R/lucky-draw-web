@@ -2,40 +2,42 @@
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import Logo from '@/assets/images/jmart.png'
+import { useI18n } from "vue-i18n";
 
+const i18n = useI18n();
 const drawer = ref(true)
 
 const menuItems = [
   {
-    title: 'Home',
+    title: i18n.t('menuitem.home'),
     route: '/home',
     icon: 'mdi-gauge',
     value: 'home'
   },
   {
-    title: 'Report',
+    title: i18n.t('menuitem.report'),
     route: '/report',
     icon: 'mdi-finance',
     value: 'report'
   },
   {
-    title: 'Random Draw',
+    title: i18n.t('menuitem.random'),
     route: '/random',
     icon: 'mdi-ferris-wheel',
     value: 'random'
   },
   {
-    title: 'Wheel Draw',
+    title: i18n.t('menuitem.wheel'),
     route: '/wheel',
     icon: 'mdi-dharmachakra',
     value: 'wheel'
   },
-  {
-    title: 'Customization',
-    route: '/customization',
-    icon: 'mdi-tune-vertical-variant',
-    value: 'customization'
-  }
+  // {
+  //   title: 'Customization',
+  //   route: '/customization',
+  //   icon: 'mdi-tune-vertical-variant',
+  //   value: 'customization'
+  // }
 ]
 </script>
 
@@ -54,7 +56,7 @@ const menuItems = [
     </VListItem>
 
     <VList density="comfortable" nav class="list-item">
-      <VListItem title="General" density="compact" />
+      <VListItem :title="$t('menuitem.general')" density="compact" />
       <VListItem :component="RouterLink" v-for="item in menuItems" :key="item.value" :to="item.route"
         :prepend-icon="item.icon" :title="item.title" :value="item.value" height="48px" color="#00AB55"
         class="menu-item" />

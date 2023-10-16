@@ -4,7 +4,7 @@ import type { CanvasConfig, PrizeConfig, PropsType } from '../types'
 
 const canvasDefaultConfig: CanvasConfig = {
   radius: 250, // 圆的半径
-  textRadius: 180, // 奖品位置距离圆心的距离
+  textRadius: 210, // 奖品位置距离圆心的距离
   textLength: 20, // 奖品文本 1 行几个字符, 最多 2 行
   textDirection: 'vertical', // 奖品文本方向
   lineHeight: 20, // 文本行高

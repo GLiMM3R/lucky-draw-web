@@ -1,22 +1,24 @@
 <template>
-    <v-btn class="text-none" rounded="lg" variant="outlined">+ Create Coupon</v-btn>
+    <v-btn class="text-none" rounded="lg" prepend-icon='mdi-plus' variant="outlined">{{ $t('button.createCustomer')
+    }}</v-btn>
     <v-dialog v-model="dialog" activator="parent" width="400">
         <v-card>
             <template v-slot:append>
                 <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
             </template>
             <v-card-title style="text-align: center">
-                Create Coupon
+                {{ $t('modalTitle.createCustomer') }}
             </v-card-title>
             <VCardItem>
                 <VContainer>
                     <VForm @submit.prevent="submit">
-                        <VTextField label="Customer Name" v-model="name.value.value"
+                        <VTextField :label="$t('textfield.label.customerName')" v-model="name.value.value"
                             :error-messages="name.errorMessage.value" variant="outlined" rounded="lg" />
-                        <VTextField label="Phone Number" v-model="phoneNumber.value.value"
+                        <VTextField :label="$t('textfield.label.customerPhone')" v-model="phoneNumber.value.value"
                             :error-messages="phoneNumber.errorMessage.value" type="number" variant="outlined"
                             rounded="lg" />
-                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4">Confirm</v-btn>
+                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4">{{ $t('button.confirm')
+                        }}</v-btn>
                     </VForm>
                 </VContainer>
             </VCardItem>
@@ -30,7 +32,9 @@ import { useField, useForm } from 'vee-validate';
 import { useRoute } from 'vue-router';
 import { useCampaignStore } from '@/stores/campaign';
 import { useCouponStore } from '@/stores/coupon';
+import { useI18n } from "vue-i18n";
 
+const i18n = useI18n();
 const campaignStore = useCampaignStore();
 const couponStore = useCouponStore();;
 const route = useRoute();
@@ -43,12 +47,12 @@ const { handleSubmit, handleReset } = useForm({
         name(val: string) {
             if (val?.length > 0) return true
 
-            return 'Title is required!'
+            return i18n.t('validate.customerName')
         },
         phoneNumber(val: string) {
-            if (val?.length > 7) return true
+            if (val?.length >= 7) return true
 
-            return 'Phone number > 7!'
+            return i18n.t('validate.customerPhone')
         },
     }
 })

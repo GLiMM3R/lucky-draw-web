@@ -38,7 +38,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import useReport from '@/composables/useReport';
+import { useI18n } from "vue-i18n";
 
+const i18n = useI18n();
 const props = defineProps(['campaigns'])
 const { getReport, } = useReport()
 
@@ -53,15 +55,15 @@ const search = ref('');
 const headers = [
     {
         key: 'title',
-        title: 'Campaign Name',
+        title: i18n.t('table.header.campaign.title')
     },
     {
         key: 'createdAt',
-        title: 'Create Date'
+        title: i18n.t('table.header.campaign.createdAt')
     },
     {
         key: 'createdBy',
-        title: 'Create By'
+        title: i18n.t('table.header.campaign.createdBy')
     },
     { title: '', key: "actions", sortable: false },
 

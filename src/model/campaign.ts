@@ -9,7 +9,8 @@ export interface Campaign {
   type: String
   file: String
   createdBy: User
-  isActive: true
+  isDone: boolean
+  isActive: boolean
   createdAt: Date
   updatedAt: Date
   prizes: Prize[]

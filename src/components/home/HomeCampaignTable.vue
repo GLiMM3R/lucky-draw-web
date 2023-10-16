@@ -40,7 +40,7 @@
                     <div class="text-right pa-2">
                         <VBtn variant="text" class="text-none" appendIcon="mdi-chevron-right" :is="RouterLink"
                             :to="props.url">
-                            View All</VBtn>
+                            {{ $t('button.viewall') }}</VBtn>
                     </div>
                 </template>
             </VDataTable>
@@ -51,23 +51,26 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 const props = defineProps(['campaigns', 'title', 'url', 'isLoading'])
+import { useI18n } from "vue-i18n";
+
+const i18n = useI18n();
 
 const headers = [
     {
         key: 'title',
-        title: 'Campaign Name',
+        title: i18n.t('table.header.campaign.title'),
     },
     {
         key: 'createdAt',
-        title: 'Create Date'
+        title: i18n.t('table.header.campaign.createdAt')
     },
     {
         key: 'createdBy',
-        title: 'Create By'
+        title: i18n.t('table.header.campaign.createdBy')
     },
     {
         key: 'prizeCap',
-        title: 'Winning quota',
+        title: i18n.t('table.header.campaign.prizeCap')
     },
     { title: '', key: "actions", sortable: false },
 ]
