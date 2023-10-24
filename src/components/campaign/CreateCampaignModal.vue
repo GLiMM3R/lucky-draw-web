@@ -16,7 +16,7 @@
                             :error-messages="title.errorMessage.value" variant="outlined" rounded="lg" />
                         <VTextField :label="$t('textfield.label.winningQuota')" v-model="prizeCap.value.value"
                             :disabled="isDisabled" :error-messages="prizeCap.errorMessage.value" type="number"
-                            variant="outlined" rounded="lg" />
+                            variant="outlined" rounded="lg" class="my-4" />
                         <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none"
                             :loading="props.isLoading">{{
                                 $t('button.confirm') }}</v-btn>
@@ -32,23 +32,24 @@ import { ref } from 'vue';
 import { useForm, useField } from 'vee-validate'
 import { useI18n } from "vue-i18n";
 import { computed } from 'vue';
+import { useCampaignStore } from '@/stores/campaign';
 
 const i18n = useI18n();
+const campaignStore = useCampaignStore();
 const props = defineProps(['isLoading', 'type'])
-const emit = defineEmits(['handleSubmit'])
 const dialog = ref(false)
 
 const isDisabled = computed(() => props.type !== 'random')
 
 const { handleSubmit, handleReset } = useForm({
     initialValues: {
-        prizeCap: 1
+        title: '',
+        prizeCap: 1,
     },
     validationSchema: {
         title(val: string) {
-            if (val?.trim().length > 0) return true
-
-            return i18n.t('validate.campaignTitle')
+            if (val?.trim().length < 0) return i18n.t('validate.campaignTitle')
+            return true
         },
         prizeCap(val: number) {
             if (val > 0) return true
@@ -62,7 +63,7 @@ const title = useField('title')
 const prizeCap = useField('prizeCap')
 
 const submit = handleSubmit(async (values) => {
-    emit('handleSubmit', values)
+    await campaignStore.addCampaign({ title: values.title.trim(), prizeCap: Number(values.prizeCap), type: props.type })
     handleReset();
     dialog.value = false
 })

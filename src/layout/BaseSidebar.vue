@@ -1,43 +1,44 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import Logo from '@/assets/images/jmart.png'
 import { useI18n } from "vue-i18n";
 
 const i18n = useI18n();
+const route = useRoute();
 const drawer = ref(true)
 
 const menuItems = [
   {
     title: i18n.t('menuitem.home'),
-    route: '/home',
+    route: 'homepage',
     icon: 'mdi-gauge',
     value: 'home'
   },
   {
     title: i18n.t('menuitem.report'),
-    route: '/report',
+    route: 'campaign-report',
     icon: 'mdi-finance',
     value: 'report'
   },
   {
     title: i18n.t('menuitem.random'),
-    route: '/random',
+    route: 'random-campaign',
     icon: 'mdi-ferris-wheel',
     value: 'random'
   },
   {
     title: i18n.t('menuitem.wheel'),
-    route: '/wheel',
+    route: 'wheel',
     icon: 'mdi-dharmachakra',
     value: 'wheel'
   },
-  // {
-  //   title: 'Customization',
-  //   route: '/customization',
-  //   icon: 'mdi-tune-vertical-variant',
-  //   value: 'customization'
-  // }
+  {
+    title: 'Customization',
+    route: 'customization',
+    icon: 'mdi-tune-vertical-variant',
+    value: 'customization'
+  }
 ]
 </script>
 
@@ -54,12 +55,12 @@ const menuItems = [
         </VAvatar>
       </template>
     </VListItem>
-
     <VList density="comfortable" nav class="list-item">
       <VListItem :title="$t('menuitem.general')" density="compact" />
-      <VListItem :component="RouterLink" v-for="item in menuItems" :key="item.value" :to="item.route"
-        :prepend-icon="item.icon" :title="item.title" :value="item.value" height="48px" color="#00AB55"
-        class="menu-item" />
+      <VListItem v-for="item in menuItems" :key="item.value" :prepend-icon="item.icon" :title="item.title"
+        :value="item.value" height="48px" color="#00AB55" class="menu-item" :is="RouterLink" :to="{ name: item.route }"
+        exact>
+      </VListItem>
     </VList>
   </VNavigationDrawer>
 </template>
@@ -91,5 +92,9 @@ const menuItems = [
 
 .menu-item {
   padding: 0 12px 0 16px;
+}
+
+.active {
+  background-color: #028947;
 }
 </style>

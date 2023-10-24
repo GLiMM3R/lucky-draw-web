@@ -4,6 +4,7 @@ import type { User } from './user'
 
 export interface Campaign {
   id: String
+  slug: String
   title: String
   prizeCap: Number
   type: String

@@ -19,7 +19,8 @@
                         <VTextField :label="$t('textfield.label.prizeAmount')" v-model="amount.value.value"
                             :error-messages="amount.errorMessage.value" type="number" variant="outlined" rounded="lg" />
                         <Suspense>
-                            <DropFile @getImage="getImage" :image="props.prize.image" />
+                            <!-- <DropFile @getImage="getImage" :image="props.prize.image" /> -->
+                            <UploadImage @getImage="getImage" :image="props.prize.image" :isRounded="false" />
                         </Suspense>
                         <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none">{{
                             $t('button.confirm') }}</v-btn>
@@ -33,11 +34,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate';
-import DropFile from '../DropFile.vue';
 import { usePrizeStore } from '@/stores/prize';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import { useCampaignStore } from '@/stores/campaign';
+import UploadImage from '@/components/UploadImage.vue';
 
 const route = useRoute();
 const slug = route.params.slug as string
@@ -62,7 +63,7 @@ const { handleSubmit, handleReset } = useForm({
             return 'Title is required!'
         },
         rank(val: number) {
-            if (val < 0) return 'Value must greater than 0'
+            if (!val || val < 0) return 'Value must greater than 0'
             if (props.prize.rank != val && prizes.value.filter((item: any) => Number(item.rank) == val).length > 0) return 'Already exists'
 
             return true
@@ -84,8 +85,7 @@ const getImage = (value: File) => {
 }
 
 const submit = handleSubmit(async (values) => {
-    await prizeStore.updatePrize(props.prize.id, { campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
-    await campaignStore.getCampaign(slug)
+    await prizeStore.updatePrize(props.prize.id, { campaignSlug: slug, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
     handleReset();
     dialog.value = false
 })

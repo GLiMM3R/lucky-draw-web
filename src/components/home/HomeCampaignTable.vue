@@ -10,7 +10,8 @@
                 <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                     <tr>
                         <template v-for="column in columns" :key="column.key">
-                            <td style="background-color: #F4F6F8; color: #637381; text-align: center; cursor: pointer;">
+                            <td
+                                style="background-color: rgba(244, 246, 248, 1); color: #637381; text-align: center; cursor: pointer;">
                                 <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{
                                     column.title }}</span>
                                 <template v-if="isSorted(column)">
@@ -38,8 +39,7 @@
                 </template>
                 <template v-slot:bottom>
                     <div class="text-right pa-2">
-                        <VBtn variant="text" class="text-none" appendIcon="mdi-chevron-right" :is="RouterLink"
-                            :to="props.url">
+                        <VBtn variant="text" class="text-none" appendIcon="mdi-chevron-right" is="a" :href="props.url">
                             {{ $t('button.viewall') }}</VBtn>
                     </div>
                 </template>
@@ -49,7 +49,6 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
 const props = defineProps(['campaigns', 'title', 'url', 'isLoading'])
 import { useI18n } from "vue-i18n";
 

@@ -10,9 +10,12 @@ import { createI18n } from 'vue-i18n'
 import { vuetify } from './plugins/vuetify'
 import ToastPlugin from 'vue-toast-notification'
 import { defaultLocale, messages } from '@/i18n/index'
-import { useAppSetting } from '@/composables/useAppSetting'
+import { useAppSettingStore } from './stores/appsetting'
 
-const { getLanguage } = useAppSetting()
+const app = createApp(App)
+app.use(createPinia())
+
+const { getLanguage } = useAppSettingStore()
 
 const i18n = createI18n({
   legacy: false,
@@ -21,9 +24,6 @@ const i18n = createI18n({
   messages
 })
 
-const app = createApp(App)
-
-app.use(createPinia())
 app.use(router)
 app.use(vuetify)
 app.use(i18n)

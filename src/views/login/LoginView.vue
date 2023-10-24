@@ -4,23 +4,24 @@
     <VRow class="content">
       <VCol cols="6" class="logo">
         <VImg :src="Logo" width="500" height="500" />
+        <p>Lucky Draw System</p>
       </VCol>
       <VCol cols="6">
         <VCard class="card">
           <VForm @submit.prevent="submit">
-            <VCardTitle style="color: white; text-align: center; font-size: 48px" class="py-8">
+            <VCardTitle style="color: white; text-align: center; font-size: 48px" class="py-16">
               Login
             </VCardTitle>
             <VCardItem>
               <VLabel class="mb-2" style="color: white">{{ $t('textfield.label.username') }}</VLabel>
               <VTextField v-model="username.value.value" :error-messages="username.errorMessage.value" variant="outlined"
-                bgColor="white" rounded="lg" density="compact" />
+                bgColor="white" rounded="lg" density="comfortable" />
               <VLabel class="mb-2" style="color: white">{{ $t('textfield.label.password') }}</VLabel>
               <VTextField v-model="password.value.value" :error-messages="password.errorMessage.value"
                 :type="isShowPassword ? 'text' : 'password'" variant="outlined" bgColor="white" rounded="lg"
-                density="compact" :append-inner-icon="isShowPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
+                density="comfortable" :append-inner-icon="isShowPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
                 @click:append-inner="showPassword" />
-              <div class="d-flex justify-center">
+              <div class="d-flex justify-center my-10">
                 <VBtn type="submit" :loading="isLoading" color="#12BA68" rounded="lg" class="my-6" width="140px">{{
                   $t('button.login') }}
                 </VBtn>
@@ -96,11 +97,21 @@ setTimeout(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+
+  p {
+    position: absolute;
+    transform: translate(7%, 150%);
+    color: #fff;
+    font-size: 24px;
+    font-family: 'Poppins';
+  }
 }
 
 .card {
   background: rgba(255, 255, 255, 0.1);
-  width: 500px;
+  width: 611px;
+  height: 641px;
   padding: 24px;
 }
 

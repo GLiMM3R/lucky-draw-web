@@ -2,13 +2,8 @@
   <div class="layout-wrapper" :class="!props.isLoading ? 'fadeout' : ''">
     <div class="logo">
       <VImg :src="Logo" :width="400" :height="400" aspect-ratio="1" />
-      <v-progress-circular
-        :width="4"
-        :size="46"
-        color="white"
-        indeterminate
-        class="spinner"
-      ></v-progress-circular>
+      <p>Lucky Draw System</p>
+      <v-progress-circular :width="6" :size="60" color="white" indeterminate class="spinner"></v-progress-circular>
     </div>
   </div>
 </template>
@@ -19,7 +14,7 @@ import Logo from '@/assets/images/jmart.png'
 const props = defineProps(['isLoading'])
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .layout-wrapper {
   height: 100vh;
   width: 100%;
@@ -33,11 +28,20 @@ const props = defineProps(['isLoading'])
   position: relative;
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  p {
+    position: absolute;
+    transform: translate(54%, 620%);
+    color: #fff;
+    font-size: 24px;
+    font-family: 'Poppins';
+  }
 }
 
 .spinner {
   position: absolute;
-  top: 70%;
+  top: 74%;
   left: 50%;
 }
 

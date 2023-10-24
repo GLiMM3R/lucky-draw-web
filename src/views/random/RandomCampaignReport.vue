@@ -31,7 +31,7 @@ const { campaign } = storeToRefs(campaignStore);
 const { winners } = storeToRefs(winnerStore);
 
 onMounted(async () => {
-    await campaignStore.getCampaign(slug)
+    await campaignStore.getCampaignBySlug(slug)
     await winnerStore.getReport(slug)
 })
 </script>

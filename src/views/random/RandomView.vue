@@ -16,6 +16,7 @@ import { RouterView } from 'vue-router';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { useCampaignStore } from '@/stores/campaign';
 import { onMounted } from 'vue';
+
 const campaignStore = useCampaignStore()
 
 onMounted(async () => {

@@ -13,7 +13,7 @@
     <VCard rounded="lg" color="white" class="shadow">
         <v-table>
             <thead>
-                <tr style="background-color: rgba(128, 128, 128, 0.1); color: #637381;">
+                <tr style="background-color: rgba(244, 246, 248, 1); color: #637381;">
                     <th class=" text-center border-0">
                         {{ $t('table.header.dataset.title') }}
                     </th>
@@ -29,12 +29,13 @@
             </thead>
             <tbody>
                 <tr v-if="props.campaign.file" class="text-center">
-                    <td>{{ props.campaign.file ? props.campaign.file.replace(`coupon/${props.campaign.id}/`, '') : '' }}
+                    <td>{{ props.campaign.file ? props.campaign.file.replace(`dataset/${props.campaign.slug}/`, '') : '' }}
                     </td>
-                    <td>{{ new Date(props.campaign.createdAt).toLocaleString() ?? '' }}</td>
+                    <td>{{ new Date(props.campaign.createdAt).toDateString() ?? '' }}</td>
                     <td>{{ props.campaign.createdBy.username ?? '' }}</td>
                     <td v-if="$props.campaign.isDone === false">
-                        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" @click="() => { }" />
+                        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red"
+                            @click="handleRemoveFile" />
                         <!-- <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" /> -->
                     </td>
                 </tr>
@@ -55,7 +56,6 @@ import useCsv from '@/composables/useCsv';
 const props = defineProps(['campaign'])
 const campaignStore = useCampaignStore();
 const { downloadCsv } = useCsv();
-console.log(props.campaign);
 
 const route = useRoute();
 const slug = route.params.slug as string
@@ -77,19 +77,26 @@ function handleFileImport() {
 async function onFileChanged(event: Event) {
     const files = event.target.files[0];
     if (!files.type.match('text/csv')) {
-        alert('alert')
+        alert('File type is not support!')
         return;
     }
     if (files) {
         selectedFile.value = files;
         uploader.value.value = null;
-        await campaignStore.uploadFileDataset(slug, selectedFile.value)
-        await campaignStore.getCampaign(slug)
+        await campaignStore.uploadFileDataset(props.campaign.id, selectedFile.value, slug)
     }
 };
 
 async function handleDownload() {
-    await downloadCsv(props.campaign.file, props.campaign.file.replace(`coupon/${props.campaign.id}/`, ''));
+    if (!props.campaign.file) {
+        return alert('No file!')
+    }
+    await downloadCsv(props.campaign.file, props.campaign.file.replace(`dataset/${props.campaign.slug}`, ''));
+}
+
+async function handleRemoveFile() {
+    selectedFile.value = null;
+    await campaignStore.uploadFileDataset(props.campaign.id, selectedFile.value, slug)
 }
 </script>
 

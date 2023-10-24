@@ -41,12 +41,12 @@
 <script setup lang="ts">
 import English from '@/assets/images/united-kingdom.png'
 import Laos from '@/assets/images/laos.png'
-import { useAppSetting } from '@/composables/useAppSetting';
 import { removeAccessToken } from '@/utils/token';
 import { useRouter } from 'vue-router';
+import { useAppSettingStore } from '@/stores/appsetting';
 
 const router = useRouter();
-const { getLanguage, setLanguage } = useAppSetting();
+const { getLanguage, setLanguage } = useAppSettingStore();
 const items = [{ logo: English, value: 'en' }, { logo: Laos, value: 'la' }]
 
 const handleLogout = () => {

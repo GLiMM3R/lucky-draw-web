@@ -1,9 +1,9 @@
 <template>
-    <VCard rounded="lg" color="white" class="shadow">
+    <VCard rounded="lg" color="white" class="shadow pa-2">
         <VContainer>
             <VRow justify="center">
                 <VCol align-selft="center" cols="7">
-                    <h3 style="font-size: 32px; font-weight: 600;">{{ props.item.value }}k</h3>
+                    <h3 style="font-size: 32px; font-weight: 600;">{{ props.item.value }}</h3>
                     <p style="font-size: 14px; font-weight: 500;">{{ props.item.text }}</p>
                 </VCol>
                 <VCol cols="5">

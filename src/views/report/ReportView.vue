@@ -8,15 +8,15 @@
         <VRow>
             <VContainer>
                 <VTabs v-model="tab" color="primary" align-tabs="start">
-                    <VTab value="wheel">Wheel Draw</VTab>
                     <VTab value="random">Random Draw</VTab>
+                    <VTab value="wheel">Wheel Draw</VTab>
                 </VTabs>
                 <VWindow v-model="tab">
-                    <VWindowItem value="wheel" style="padding: 16px 4px;">
-                        <ReportTable :campaigns="wheel" />
-                    </VWindowItem>
                     <VWindowItem value="random" style="padding: 16px 4px;">
                         <ReportTable :campaigns="random" />
+                    </VWindowItem>
+                    <VWindowItem value="wheel" style="padding: 16px 4px;">
+                        <ReportTable :campaigns="wheel" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>
@@ -25,15 +25,15 @@
 </template>
   
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useCampaignStore } from '@/stores/campaign';
+import { replaceNumber } from '@/utils/replaceNumber'
 import StatisticCard from '@/components/StatisticCard.vue';
 import Wheel from '@/assets/images/wheel.png'
 import Lottery from '@/assets/images/lottery.png'
-import { ref } from 'vue';
 import ReportTable from '@/components/report/ReportTable.vue';
-import { useCampaignStore } from '@/stores/campaign';
-import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
-import { computed } from 'vue';
+
 
 const campaignStore = useCampaignStore();
 const { campaigns } = storeToRefs(campaignStore);
@@ -46,12 +46,12 @@ const tab = ref('')
 onMounted(async () => await campaignStore.getCampaigns())
 const statics = [
     {
-        value: '8.2',
+        value: replaceNumber(random.value.length),
         text: 'New Campagins',
         logo: Wheel
     },
     {
-        value: '124',
+        value: replaceNumber(wheel.value.length),
         text: 'Done',
         logo: Lottery
     },

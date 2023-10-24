@@ -48,7 +48,7 @@ const resetSelectCoupon = () => {
 }
 
 onMounted(async () => {
-    await campaignStore.getCampaign(slug)
+    await campaignStore.getCampaignBySlug(slug)
 })
 </script>
 

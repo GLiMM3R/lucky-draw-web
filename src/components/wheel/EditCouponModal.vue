@@ -16,7 +16,8 @@
                         <VTextField :label="$t('textfield.label.customerPhone')" v-model="phoneNumber.value.value"
                             :error-messages="phoneNumber.errorMessage.value" type="number" variant="outlined"
                             rounded="lg" />
-                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4">{{ $t('button.confirm')
+                        <v-btn color="primary" type="submit" rounded="lg" block class="my-4" :loading="isLoading">{{
+                            $t('button.confirm')
                         }}</v-btn>
                     </VForm>
                 </VContainer>
@@ -28,14 +29,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
-import { useRoute } from 'vue-router';
 import { useI18n } from "vue-i18n";
+import { useCouponStore } from '@/stores/coupon';
+import { useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
-const i18n = useI18n();
 const route = useRoute();
 const slug = route.params.slug as string
+const i18n = useI18n();
 const props = defineProps(['customer'])
-const emit = defineEmits(['handleUpdateCoupon'])
+const couponStore = useCouponStore();
+const { isLoading } = storeToRefs(couponStore);
 const dialog = ref(false)
 
 const { handleSubmit, handleReset } = useForm({
@@ -61,7 +65,7 @@ const name = useField('name')
 const phoneNumber = useField('phoneNumber')
 
 const submit = handleSubmit(async (values) => {
-    emit('handleUpdateCoupon', { ...values, id: props.customer.id })
+    await couponStore.updateCoupon(props.customer.id, slug, { name: values.name, phone: values.phoneNumber })
     handleReset();
     dialog.value = false
 })

@@ -64,6 +64,25 @@ export const useCampaignStore = defineStore('campaign', () => {
     }
   }
 
+  async function getCampaignBySlug(slug: string) {
+    campaign.value = null
+    isLoading.value = true
+    try {
+      const response = await request({
+        url: `/campaigns/slug/${slug}`,
+        params: {
+          field: ['prizes', 'createdBy', 'coupons']
+        }
+      })
+
+      campaign.value = response.data.data
+      isLoading.value = false
+    } catch (error) {
+      isLoading.value = false
+      $toast.error(i18n.t('alert.apiError'))
+    }
+  }
+
   async function addCampaign(campaignData: CreateCampaign) {
     isLoading.value = true
     try {
@@ -73,6 +92,7 @@ export const useCampaignStore = defineStore('campaign', () => {
         data: campaignData
       })
 
+      await getCampaigns()
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -83,12 +103,13 @@ export const useCampaignStore = defineStore('campaign', () => {
   async function updateCampaign(campaignData: UpdateCampaign) {
     isLoading.value = true
     try {
-      const response = await request({
+      await request({
         url: `/campaigns/${campaignData.id}`,
         method: 'PATCH',
         data: campaignData
       })
 
+      await getCampaigns()
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -99,11 +120,12 @@ export const useCampaignStore = defineStore('campaign', () => {
   async function deleteCampaign(id: string) {
     isLoading.value = true
     try {
-      const response = await request({
+      await request({
         url: `/campaigns/${id}`,
         method: 'DELETE'
       })
 
+      await getCampaigns()
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -111,11 +133,11 @@ export const useCampaignStore = defineStore('campaign', () => {
     }
   }
 
-  async function uploadFileDataset(id: string, file: File) {
+  async function uploadFileDataset(id: string, file: File, slug: string) {
     isLoading.value = true
     try {
-      const response = await request({
-        url: `/campaigns/${id}`,
+      await request({
+        url: `/campaigns/dataset/${id}`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -125,7 +147,27 @@ export const useCampaignStore = defineStore('campaign', () => {
         }
       })
 
+      await getCampaignBySlug(slug)
       isLoading.value = false
+    } catch (error) {
+      isLoading.value = false
+      $toast.error(i18n.t('alert.apiError'))
+    }
+  }
+
+  async function validateCampaign(title: string) {
+    campaign.value = null
+    isLoading.value = true
+    try {
+      const response = await request({
+        url: `/campaigns/validate`,
+        params: {
+          title
+        }
+      })
+
+      isLoading.value = false
+      return response.data.data
     } catch (error) {
       isLoading.value = false
       $toast.error(i18n.t('alert.apiError'))
@@ -137,10 +179,12 @@ export const useCampaignStore = defineStore('campaign', () => {
     campaigns,
     addCampaign,
     getCampaign,
+    getCampaignBySlug,
     getCampaigns,
     deleteCampaign,
     updateCampaign,
     uploadFileDataset,
+    validateCampaign,
     isLoading
   }
 })

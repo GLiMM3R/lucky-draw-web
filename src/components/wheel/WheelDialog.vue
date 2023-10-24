@@ -6,8 +6,13 @@
         <VRow justify="center" v-if="!result">
             <VCol>
                 <VRow justify="center">
-                    <VCard color="#028947" width="600px" rounded="pill">
+                    <!-- <VCard color="#028947" width="600px" rounded="pill">
                         <VCardTitle class="text-center text-h4 py-4">
+                            Wheel Draw
+                        </VCardTitle>
+                    </VCard> -->
+                    <VCard width="900" class="bg-primary  rounded-lg">
+                        <VCardTitle v-if="campaign" class="text-center py-8 text-h3 font-weight-bold">
                             Wheel Draw
                         </VCardTitle>
                     </VCard>
@@ -71,18 +76,20 @@ import Winner from '@/assets/images/winner.png'
 import { useToast } from 'vue-toast-notification';
 import { usePrizeStore } from '@/stores/prize';
 import { storeToRefs } from 'pinia';
-import { useCampaignStore } from '@/stores/campaign';
 import { useDrawStore } from '@/stores/draw';
 import { useI18n } from "vue-i18n";
 import useImage from '@/composables/useImage';
+import { useAppSettingStore } from '@/stores/appsetting';
+import { useRoute } from 'vue-router';
 
 const i18n = useI18n();
 const props = defineProps(['campaign', 'coupon'])
 const emits = defineEmits(['resetSelectCoupon'])
 const $toast = useToast()
-
+const route = useRoute();
+const slug = route.params.slug as string
 const prizeStore = usePrizeStore()
-const campaignStore = useCampaignStore();
+const appSettingStore = useAppSettingStore()
 const drawStore = useDrawStore()
 const { prize } = storeToRefs(prizeStore)
 
@@ -91,8 +98,15 @@ const result = ref(false)
 const wheel = ref(null)
 const wheelActive = ref(true)
 const prizeImage = ref('');
+const loadingImage = ref('');
 
 const { getImage } = useImage();
+
+const appsetting = await appSettingStore.getAppSetting();
+
+if (appsetting.wheelImage) {
+    loadingImage.value = await getImage(appsetting.wheelImage)
+}
 
 const wheelData = {
     firstItemIndex: { value: 0 },
@@ -113,7 +127,7 @@ const wheelData = {
         baseDisplayShadow: true,
         baseDisplayIndicator: true,
         baseBackground: "#EEAA33",
-        baseHtmlContent: "<strong>Go!</strong>",
+        baseHtmlContent: loadingImage.value ? `<img src="${loadingImage.value}" style="object-fit: cover; width: 100%" />` : "<strong>Go!</strong>",
     }
 }
 
@@ -136,12 +150,18 @@ function wheelStartedCallback(resultItem: any) {
 async function wheelEndedCallback(resultItem: any) {
     console.log("wheel ended !", resultItem);
     await prizeStore.getPrize(resultItem.id)
-    prizeImage.value = await getImage(prize.value?.image as string)
+    if (prize.value?.image) {
+        prizeImage.value = await getImage(prize.value?.image as string)
+    }
     result.value = true
 }
-const handleDialog = (rotate: Function) => {
+function handleDialog(rotate: Function) {
     if (props.campaign.prizes.length <= 0) {
         $toast.warning(i18n.t('alert.noPrize'))
+        return;
+    }
+    if (props.campaign.prizes.length < 4) {
+        $toast.warning("Prize must have more than 4")
         return;
     }
     if (!props.coupon) {
@@ -162,10 +182,9 @@ const items = props.campaign.prizes.map((item: any, index: number) => {
     return prize;
 })
 
-const handleConfirm = async () => {
-    await drawStore.wheelDraw({ campaignId: props.campaign.id, prizeId: prize.value?.id as string, couponId: props.coupon.id, winnerName: props.coupon.name, winnerPhone: props.coupon.phone })
+async function handleConfirm() {
+    await drawStore.wheelDraw({ campaignSlug: slug, prizeId: prize.value?.id as string, couponId: props.coupon.id, winnerName: props.coupon.name, winnerPhone: props.coupon.phone })
     dialog.value = false
-    await campaignStore.getCampaign(props.campaign.id)
     onHardReset()
     resetSelectCoupon()
 }

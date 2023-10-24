@@ -58,9 +58,11 @@ const emit = defineEmits(['handleSelectCoupon'])
 
 const selected = ref([]);
 const search = ref('');
+
 const handleSelected = () => {
     emit('handleSelectCoupon', props.coupon.filter((item: any) => item.id == selected.value[0])[0])
 }
+
 const headers = [
     {
         key: 'name',

@@ -30,12 +30,10 @@
 import { ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
 import { useRoute } from 'vue-router';
-import { useCampaignStore } from '@/stores/campaign';
 import { useCouponStore } from '@/stores/coupon';
 import { useI18n } from "vue-i18n";
 
 const i18n = useI18n();
-const campaignStore = useCampaignStore();
 const couponStore = useCouponStore();;
 const route = useRoute();
 const slug = route.params.slug as string
@@ -61,8 +59,7 @@ const name = useField('name')
 const phoneNumber = useField('phoneNumber')
 
 const submit = handleSubmit(async (values) => {
-    await couponStore.addCoupon({ campaignId: slug, name: values.name, phone: values.phoneNumber })
-    await campaignStore.getCampaign(slug)
+    await couponStore.addCoupon({ campaignSlug: slug, name: values.name, phone: values.phoneNumber })
     handleReset();
     // dialog.value = false
 })

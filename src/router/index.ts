@@ -10,44 +10,44 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    { path: '/', redirect: 'home' },
     {
       path: '/',
-      redirect: '/home',
       component: () => import('@/layout/BaseLayout.vue'),
       children: [
         {
-          path: '/home',
-          name: 'home',
+          path: 'home',
+          name: 'homepage',
           component: () => import('@/views/home/HomeView.vue')
         },
         {
-          path: '/report',
-          name: 'report',
+          path: 'report',
+          name: 'campaign-report',
           component: () => import('@/views/report/ReportView.vue')
         },
         {
-          path: '/random',
+          path: 'random',
           component: () => import('@/views/random/RandomView.vue'),
           children: [
             {
               path: '',
-              name: 'random',
+              name: 'random-campaign',
               component: () => import('@/views/random/RandomCampaign.vue')
             },
             {
-              path: '/random/:slug',
+              path: ':slug',
               name: 'random-detail',
               component: () => import('@/views/random/RandomCampaignDetail.vue')
             },
             {
-              path: '/random/:slug/report',
+              path: ':slug/report',
               name: 'random-report',
               component: () => import('@/views/random/RandomCampaignReport.vue')
             }
           ]
         },
         {
-          path: '/wheel',
+          path: 'wheel',
           component: () => import('@/views/wheel/WheelView.vue'),
           children: [
             {
@@ -56,12 +56,12 @@ const router = createRouter({
               component: () => import('@/views/wheel/WheelCampaign.vue')
             },
             {
-              path: '/wheel/:slug',
+              path: ':slug',
               name: 'wheel-detail',
               component: () => import('@/views/wheel/WheelCampaignDetail.vue')
             },
             {
-              path: '/wheel/:slug/report',
+              path: ':slug/report',
               name: 'wheel-report',
               component: () => import('@/views/wheel/WheelCampaignReport.vue')
             }

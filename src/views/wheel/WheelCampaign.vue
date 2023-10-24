@@ -33,6 +33,7 @@ import CampaignTable from '@/components/campaign/CampaignTable.vue';
 import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
 import { useI18n } from "vue-i18n";
+import { replaceNumber } from '@/utils/replaceNumber'
 
 const i18n = useI18n();
 const campaignStore = useCampaignStore()
@@ -45,12 +46,12 @@ const wheelCampaignIsDone = computed(() => campaigns.value.filter((item) => item
 
 const statics = [
     {
-        value: '8.2',
+        value: replaceNumber(wheelCampaign.value.length),
         text: i18n.t('button.newCampaign'),
         logo: LogoStatic
     },
     {
-        value: '124',
+        value: replaceNumber(wheelCampaignIsDone.value.length),
         text: i18n.t('tab.done'),
         logo: LogoDone
     },

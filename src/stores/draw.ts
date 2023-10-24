@@ -3,14 +3,15 @@ import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
 import type { Winner } from '@/model/winner'
+import { useCampaignStore } from '@/stores/campaign'
 
 export interface RequestRandom {
-  campaignId: string
+  campaignSlug: string
   prizeId: string
 }
 
 interface RequestWheel {
-  campaignId: string
+  campaignSlug: string
   prizeId: string
   couponId: string
   winnerName: string
@@ -18,15 +19,17 @@ interface RequestWheel {
 }
 
 export const useDrawStore = defineStore('draw', () => {
+  const campaignStore = useCampaignStore()
   const $toast = useToast()
   const winners = ref<Winner[]>([])
 
   const isLoading = ref(false)
+  const errorMessage = ref('')
 
-  async function getWinnerRecord(campaignId: string, prizeId: string) {
+  async function getWinnerRecord(slug: string, prizeId: string) {
     isLoading.value = true
     try {
-      const response = await request({ url: `/winner-record/${campaignId}/${prizeId}` })
+      const response = await request({ url: `/winner-record/${slug}/${prizeId}` })
 
       winners.value = response.data.data
       isLoading.value = false
@@ -46,6 +49,13 @@ export const useDrawStore = defineStore('draw', () => {
         data: randomData
       })
 
+      if (response.response.status === 400) {
+        errorMessage.value = response.response.data.message
+        isLoading.value = false
+
+        return
+      }
+
       winners.value = response.data.data
       isLoading.value = false
     } catch (error) {
@@ -57,12 +67,13 @@ export const useDrawStore = defineStore('draw', () => {
   async function wheelDraw(requestWheel: RequestWheel) {
     isLoading.value = true
     try {
-      const response = await request({
+      await request({
         url: '/random/wheel-draw',
         method: 'POST',
         data: requestWheel
       })
 
+      await campaignStore.getCampaign(requestWheel.campaignSlug)
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -70,5 +81,5 @@ export const useDrawStore = defineStore('draw', () => {
     }
   }
 
-  return { getWinnerRecord, randomDraw, wheelDraw, winners, isLoading }
+  return { getWinnerRecord, randomDraw, wheelDraw, winners, isLoading, errorMessage }
 })

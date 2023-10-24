@@ -1,5 +1,5 @@
 <template>
-    <VCard rounded="lg" color="white" class="shadow pointer" :is="RouterLink" :to="props.url">
+    <VCard rounded="lg" color="white" class="shadow pointer pa-2" is="a" :href="props.url">
         <VContainer>
             <VRow justify="space-between">
                 <VCol align-self='center'>
@@ -7,7 +7,7 @@
                     <VIcon color="green" size="large" icon="mdi-arrow-right-circle" />
                 </VCol>
                 <VCol>
-                    <VImg :src="props.logo" width="120" height="120" class="img" />
+                    <VImg :src="props.logo" width="100" height="100" class="img" />
                 </VCol>
             </VRow>
         </VContainer>
@@ -15,11 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
 const props = defineProps(['title', 'logo', 'url'])
-// const emit = defineEmits(['handleClick'])
-
-// const handleClick = () => emit('handleClick')
 </script>
 
 

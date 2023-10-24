@@ -3,19 +3,20 @@ import { defineStore } from 'pinia'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
+import { useCampaignStore } from './campaign'
 
 export interface CreateCoupon {
-  campaignId: string
+  campaignSlug: string
   name: string
   phone: string
 }
 export interface UpdateCoupon {
-  campaignId: string
   name: string
   phone: string
 }
 
 export const useCouponStore = defineStore('coupon', () => {
+  const campaignStore = useCampaignStore()
   const $toast = useToast()
   const coupon = ref<Coupon | null>(null)
   const coupons = ref<Coupon[]>([])
@@ -55,6 +56,7 @@ export const useCouponStore = defineStore('coupon', () => {
         data: couponData
       })
 
+      await campaignStore.getCampaignBySlug(couponData.campaignSlug)
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -62,7 +64,7 @@ export const useCouponStore = defineStore('coupon', () => {
     }
   }
 
-  async function updateCoupon(id: string, couponData: UpdateCoupon) {
+  async function updateCoupon(id: string, slug: string, couponData: UpdateCoupon) {
     isLoading.value = true
     try {
       const response = await request({
@@ -71,6 +73,7 @@ export const useCouponStore = defineStore('coupon', () => {
         data: couponData
       })
 
+      await campaignStore.getCampaignBySlug(slug)
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -78,5 +81,5 @@ export const useCouponStore = defineStore('coupon', () => {
     }
   }
 
-  return { coupon, coupons, getCoupon, getCoupons, addCoupon, isLoading }
+  return { coupon, coupons, getCoupon, getCoupons, addCoupon, updateCoupon, isLoading }
 })

@@ -9,7 +9,7 @@
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
-                        <td style="background-color: rgb(128, 128, 128, 0.1); text-align: center; cursor: pointer;">
+                        <td style="background-color: rgba(244, 246, 248, 1); text-align: center; cursor: pointer;">
                             <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{
                                 column.title }}</span>
                             <template v-if="isSorted(column)">

@@ -8,7 +8,8 @@
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
-                        <td style="background-color: #F4F6F8; color: #637381; text-align: center; cursor: pointer;">
+                        <td
+                            style="background-color: rgba(244, 246, 248, 1); color: #637381; text-align: center; cursor: pointer;">
                             <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{
                                 column.title }}</span>
                             <template v-if="isSorted(column)">
@@ -22,7 +23,7 @@
                 {{ item.columns.rank }}
             </template>
             <template v-slot:item.title="{ item }">
-                {{ item.columns.title }}
+                {{ capitalizeLetter(item.columns.title) }}
             </template>
             <template v-slot:item.createdAt="{ item }">
                 {{ new Date(item.columns.createdAt).toDateString() }}
@@ -65,10 +66,10 @@ import EditPrizeModal from './EditPrizeModal.vue';
 import CreatePrizeModal from './CreatePrizeModal.vue';
 import ConfirmDialog from '../ConfirmDialog.vue';
 import { useRoute } from 'vue-router';
-import { useCampaignStore } from '@/stores/campaign';
 import { usePrizeStore } from '@/stores/prize';
 import { useI18n } from "vue-i18n";
 import { computed } from 'vue';
+import { capitalizeLetter } from '@/utils/capitalizeLetter';
 
 const i18n = useI18n();
 const route = useRoute();
@@ -76,12 +77,10 @@ const slug = route.params.slug as string
 
 const props = defineProps(['prizes', 'type'])
 
-const campaignStore = useCampaignStore();
 const prizeStore = usePrizeStore();
 
 const handleConfirm = async (id: string) => {
-    await prizeStore.deletePrize(id)
-    await campaignStore.getCampaign(slug)
+    await prizeStore.deletePrize(id, slug)
 }
 
 const headers = computed(() => {

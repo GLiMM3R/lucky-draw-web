@@ -3,13 +3,14 @@
         <VCardTitle class="d-flex">
             <VTextField v-model="search" variant="outlined" density="comfortable" prepend-inner-icon="mdi-magnify"
                 :placeholder="$t('textfield.placeholder.search')" />
-            <CreateCampaignModal @handleSubmit="handleSubmit" :type="$props.type" />
+            <CreateCampaignModal :type="$props.type" />
         </VCardTitle>
-        <VDataTable :headers="headers" :items="props.campaigns" :search="search" :hover="true" class="text-center">
+        <VDataTable :headers="headers" :items="props.campaigns" :search="search" :hover="true" class="text-center"
+            @click:row="handleSelect">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
-                        <td style="background-color: rgba(128, 128, 128, 0.1); text-align: center; cursor: pointer;">
+                        <td style="background-color: rgba(244, 246, 248, 1); text-align: center; cursor: pointer;">
                             <span class="mr-2 cursor-pointer" @click="() => toggleSort(column)">{{
                                 column.title }}</span>
                             <template v-if="isSorted(column)">
@@ -20,8 +21,8 @@
                 </tr>
             </template>
 
-            <!-- <template v-slot:item.title="{ item, toggleSelect }">
-                {{ item.columns.title }}
+            <template v-slot:item.title="{ item }">
+                {{ capitalizeLetter(item.columns.title) }}
             </template>
             <template v-slot:item.createdAt="{ item }">
                 {{ new Date(item.columns.createdAt).toDateString() }}
@@ -35,63 +36,28 @@
                 </VChip>
             </template>
             <template v-slot:item.actions="{ item }">
-                <div style="border-bottom: none; text-align: center; display: flex; justify-content: center;">
+                <div style="text-align: center; display: flex; justify-content: center;">
                     <div>
-                        <ConfirmDialog message="Do you want to delete this?" @handleConfirm="handleDeleteCampaign(item)" />
+                        <ConfirmDialog message="Do you want to delete this?" icon="mdi-trash-can-outline" color="red"
+                            @handleConfirm="handleDeleteCampaign(item)" />
                     </div>
                     <div>
-                        <EditCampaignModal @handleUpdate="handleUpdate" :campaign="item.raw" :type="props.type" />
+                        <v-menu>
+                            <template v-slot:activator="{ props }">
+                                <v-btn variant="text" size="small" icon="mdi-dots-vertical" v-bind="props"></v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item>
+                                    <EditCampaignModal :campaign="item.raw" :type="props.type" />
+                                </v-list-item>
+                                <v-list-item>
+                                    <ConfirmDialog message="Do you want to complete this campaign?"
+                                        buttonText="Finish Campaign" @handleConfirm="handleFinishCampaign(item.raw)" />
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
                     </div>
                 </div>
-            </template> -->
-
-            <template v-slot:item="{ item }">
-                <tr>
-                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">{{
-                        item.columns.title }}
-                    </td>
-                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">{{
-                        new Date(item.columns.createdAt).toDateString()
-                    }}</td>
-                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">
-                        {{ item.columns.createdBy.username }}</td>
-                    <td @click="handleSelect(item)" style="background-color: white; text-align: center;">
-                        <VChip rounded="sm" :color="getColor(item.columns.prizeCap)">
-                            {{ item.columns.prizeCap }}
-                        </VChip>
-                    </td>
-                    <!-- <td @click="handleSelect(item)" style="background-color: white; text-align: center;">
-                        <VChip rounded="sm" :color="getColor(item.columns.isDone)">
-                            {{ item.columns.isDone ? 'Completed' : 'In progress' }}
-                        </VChip>
-                    </td> -->
-                    <td style="background-color: white;">
-                        <div style="text-align: center; display: flex; justify-content: center;">
-                            <div>
-                                <ConfirmDialog message="Do you want to delete this?" icon="mdi-trash-can-outline"
-                                    color="red" @handleConfirm="handleDeleteCampaign(item)" />
-                            </div>
-                            <div>
-                                <v-menu>
-                                    <template v-slot:activator="{ props }">
-                                        <v-btn variant="text" size="small" icon="mdi-dots-vertical" v-bind="props"></v-btn>
-                                    </template>
-                                    <v-list>
-                                        <v-list-item>
-                                            <EditCampaignModal @handleUpdate="handleUpdate" :campaign="item.raw"
-                                                :type="props.type" />
-                                        </v-list-item>
-                                        <v-list-item>
-                                            <ConfirmDialog message="Do you want to complete this campaign?"
-                                                buttonText="Finish Campaign"
-                                                @handleConfirm="handleFinishCampaign(item.raw)" />
-                                        </v-list-item>
-                                    </v-list>
-                                </v-menu>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
             </template>
         </VDataTable>
     </VCard>
@@ -105,6 +71,7 @@ import EditCampaignModal from './EditCampaignModal.vue';
 import { useCampaignStore } from '@/stores/campaign';
 import ConfirmDialog from '../ConfirmDialog.vue';
 import { useI18n } from "vue-i18n";
+import { capitalizeLetter } from '@/utils/capitalizeLetter';
 
 const i18n = useI18n();
 const router = useRouter();
@@ -114,32 +81,20 @@ const campaignStore = useCampaignStore();
 const selected = ref([]);
 const search = ref('');
 
-const handleSubmit = async (values: any) => {
-    await campaignStore.addCampaign({ title: values.title, prizeCap: Number(values.prizeCap), type: props.type })
-    await campaignStore.getCampaigns()
-}
-
-const handleUpdate = async (values: any) => {
-    await campaignStore.updateCampaign({ id: values.id, title: values.title, prizeCap: Number(values.prizeCap) })
-    await campaignStore.getCampaigns()
+const handleSelect = async (item: any, row: any) => {
+    if (!row.item.raw.isDone) {
+        await router.push(`/${props.type}/${row.item.raw.slug}`)
+    } else if (item.raw.isDone) {
+        await router.push(`/${props.type}/${row.item.raw.slug}/report`)
+    }
 }
 
 const handleFinishCampaign = async (values: any) => {
     await campaignStore.updateCampaign({ id: values.id, isDone: true })
-    await campaignStore.getCampaigns()
-}
-
-const handleSelect = async (item: any) => {
-    if (!item.raw.isDone) {
-        await router.push(`/${props.type}/${item.raw.id}`)
-    } else if (item.raw.isDone) {
-        await router.push(`/${props.type}/${item.raw.id}/report`)
-    }
 }
 
 const handleDeleteCampaign = async (item: any) => {
     await campaignStore.deleteCampaign(item.raw.id)
-    await campaignStore.getCampaigns()
 }
 
 const headers = [

@@ -1,3 +1,9 @@
-export const capitalizeLetter = (str: string) => {
-  return str.charAt(0).toUpperCase() + str.slice(1)
+export function capitalizeLetter(str: string) {
+  if (typeof str !== 'string') {
+    throw new Error('Input must be a string.')
+  }
+
+  return str.replace(/\b\w/g, function (match) {
+    return match.toUpperCase()
+  })
 }

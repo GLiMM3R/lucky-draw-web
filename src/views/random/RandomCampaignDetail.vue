@@ -35,7 +35,7 @@ const campaignStore = useCampaignStore();
 const { campaign } = storeToRefs(campaignStore);
 
 onMounted(async () => {
-    await campaignStore.getCampaign(slug)
+    await campaignStore.getCampaignBySlug(slug)
 })
 
 </script>

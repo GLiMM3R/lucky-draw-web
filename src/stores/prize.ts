@@ -3,16 +3,17 @@ import { defineStore } from 'pinia'
 import request from '@/utils/request'
 import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
+import { useCampaignStore } from './campaign'
 
 export interface CreatePrize {
-  campaignId: string
+  campaignSlug: string
   title: string
   amount: number
   rank: number
   file: any
 }
 export interface UpdatePrize {
-  campaignId: string
+  campaignSlug: string
   title: string
   amount: number
   rank: number
@@ -21,6 +22,7 @@ export interface UpdatePrize {
 
 export const usePrizeStore = defineStore('prize', () => {
   const $toast = useToast()
+  const campaignStore = useCampaignStore()
 
   const prize = ref<Prize | null>(null)
   const prizes = ref<Prize[]>([])
@@ -56,14 +58,14 @@ export const usePrizeStore = defineStore('prize', () => {
   async function addPrize(prizeData: CreatePrize) {
     isLoading.value = true
     try {
-      const response = await request({
+      await request({
         url: '/prizes',
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data'
         },
         data: {
-          campaignId: prizeData.campaignId,
+          campaignSlug: prizeData.campaignSlug,
           title: prizeData.title,
           amount: prizeData.amount,
           rank: prizeData.rank,
@@ -71,6 +73,7 @@ export const usePrizeStore = defineStore('prize', () => {
         }
       })
 
+      await campaignStore.getCampaignBySlug(prizeData.campaignSlug)
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -81,14 +84,14 @@ export const usePrizeStore = defineStore('prize', () => {
   async function updatePrize(id: string, prizeData: UpdatePrize) {
     isLoading.value = true
     try {
-      const response = await request({
+      await request({
         url: `/prizes/${id}`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'multipart/form-data'
         },
         data: {
-          campaignId: prizeData.campaignId,
+          campaignSlug: prizeData.campaignSlug,
           title: prizeData.title,
           amount: prizeData.amount,
           rank: prizeData.rank,
@@ -96,6 +99,7 @@ export const usePrizeStore = defineStore('prize', () => {
         }
       })
 
+      await campaignStore.getCampaignBySlug(prizeData.campaignSlug)
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
@@ -103,11 +107,12 @@ export const usePrizeStore = defineStore('prize', () => {
     }
   }
 
-  async function deletePrize(id: string) {
+  async function deletePrize(id: string, slug: string) {
     isLoading.value = true
     try {
-      const response = await request({ url: `/prizes/${id}`, method: 'DELETE' })
+      await request({ url: `/prizes/${id}`, method: 'DELETE' })
 
+      await campaignStore.getCampaignBySlug(slug)
       isLoading.value = false
     } catch (error) {
       isLoading.value = false

@@ -12,12 +12,17 @@
                     <VContainer>
                         <VForm @submit.prevent="submit">
                             <VTextField :label="$t('textfield.label.prizeName')" v-model="title.value.value"
-                                :error-messages="title.errorMessage.value" variant="outlined" rounded="lg" />
+                                :error-messages="title.errorMessage.value" variant="outlined" rounded="lg" class="mb-4" />
                             <VTextField :label="$t('textfield.label.prizeRank')" v-model="rank.value.value"
-                                :error-messages="rank.errorMessage.value" type="number" variant="outlined" rounded="lg" />
+                                :error-messages="rank.errorMessage.value" type="number" variant="outlined" rounded="lg"
+                                class="mb-4" />
                             <VTextField :label="$t('textfield.label.prizeAmount')" v-model="amount.value.value"
-                                :error-messages="amount.errorMessage.value" type="number" variant="outlined" rounded="lg" />
-                            <DropFile @getImage="getImage" />
+                                :error-messages="amount.errorMessage.value" type="number" variant="outlined" rounded="lg"
+                                class="mb-4" />
+                            <Suspense>
+                                <UploadImage @getImage="getImage" :isRounded="false" />
+                            </Suspense>
+
                             <v-btn color="primary" type="submit" rounded="lg" block class="my-4 text-none">{{
                                 $t('button.confirm') }}</v-btn>
                         </VForm>
@@ -31,11 +36,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useField, useForm } from 'vee-validate';
-import DropFile from './DropFile.vue';
 import { useRoute } from 'vue-router';
 import { usePrizeStore } from '@/stores/prize';
 import { storeToRefs } from 'pinia';
 import { useCampaignStore } from '@/stores/campaign';
+import UploadImage from '@/components/UploadImage.vue';
+
 
 const route = useRoute();
 const slug = route.params.slug as string
@@ -55,7 +61,7 @@ const { handleSubmit, handleReset } = useForm({
             return 'Title is required!'
         },
         rank(val: number) {
-            if (val < 0) return 'Value must greater than 0'
+            if (!val || val < 0) return 'Value must greater than 0'
             let prizes: any = []
             if (campaign.value?.prizes) {
                 prizes = campaign.value.prizes
@@ -81,8 +87,8 @@ const getImage = (value: File) => {
 }
 
 const submit = handleSubmit(async (values) => {
-    await prizeStore.addPrize({ campaignId: slug, title: values.title, rank: values.rank, amount: values.amount, file: file.value })
-    await campaignStore.getCampaign(slug)
+    await prizeStore.addPrize({ campaignSlug: slug, title: values.title.trim(), rank: values.rank, amount: values.amount, file: file.value })
+    await campaignStore.getCampaignBySlug(slug)
     handleReset();
     dialog.value = false
 })

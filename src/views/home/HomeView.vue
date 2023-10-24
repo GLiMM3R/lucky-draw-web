@@ -3,10 +3,10 @@
         <VRow>
             <VCol cols="9">
                 <VRow>
-                    <VCol cols="4">
+                    <VCol cols="12" md="6" lg="4">
                         <Shortcut title="Random Draw" :logo="Lottery" url="/random" />
                     </VCol>
-                    <VCol cols="4">
+                    <VCol cols="12" md="6" lg="4">
                         <Shortcut title="Wheel Draw" :logo="Wheel" url="/wheel" />
                     </VCol>
                 </VRow>

@@ -34,6 +34,7 @@ import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
 import { useI18n } from "vue-i18n";
 import { computed } from 'vue';
+import { replaceNumber } from '@/utils/replaceNumber'
 
 const i18n = useI18n();
 const campaignStore = useCampaignStore()
@@ -47,12 +48,12 @@ const randomCampaignIsDone = computed(() => campaigns.value.filter((item) => ite
 
 const statics = [
     {
-        value: '8.2',
+        value: replaceNumber(randomCampaign.value.length),
         text: i18n.t('button.newCampaign'),
         logo: LogoStatic
     },
     {
-        value: '124',
+        value: replaceNumber(randomCampaignIsDone.value.length),
         text: i18n.t('tab.done'),
         logo: LogoDone
     },
@@ -63,7 +64,7 @@ const statics = [
 <style scoped lang="scss">
 .title {
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 700;
     padding-left: 2px;
 }
 
