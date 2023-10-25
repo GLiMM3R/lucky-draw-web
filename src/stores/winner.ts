@@ -16,7 +16,7 @@ export const useWinnerStore = defineStore('winner', () => {
   async function getReport(slug: string) {
     isLoading.value = true
     try {
-      const response = await request({ url: `/winner-record/${slug}/report` })
+      const response = await request({ url: `/winner-record/report/${slug}` })
 
       winners.value = response.data.data
       isLoading.value = false

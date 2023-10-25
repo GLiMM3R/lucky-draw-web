@@ -36,7 +36,7 @@
                 </VChip>
             </template>
             <template v-slot:item.actions="{ item }">
-                <div style="text-align: center; display: flex; justify-content: center;">
+                <div v-if="!item.raw.isDone" style="text-align: center; display: flex; justify-content: center;">
                     <div>
                         <ConfirmDialog message="Do you want to delete this?" icon="mdi-trash-can-outline" color="red"
                             @handleConfirm="handleDeleteCampaign(item)" />
@@ -84,7 +84,7 @@ const search = ref('');
 const handleSelect = async (item: any, row: any) => {
     if (!row.item.raw.isDone) {
         await router.push(`/${props.type}/${row.item.raw.slug}`)
-    } else if (item.raw.isDone) {
+    } else if (row.item.raw.isDone) {
         await router.push(`/${props.type}/${row.item.raw.slug}/report`)
     }
 }
@@ -114,10 +114,6 @@ const headers = [
         key: 'prizeCap',
         title: i18n.t('table.header.campaign.prizeCap')
     },
-    // {
-    //     key: 'isDone',
-    //     title: i18n.t('table.header.campaign.status')
-    // },
     { title: '', key: "actions", sortable: false },
 ]
 

@@ -1,8 +1,13 @@
 <template>
     <VContainer>
         <VRow class="static">
-            <VCol cols="12" sm="6" md="6" lg="4" xl="3" v-for="item, index in statics" :key="index">
-                <StatisticCard :item="item" />
+            <VCol cols="12" sm="6" md="6" lg="4" xl="3">
+                <StatisticCard :value="replaceNumber(randomCampaign.length)" :text="$t('button.newCampaign')"
+                    :logo="LogoStatic" />
+            </VCol>
+            <VCol cols="12" sm="6" md="6" lg="4" xl="3">
+                <StatisticCard :value="replaceNumber(randomCampaignIsDone.length)" :text="$t('tab.done')"
+                    :logo="LogoDone" />
             </VCol>
         </VRow>
         <VRow>
@@ -32,11 +37,9 @@ import StatisticCard from '@/components/StatisticCard.vue';
 import CampaignTable from '@/components/campaign/CampaignTable.vue';
 import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
-import { useI18n } from "vue-i18n";
 import { computed } from 'vue';
 import { replaceNumber } from '@/utils/replaceNumber'
 
-const i18n = useI18n();
 const campaignStore = useCampaignStore()
 const { campaigns } = storeToRefs(campaignStore)
 
@@ -45,20 +48,6 @@ const tab = ref(null)
 
 const randomCampaign = computed(() => campaigns.value.filter((item) => item.type === 'random' && item.isDone === false))
 const randomCampaignIsDone = computed(() => campaigns.value.filter((item) => item.type === 'random' && item.isDone === true))
-
-const statics = [
-    {
-        value: replaceNumber(randomCampaign.value.length),
-        text: i18n.t('button.newCampaign'),
-        logo: LogoStatic
-    },
-    {
-        value: replaceNumber(randomCampaignIsDone.value.length),
-        text: i18n.t('tab.done'),
-        logo: LogoDone
-    },
-]
-
 </script>
 
 <style scoped lang="scss">

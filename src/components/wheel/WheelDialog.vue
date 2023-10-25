@@ -52,10 +52,10 @@
                         <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="dialog = false"></VBtn>
                     </template>
                     <VCardItem>
-                        <VImg :src="prizeImage ?? Winner" width="80" class="mx-auto" />
+                        <VImg :src="prizeImage ? prizeImage : Winner" width="80" class="mx-auto" />
                     </VCardItem>
                     <VCardTitle class="text-center text-h4 py-4">
-                        {{ prize?.title }}
+                        {{ capitalizeLetter(prize?.title as string) }}
                     </VCardTitle>
                     <VCardActions>
                         <VBtn class="text-none" variant="elevated" rounded="lg" block color="#00AB55"
@@ -81,6 +81,7 @@ import { useI18n } from "vue-i18n";
 import useImage from '@/composables/useImage';
 import { useAppSettingStore } from '@/stores/appsetting';
 import { useRoute } from 'vue-router';
+import { capitalizeLetter } from '@/utils/capitalizeLetter';
 
 const i18n = useI18n();
 const props = defineProps(['campaign', 'coupon'])
@@ -102,12 +103,6 @@ const loadingImage = ref('');
 
 const { getImage } = useImage();
 
-const appsetting = await appSettingStore.getAppSetting();
-
-if (appsetting.wheelImage) {
-    loadingImage.value = await getImage(appsetting.wheelImage)
-}
-
 const wheelData = {
     firstItemIndex: { value: 0 },
     wheelSettings: {
@@ -126,7 +121,7 @@ const wheelData = {
         baseSize: 100,
         baseDisplayShadow: true,
         baseDisplayIndicator: true,
-        baseBackground: "#EEAA33",
+        baseBackground: "#098E30",
         baseHtmlContent: loadingImage.value ? `<img src="${loadingImage.value}" style="object-fit: cover; width: 100%" />` : "<strong>Go!</strong>",
     }
 }
@@ -143,19 +138,17 @@ function onHardReset() {
     }, 10);
 };
 
-function wheelStartedCallback(resultItem: any) {
-    console.log("wheel started !", resultItem);
+async function wheelStartedCallback(resultItem: any) {
+    await prizeStore.getPrize(resultItem.id)
+    if (prize.value?.image && prize.value?.image !== null || prize.value?.image !== '') {
+        prizeImage.value = await getImage(prize.value?.image as string)
+    }
 };
 
 async function wheelEndedCallback(resultItem: any) {
-    console.log("wheel ended !", resultItem);
-    await prizeStore.getPrize(resultItem.id)
-    if (prize.value?.image) {
-        prizeImage.value = await getImage(prize.value?.image as string)
-    }
     result.value = true
 }
-function handleDialog(rotate: Function) {
+async function handleDialog(rotate: Function) {
     if (props.campaign.prizes.length <= 0) {
         $toast.warning(i18n.t('alert.noPrize'))
         return;
@@ -167,6 +160,13 @@ function handleDialog(rotate: Function) {
     if (!props.coupon) {
         $toast.warning(i18n.t('alert.noCustomer'))
         return;
+    }
+
+    const appsetting = await appSettingStore.getAppSetting();
+    console.log("🚀 ~ file: WheelDialog.vue:167 ~ handleDialog ~ appsetting:", appsetting)
+
+    if (appsetting && appsetting.wheelImage) {
+        loadingImage.value = await getImage(appsetting.wheelImage)
     }
     result.value = false
     dialog.value = !dialog.value
