@@ -61,9 +61,9 @@ const route = useRoute();
 const slug = route.params.slug as string
 
 
-const uploader = ref(null);
+const uploader = ref();
 const isSelecting = ref(false);
-const selectedFile = ref(null);
+const selectedFile = ref();
 
 function handleFileImport() {
     isSelecting.value = true;

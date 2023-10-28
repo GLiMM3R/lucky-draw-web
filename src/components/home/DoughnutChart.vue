@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { Doughnut } from 'vue-chartjs'
 import { Chart as ChartJS, ArcElement, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-
+import type { ChartOptions, ChartConfiguration } from 'chart.js'
 ChartJS.register(ArcElement, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const chartData = {
@@ -20,6 +20,7 @@ const chartData = {
         }
     ]
 };
+
 const chartOptions = {
     cutout: '80%',
     responsive: true,

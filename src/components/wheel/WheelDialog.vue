@@ -96,10 +96,10 @@ const { prize } = storeToRefs(prizeStore)
 
 const dialog = ref(false)
 const result = ref(false)
-const wheel = ref(null)
+const wheel = ref()
 const wheelActive = ref(true)
-const prizeImage = ref('');
-const loadingImage = ref('');
+const prizeImage = ref();
+const loadingImage = ref();
 
 const { getImage } = useImage();
 
@@ -127,7 +127,7 @@ const wheelData = {
 }
 
 function launchWheel() {
-    wheel.value.launchWheel();
+    wheel.value!.launchWheel();
 };
 
 function onHardReset() {
@@ -163,7 +163,6 @@ async function handleDialog(rotate: Function) {
     }
 
     const appsetting = await appSettingStore.getAppSetting();
-    console.log("🚀 ~ file: WheelDialog.vue:167 ~ handleDialog ~ appsetting:", appsetting)
 
     if (appsetting && appsetting.wheelImage) {
         loadingImage.value = await getImage(appsetting.wheelImage)

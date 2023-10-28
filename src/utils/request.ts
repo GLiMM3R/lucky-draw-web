@@ -8,7 +8,7 @@ import {
 } from '@/utils/token'
 import axios from 'axios'
 
-const BASE_URL = 'http://127.0.0.1:3008'
+const BASE_URL = 'http://localhost:3000'
 // const BASE_URL = 'http://192.168.1.220:3008'
 
 const axiosApiInstance = axios.create({

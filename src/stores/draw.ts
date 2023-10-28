@@ -48,6 +48,7 @@ export const useDrawStore = defineStore('draw', () => {
         method: 'POST',
         data: randomData
       })
+      console.log('🚀 ~ file: draw.ts:51 ~ randomDraw ~ response:', response)
 
       if (response.response.status === 400) {
         errorMessage.value = response.response.data.message

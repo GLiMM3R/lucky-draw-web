@@ -38,15 +38,15 @@ const props = defineProps(['image', 'isRounded'])
 const { getImage } = useImage();
 const $toast = useToast();
 
-const selectFile = ref(null);
-const previewImage = ref('');
+const selectFile = ref();
+const previewImage = ref();
 const dragging = ref(false)
 
 if (props.image) {
     previewImage.value = await getImage(props.image)
 }
 
-const onFileChange = (event: Event) => {
+const onFileChange = (event: any) => {
     var files = event.target.files || event.dataTransfer.files;
 
     if (!files.length) {

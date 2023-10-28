@@ -1,6 +1,6 @@
 <script lang="ts">
-import { computed, onMounted, watchEffect, ref, PropType } from "vue";
-
+import { computed, onMounted, watchEffect, ref } from "vue";
+import type { PropType } from 'vue'
 const ROTATION_SPEED_MIN = 200; // minimum possible duration of single particle full rotation
 const ROTATION_SPEED_MAX = 800; // maximum possible duration of single particle full rotation
 const CRAZY_PARTICLES_FREQUENCY = 0.1; // 0-1 frequency of crazy curvy unpredictable particles
@@ -333,7 +333,8 @@ export default {
 
 <template>
     <div v-if="isVisible && isValid" class="confetti-container" :style="`--floor-height: ${stageHeight}px;`">
-        <div v-for="{ color, degree } in particles" :key="degree" class="particle" :ref="(el) => setItemRef(el, degree)">
+        <div v-for="{ color, degree } in particles" :key="degree" class="particle"
+            :ref="(el: any) => setItemRef(el, degree)">
             <div :style="`--bgcolor: ${color};`" />
         </div>
     </div>

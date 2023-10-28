@@ -127,8 +127,8 @@ const dialog = ref(false)
 const showResult = ref(true)
 const isCompleted = ref(false)
 const selectedPrize = ref(99)
-const prizeImage = ref(null);
-const loadingImage = ref('');
+const prizeImage = ref();
+const loadingImage = ref();
 
 await campaignStore.getCampaignBySlug(slug)
 

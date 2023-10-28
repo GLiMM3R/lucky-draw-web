@@ -3,7 +3,7 @@
         <h2 class="title">{{ $t('table.title.prize') }}</h2>
     </div>
     <VCard class="shadow">
-        <v-data-table :group-by="groupBy" :headers="headers" :items="props.source" class="elevation-1">
+        <v-data-table :groupBy="groupBy" :sort-by="sortBy" :headers="headers" :items="props.source" class="elevation-1">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -29,6 +29,7 @@ import { useI18n } from "vue-i18n";
 
 const i18n = useI18n();
 const props = defineProps(['source'])
+const sortBy = [{ key: 'createdAt', order: 'asc' }];
 const groupBy = [{ key: 'prize.title', order: 'asc' }];
 const headers = [
     {
