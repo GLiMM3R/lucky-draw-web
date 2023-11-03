@@ -35,5 +35,6 @@ const emit = defineEmits(['handleConfirm'])
 
 const handleConfirm = () => {
     emit('handleConfirm')
+    dialog.value = false
 }
 </script>

@@ -17,10 +17,10 @@
                 </VTabs>
                 <VWindow v-model="tab">
                     <VWindowItem value="all" style="padding: 16px 4px;">
-                        <CampaignTable :campaigns="wheelCampaign" type="wheel" />
+                        <WheelCampaignTable :campaigns="wheelCampaign" type="wheel" />
                     </VWindowItem>
                     <VWindowItem value="done" style="padding: 16px 4px;">
-                        <CampaignTable :campaigns="wheelCampaignIsDone" type="wheel" />
+                        <WheelCampaignTable :campaigns="wheelCampaignIsDone" type="wheel" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>
@@ -33,18 +33,21 @@ import { computed, ref } from 'vue';
 import LogoStatic from '@/assets/images/campaign_static.png'
 import LogoDone from '@/assets/images/done.png'
 import StatisticCard from '@/components/StatisticCard.vue';
-import CampaignTable from '@/components/campaign/CampaignTable.vue';
-import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
 import { replaceNumber } from '@/utils/replaceNumber'
+import { useWheelStore } from '@/stores/wheel';
+import { onMounted } from 'vue';
+import WheelCampaignTable from '@/components/wheel/WheelCampaignTable.vue';
 
-const campaignStore = useCampaignStore()
-const { campaigns } = storeToRefs(campaignStore)
+const wheelStore = useWheelStore()
+const { wheels } = storeToRefs(wheelStore)
 
 const tab = ref(null)
 
-const wheelCampaign = computed(() => campaigns.value.filter((item) => item.type === 'wheel' && item.isDone === false))
-const wheelCampaignIsDone = computed(() => campaigns.value.filter((item) => item.type === 'wheel' && item.isDone === true))
+const wheelCampaign = computed(() => wheels.value.filter((item) => item.isComplete === false))
+const wheelCampaignIsDone = computed(() => wheels.value.filter((item) => item.isComplete === true))
+
+onMounted(async () => await wheelStore.fetchWheels())
 </script>
 
 <style scoped lang="scss">

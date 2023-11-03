@@ -42,10 +42,10 @@ import { useI18n } from "vue-i18n";
 
 const i18n = useI18n();
 const props = defineProps(['campaigns'])
-const { getReport, } = useReport()
+const { downloadReport, } = useReport()
 
 const handleDownloadReport = async (item: any) => {
-    await getReport(item.id, item.title)
+    await downloadReport(item.id, item.title)
 }
 
 

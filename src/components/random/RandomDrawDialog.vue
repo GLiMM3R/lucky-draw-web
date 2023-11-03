@@ -4,16 +4,16 @@
     </v-btn>
     <v-dialog v-if="showResult" v-model="dialog" class="overlay" persistent scrollable width="900">
         <VCard width="auto" class="bg-primary  rounded-lg">
-            <VCardTitle v-if="campaign" class="text-center py-8 text-h3 font-weight-bold">
-                {{ campaign.prizes[selectedPrize].title }}
+            <VCardTitle v-if="random" class="text-center py-8 text-h3 font-weight-bold">
+                {{ randomPrizes[selectedPrize].title }}
             </VCardTitle>
         </VCard>
-        <v-item-group v-if="campaign" mandatory v-model="selectedPrize">
+        <v-item-group v-if="random" mandatory v-model="selectedPrize">
             <v-container>
                 <v-row :dense="true">
-                    <v-col class="text-center" v-for="item, index in campaign.prizes" :key="index">
+                    <v-col class="text-center" v-for="item, index in randomPrizes" :key="index">
                         <v-item v-slot="{ isSelected, toggle }">
-                            <VAvatar v-if="!item.isDone" @click="toggle" :size="isSelected ? 58 : 48"
+                            <VAvatar v-if="!item.isComplete" @click="toggle" :size="isSelected ? 58 : 48"
                                 :color="isSelected ? 'primary' : 'white'" style="cursor: pointer;">
                                 <v-icon v-if="isSelected" :icon="isSelected ? 'mdi-check-bold' : ''" />
                                 <div v-else>{{ item.rank }}</div>
@@ -30,13 +30,13 @@
                 </v-row>
             </v-container>
         </v-item-group>
-        <WinnerTable :winners="winners" />
+        <RandomWinnerTable :winners="winners" />
         <VRow justify="center" no-gutters class="mt-8">
             <VCol class="d-flex justify-center">
                 <v-btn color="red" variant="flat" rounded="lg" class="text-none" @click="dialog = false">{{
                     $t('button.exit') }}</v-btn>
             </VCol>
-            <VCol v-if="campaign?.prizes[selectedPrize].isDone === false" class="d-flex justify-center">
+            <VCol v-if="randomPrizes[selectedPrize].isComplete === false" class="d-flex justify-center">
                 <v-btn color="green-darken-1" rounded="lg" variant="elevated" class="text-none" @click="handleRandom"
                     :loading="isLoading">{{
                         $t('button.startRandom') }}</v-btn>
@@ -101,15 +101,16 @@ import Random from '@/assets/images/random2.gif'
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useCampaignStore } from '@/stores/campaign';
-import WinnerTable from './WinnerTable.vue';
-import { useDrawStore } from '@/stores/draw';
+import RandomWinnerTable from './RandomWinnerTable.vue';
 import { useToast } from 'vue-toast-notification';
 import { useI18n } from "vue-i18n";
 import useImage from '@/composables/useImage';
 import Confetti from '@/components/Confetti.vue'
 import { nextTick } from 'vue';
 import { useAppSettingStore } from '@/stores/appsetting';
+import { useRandomStore } from '@/stores/random';
+import { useWinnerStore } from '@/stores/winner';
+import { useRandomPrizeStore } from '@/stores/randomPrize';
 
 const i18n = useI18n();
 const $toast = useToast()
@@ -117,10 +118,12 @@ const route = useRoute();
 const slug = route.params.slug as string
 
 const appSettingStore = useAppSettingStore();
-const campaignStore = useCampaignStore();
-const drawStore = useDrawStore();
-const { campaign } = storeToRefs(campaignStore)
-const { isLoading, winners, errorMessage } = storeToRefs(drawStore)
+const randomStore = useRandomStore();
+const randomPrizeStore = useRandomPrizeStore();
+const winnerStore = useWinnerStore();
+const { random, errorMessage, isLoading } = storeToRefs(randomStore)
+const { randomPrizes } = storeToRefs(randomPrizeStore)
+const { winners } = storeToRefs(winnerStore)
 const { getImage } = useImage();
 
 const dialog = ref(false)
@@ -130,11 +133,11 @@ const selectedPrize = ref(99)
 const prizeImage = ref();
 const loadingImage = ref();
 
-await campaignStore.getCampaignBySlug(slug)
+await randomStore.fetchRandomBySlug(slug)
 
 watch(() => selectedPrize.value, async () => {
-    if (campaign.value?.prizes[selectedPrize.value].isDone) {
-        await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
+    if (randomPrizes.value[selectedPrize.value].isComplete) {
+        await winnerStore.fetchWinnersByPrizeId(slug, randomPrizes.value[selectedPrize.value].id as string)
     } else {
         winners.value = []
     }
@@ -149,27 +152,25 @@ const explode = async () => {
 };
 
 const handleDialog = async () => {
-    await campaignStore.getCampaignBySlug(slug)
     const appsetting = await appSettingStore.getAppSetting();
-
     if (appsetting && appsetting.randomImage) {
         loadingImage.value = await getImage(appsetting.randomImage)
     }
 
-    if (campaign.value?.prizes.length === 0) {
+    if (randomPrizes.value?.length === 0) {
         $toast.warning(i18n.t('alert.noPrize'))
         return
     }
-    if (!campaign.value?.file) {
+    if (!random.value?.dataset) {
         $toast.warning(i18n.t('alert.selectCoupon'))
         return
     }
 
-    selectedPrize.value = campaign.value?.prizes.length - 1
+    selectedPrize.value = randomPrizes.value?.length - 1
     dialog.value = !dialog.value
 
-    if (campaign.value.isDone) {
-        await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
+    if (random.value.isComplete) {
+        await winnerStore.fetchWinnersByPrizeId(slug, randomPrizes.value[selectedPrize.value].id as string)
     }
 }
 
@@ -183,18 +184,18 @@ const handleRandom = async () => {
         $toast.warning(i18n.t('alert.noPrize'))
         return;
     }
-    if (campaign.value?.prizes[selectedPrize.value].isDone) {
+    if (randomPrizes.value[selectedPrize.value].isComplete) {
         alert(i18n.t('alert.alreadyRandom'))
         return;
     }
     showResult.value = false
-    await drawStore.randomDraw({ campaignSlug: slug, prizeId: campaign.value?.prizes[selectedPrize.value].id as string })
+    await randomStore.randomDraw({ randomSlug: slug, prizeId: randomPrizes.value[selectedPrize.value].id as string })
     if (!errorMessage.value) {
         setTimeout(async () => {
-            await drawStore.getWinnerRecord(slug, campaign.value?.prizes[selectedPrize.value].id as string)
-            await campaignStore.getCampaignBySlug(slug)
-            if (campaign.value?.prizes[selectedPrize.value].image) {
-                prizeImage.value = await getImage(campaign.value?.prizes[selectedPrize.value].image as string)
+            await winnerStore.fetchWinnersByPrizeId(slug, randomPrizes.value[selectedPrize.value].id as string)
+            await randomStore.fetchRandomBySlug(slug)
+            if (randomPrizes.value[selectedPrize.value].image) {
+                prizeImage.value = await getImage(randomPrizes.value[selectedPrize.value].image as string)
             };
             isCompleted.value = true
             await explode();
@@ -219,4 +220,4 @@ const handleRandom = async () => {
     top: 0;
     transform: translateX(50%);
 }
-</style>
+</style>@/stores/draw@/stores/drawPrize

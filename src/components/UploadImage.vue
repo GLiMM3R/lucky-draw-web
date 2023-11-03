@@ -2,7 +2,7 @@
     <div :class="['dropZone', dragging ? 'dropZone-over' : '']" @dragenter="dragging = true" @dragleave="dragging = false">
         <div @drag="onFileChange">
             <div class="dropZone-info">
-                <div v-if="selectFile || $props.image">
+                <div v-if="selectFile || props.image">
                     <VIcon size="34" class="change-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="34px" height="34px" viewBox="0 0 34 34" fill="none">
                             <path

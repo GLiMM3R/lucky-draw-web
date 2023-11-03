@@ -3,7 +3,7 @@
         <VCardTitle class="d-flex">
             <VTextField v-model="search" variant="outlined" density="comfortable" prepend-inner-icon="mdi-magnify"
                 :placeholder="$t('textfield.placeholder.search')" />
-            <CreateCampaignModal :type="$props.type" />
+            <FormWheelCampaign />
         </VCardTitle>
         <VDataTable :headers="headers" :items="props.campaigns" :search="search" :hover="true" class="text-center"
             @click:row="handleSelect">
@@ -30,11 +30,6 @@
             <template v-slot:item.createdBy="{ item }">
                 {{ item.columns.createdBy.username }}
             </template>
-            <template v-slot:item.prizeCap="{ item }">
-                <VChip rounded="sm" :color="getColor(item.columns.prizeCap)">
-                    {{ item.columns.prizeCap }}
-                </VChip>
-            </template>
             <template v-slot:item.actions="{ item }">
                 <div v-if="!item.raw.isComplete" style="text-align: center; display: flex; justify-content: center;">
                     <div>
@@ -48,7 +43,7 @@
                             </template>
                             <v-list>
                                 <v-list-item>
-                                    <EditCampaignModal :campaign="item.raw" :type="props.type" />
+                                    <FormWheelCampaign :campaign="item.raw" />
                                 </v-list-item>
                                 <v-list-item>
                                     <ConfirmDialog message="Do you want to complete this campaign?"
@@ -66,35 +61,33 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import CreateCampaignModal from './CreateCampaignModal.vue';
-import EditCampaignModal from './EditCampaignModal.vue';
-import { useCampaignStore } from '@/stores/campaign';
 import ConfirmDialog from '../ConfirmDialog.vue';
 import { useI18n } from "vue-i18n";
 import { capitalizeLetter } from '@/utils/capitalizeLetter';
+import FormWheelCampaign from './FormWheelCampaign.vue';
+import { useWheelStore } from '@/stores/wheel';
 
 const i18n = useI18n();
 const router = useRouter();
-const props = defineProps(['campaigns', 'type'])
-const campaignStore = useCampaignStore();
+const props = defineProps(['campaigns'])
+const wheelStore = useWheelStore();
 
-const selected = ref([]);
 const search = ref('');
 
 const handleSelect = async (item: any, row: any) => {
     if (!row.item.raw.isComplete) {
-        await router.push(`/${props.type}/${row.item.raw.slug}`)
+        await router.push(`/wheel/${row.item.raw.slug}`)
     } else if (row.item.raw.isComplete) {
-        await router.push(`/${props.type}/${row.item.raw.slug}/report`)
+        await router.push(`/wheel/${row.item.raw.slug}/report`)
     }
 }
 
 const handleFinishCampaign = async (values: any) => {
-    await campaignStore.updateCampaign({ id: values.id, isDone: true })
+    await wheelStore.updateWheel({ id: values.id, isComplete: true })
 }
 
 const handleDeleteCampaign = async (item: any) => {
-    await campaignStore.deleteCampaign(item.raw.id)
+    await wheelStore.deleteWheel(item.raw.id)
 }
 
 const headers = [
@@ -109,10 +102,6 @@ const headers = [
     {
         key: 'createdBy',
         title: i18n.t('table.header.campaign.createdBy')
-    },
-    {
-        key: 'prizeCap',
-        title: i18n.t('table.header.campaign.prizeCap')
     },
     { title: '', key: "actions", sortable: false },
 ]

@@ -80,6 +80,8 @@
     "button": {
         "newCampaign": "ແຄມເປນໃໝ່",
         "createPrize": "ສ້າງລາງວັນ",
+        "editPrize": "ແກ້ໄຂລາງວັນ",
+        "campaignSetting": "ຕັ້ງຄ່າແຄມເປນ",
         "importCoupon": "ນຳເຂົ້າຄູປອງ",
         "exportCoupon": "ສົ່ງອອກຄູປອງ",
         "createCustomer": "ສ້າງລູກຄ້າ",

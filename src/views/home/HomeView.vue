@@ -11,10 +11,12 @@
                     </VCol>
                 </VRow>
                 <VRow>
-                    <HomeCampaignTable title="Random Draw" url="/random" :campaigns="random" :isLoading="isLoading" />
+                    <HomeCampaignTable title="Random Draw" url="/random" :campaigns="drawCampaigns"
+                        :isLoading="randomLoading" />
                 </VRow>
                 <VRow>
-                    <HomeCampaignTable title="Wheel Draw" url="/wheel" :campaigns="wheel" :isLoading="isLoading" />
+                    <HomeCampaignTable title="Wheel Draw" url="/wheel" :campaigns="wheelCapaigns"
+                        :isLoading="wheelLoading" />
                 </VRow>
             </VCol>
             <VCol cols="3">
@@ -37,20 +39,24 @@ import Shortcut from '@/components/home/Shortcut.vue'
 import Wheel from '@/assets/images/wheel.png'
 import Lottery from '@/assets/images/lottery.png'
 import HomeCampaignTable from '@/components/home/HomeCampaignTable.vue';
-import { useCampaignStore } from '@/stores/campaign';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 import DoughnutChart from '@/components/home/DoughnutChart.vue';
 import { computed } from 'vue';
+import { useWheelStore } from '@/stores/wheel';
+import { useDrawStore } from '@/stores/draw';
 
-const cmapaignStore = useCampaignStore();
-const { campaigns, isLoading } = storeToRefs(cmapaignStore)
+const drawStore = useDrawStore();
+const wheelStore = useWheelStore();
+const { draws, isLoading: randomLoading } = storeToRefs(drawStore)
+const { wheels, wheel: wheelLoading } = storeToRefs(wheelStore)
 
-const random = computed(() => campaigns.value.filter((item) => item.type === 'random').slice(0, 5))
-const wheel = computed(() => campaigns.value.filter((item) => item.type === 'wheel').slice(0, 5))
+const drawCampaigns = computed(() => draws.value.slice(0, 5))
+const wheelCapaigns = computed(() => wheels.value.slice(0, 5))
 
 onMounted(async () => {
-    await cmapaignStore.getCampaigns();
+    await drawStore.fetchDraws();
+    await wheelStore.fetchWheels();
 })
 </script>
 
@@ -58,4 +64,4 @@ onMounted(async () => {
 .shadow {
     box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
-</style>
+</style>@/stores/draw

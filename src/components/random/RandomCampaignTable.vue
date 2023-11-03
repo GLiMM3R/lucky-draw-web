@@ -3,7 +3,12 @@
         <VCardTitle class="d-flex">
             <VTextField v-model="search" variant="outlined" density="comfortable" prepend-inner-icon="mdi-magnify"
                 :placeholder="$t('textfield.placeholder.search')" />
-            <CreateCampaignModal :type="$props.type" />
+            <Suspense>
+                <FormRandomCampaign />
+                <template #fallback>
+                    Loading...
+                </template>
+            </Suspense>
         </VCardTitle>
         <VDataTable :headers="headers" :items="props.campaigns" :search="search" :hover="true" class="text-center"
             @click:row="handleSelect">
@@ -48,7 +53,7 @@
                             </template>
                             <v-list>
                                 <v-list-item>
-                                    <EditCampaignModal :campaign="item.raw" :type="props.type" />
+                                    <FormRandomCampaign :campaign="item.raw" />
                                 </v-list-item>
                                 <v-list-item>
                                     <ConfirmDialog message="Do you want to complete this campaign?"
@@ -66,35 +71,35 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import CreateCampaignModal from './CreateCampaignModal.vue';
-import EditCampaignModal from './EditCampaignModal.vue';
-import { useCampaignStore } from '@/stores/campaign';
 import ConfirmDialog from '../ConfirmDialog.vue';
 import { useI18n } from "vue-i18n";
 import { capitalizeLetter } from '@/utils/capitalizeLetter';
+import FormRandomCampaign from './FormRandomCampaign.vue';
+import { useDrawStore } from '@/stores/draw';
 
 const i18n = useI18n();
 const router = useRouter();
-const props = defineProps(['campaigns', 'type'])
-const campaignStore = useCampaignStore();
+const props = defineProps(['campaigns'])
+const drawStore = useDrawStore();
 
-const selected = ref([]);
 const search = ref('');
 
 const handleSelect = async (item: any, row: any) => {
     if (!row.item.raw.isComplete) {
-        await router.push(`/${props.type}/${row.item.raw.slug}`)
+        await router.push(`/random/${row.item.raw.slug}`)
     } else if (row.item.raw.isComplete) {
-        await router.push(`/${props.type}/${row.item.raw.slug}/report`)
+        await router.push(`/random/${row.item.raw.slug}/report`)
     }
 }
 
 const handleFinishCampaign = async (values: any) => {
-    await campaignStore.updateCampaign({ id: values.id, isDone: true })
+    await drawStore.updateDraw({ id: values.id, isComplete: true })
+    await drawStore.fetchDraws();
 }
 
 const handleDeleteCampaign = async (item: any) => {
-    await campaignStore.deleteCampaign(item.raw.id)
+    await drawStore.deleteDraw(item.raw.id)
+    await drawStore.fetchDraws();
 }
 
 const headers = [
@@ -131,4 +136,4 @@ const getColor = (status: boolean) => {
 .shadow {
     box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
-</style>
+</style>@/stores/draw

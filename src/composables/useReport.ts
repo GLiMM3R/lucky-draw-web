@@ -6,10 +6,10 @@ export default function useReport() {
   const $toast = useToast()
   const isLoading = ref(false)
 
-  const getReport = async (id: string, title: string) => {
+  const downloadReport = async (id: string, title: string) => {
     try {
       const response = await request({
-        url: `/reports/${id}`,
+        url: `/randoms/${id}`,
         method: 'GET',
         responseType: 'blob'
       })
@@ -27,5 +27,5 @@ export default function useReport() {
     }
   }
 
-  return { getReport }
+  return { downloadReport }
 }

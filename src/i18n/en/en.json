@@ -80,6 +80,8 @@
     "button": {
         "newCampaign": "New Campaign",
         "createPrize": "Create Prize",
+        "editPrize": "Edit Prize",
+        "campaignSetting": "Campaign Setting",
         "importCoupon": "Import Coupon",
         "exportCoupon": "Export Coupon",
         "createCustomer": "Create Customer",

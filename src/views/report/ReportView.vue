@@ -32,23 +32,29 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useCampaignStore } from '@/stores/campaign';
 import { replaceNumber } from '@/utils/replaceNumber'
 import Wheel from '@/assets/images/wheel.png'
 import Lottery from '@/assets/images/lottery.png'
 import ReportTable from '@/components/report/ReportTable.vue';
 import ReportStatistic from '@/components/report/ReportStatistic.vue';
+import { useRandomStore } from '@/stores/random';
+import { useWheelStore } from '@/stores/wheel';
 
 
-const campaignStore = useCampaignStore();
-const { campaigns } = storeToRefs(campaignStore);
+const randomStore = useRandomStore();
+const wheelStore = useWheelStore();
+const { randoms } = storeToRefs(randomStore);
+const { wheels } = storeToRefs(wheelStore);
 
-const random = computed(() => campaigns.value.filter((item) => item.type === 'random' && item.isDone === true))
-const wheel = computed(() => campaigns.value.filter((item) => item.type === 'wheel' && item.isDone === true))
+const random = computed(() => randoms.value.filter((item) => item.isComplete === true))
+const wheel = computed(() => wheels.value.filter((item) => item.isComplete === true))
 
 const tab = ref('')
 
-onMounted(async () => await campaignStore.getCampaigns())
+onMounted(async () => {
+    await randomStore.fetchRandoms();
+    await wheelStore.fetchWheels();
+})
 </script>
   
 <style scoped lang="scss">
@@ -57,4 +63,4 @@ onMounted(async () => await campaignStore.getCampaigns())
     font-weight: 600;
     padding-left: 2px;
 }
-</style>
+</style>@/stores/draw

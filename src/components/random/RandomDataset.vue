@@ -2,8 +2,8 @@
     <div class="dataset-header">
         <h2 class="title">{{ $t('table.title.coupon') }}</h2>
         <div>
-            <VBtn v-if="props.campaign.isDone === false" class="text-none" variant="outlined" rounded="lg"
-                prepend-icon='mdi-plus' :loading="isSelecting" @click="handleFileImport">
+            <VBtn v-if="!random?.isComplete" class="text-none" variant="outlined" rounded="lg" prepend-icon='mdi-plus'
+                :loading="isSelecting" @click="handleFileImport">
                 {{ $t('button.importCoupon') }}</VBtn>
             <input ref="uploader" accept=".csv" type="file" class="d-none" @change="onFileChanged" />
             <VBtn class="text-none ml-4" prepend-icon='mdi-plus' rounded="lg" @click="handleDownload">{{
@@ -28,15 +28,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="props.campaign.file" class="text-center">
-                    <td>{{ props.campaign.file ? props.campaign.file.replace(`dataset/${props.campaign.slug}/`, '') : '' }}
+                <tr v-if="random?.dataset" class="text-center">
+                    <td>{{ random?.dataset ? random?.dataset.replace(`dataset/${random?.slug}/`, '') : '' }}
                     </td>
-                    <td>{{ new Date(props.campaign.createdAt).toDateString() ?? '' }}</td>
-                    <td>{{ props.campaign.createdBy.username ?? '' }}</td>
-                    <td v-if="$props.campaign.isDone === false">
-                        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red"
+                    <td>{{ new Date(random?.createdAt).toDateString() ?? '' }}</td>
+                    <td>{{ random?.createdBy.username ?? '' }}</td>
+                    <td v-if="random?.isComplete === false">
+                        <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" :loading="isLoading"
                             @click="handleRemoveFile" />
-                        <!-- <v-btn size="small" variant="text" icon="mdi-dots-vertical" @click="() => { }" /> -->
                     </td>
                 </tr>
                 <tr v-else>
@@ -50,16 +49,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useCampaignStore } from '@/stores/campaign';
 import useCsv from '@/composables/useCsv';
-
-const props = defineProps(['campaign'])
-const campaignStore = useCampaignStore();
-const { downloadCsv } = useCsv();
+import { useRandomStore } from '@/stores/random';
+import { storeToRefs } from 'pinia';
 
 const route = useRoute();
 const slug = route.params.slug as string
 
+const randomStore = useRandomStore()
+const { random, isLoading } = storeToRefs(randomStore)
+const { downloadCsv } = useCsv();
+
+await randomStore.fetchRandomBySlug(slug)
 
 const uploader = ref();
 const isSelecting = ref(false);
@@ -74,7 +75,7 @@ function handleFileImport() {
     uploader.value.click();
 };
 
-async function onFileChanged(event: Event) {
+async function onFileChanged(event: any) {
     const files = event.target.files[0];
     if (!files.type.match('text/csv')) {
         alert('File type is not support!')
@@ -83,20 +84,22 @@ async function onFileChanged(event: Event) {
     if (files) {
         selectedFile.value = files;
         uploader.value.value = null;
-        await campaignStore.uploadFileDataset(props.campaign.id, selectedFile.value, slug)
+        await randomStore.uploadFileDataset(random.value!.id, selectedFile.value)
+        await randomStore.fetchRandomBySlug(slug)
     }
 };
 
 async function handleDownload() {
-    if (!props.campaign.file) {
+    if (!random.value?.dataset) {
         return alert('No file!')
     }
-    await downloadCsv(props.campaign.file, props.campaign.file.replace(`dataset/${props.campaign.slug}`, ''));
+    await downloadCsv(random.value.dataset, random.value.dataset.replace(`dataset/${slug}`, ''));
 }
 
 async function handleRemoveFile() {
     selectedFile.value = null;
-    await campaignStore.uploadFileDataset(props.campaign.id, selectedFile.value, slug)
+    await randomStore.uploadFileDataset(random.value!.id, selectedFile.value)
+    await randomStore.fetchRandomBySlug(slug)
 }
 </script>
 
@@ -116,4 +119,4 @@ async function handleRemoveFile() {
 .shadow {
     box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
-</style>
+</style>@/stores/draw

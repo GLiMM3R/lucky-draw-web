@@ -1,13 +1,13 @@
 <template>
   <SplashScreen :isLoading="loading" v-if="loading" />
   <VContainer v-else class="layout-wrapper" :fluid="true">
-    <VRow class="content">
-      <VCol cols="6" class="logo">
-        <VImg :src="Logo" width="500" height="500" />
-        <p>Lucky Draw System</p>
+    <VRow class="content" justify="center">
+      <VCol cols="12" sm="12" md="12" lg="6" class="logo">
+        <VImg :src="Logo" width="600" height="300" />
+        <!-- <p>Lucky Draw System</p> -->
       </VCol>
-      <VCol cols="6">
-        <VCard class="card">
+      <VCol cols="12" sm="12" md="12" lg="6" style="display: flex; justify-content: center;">
+        <VCard class="card" width="600" height="620">
           <VForm @submit.prevent="submit">
             <VCardTitle style="color: white; text-align: center; font-size: 48px" class="py-16">
               Login
@@ -39,7 +39,7 @@ import { ref } from 'vue'
 import { useForm, useField } from 'vee-validate'
 import SplashScreen from '@/components/SplashScreen.vue'
 import { useUserStore } from '@/stores/user'
-import Logo from '@/assets/images/jmart.png'
+import Logo from '@/assets/images/logo-banner.png'
 import { storeToRefs } from 'pinia'
 
 const userStore = useUserStore()
@@ -110,8 +110,6 @@ setTimeout(() => {
 
 .card {
   background: rgba(255, 255, 255, 0.1);
-  width: 611px;
-  height: 641px;
   padding: 24px;
 }
 

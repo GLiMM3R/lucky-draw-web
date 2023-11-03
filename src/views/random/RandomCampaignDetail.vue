@@ -2,42 +2,39 @@
     <VContainer>
         <VRow>
             <VCol>
-                <RandomDataset v-if="campaign" :campaign="campaign" />
+                <Suspense>
+                    <RandomDataset />
+                    <template #fallback>
+                        Loading...
+                    </template>
+                </Suspense>
             </VCol>
         </VRow>
         <VRow>
             <VCol>
-                <PrizeTable v-if="campaign?.prizes" :prizes="campaign.prizes" />
+                <Suspense>
+                    <RandomPrizeTable />
+                    <template #fallback>
+                        Loading...
+                    </template>
+                </Suspense>
             </VCol>
         </VRow>
         <VRow justify="center">
             <Suspense>
                 <RandomDrawDialog />
+                <template #fallback>
+                    Loading...
+                </template>
             </Suspense>
         </VRow>
     </VContainer>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useRoute } from 'vue-router';
-import { useCampaignStore } from '@/stores/campaign';
-
 import RandomDataset from '@/components/random/RandomDataset.vue';
 import RandomDrawDialog from '@/components/random/RandomDrawDialog.vue';
-import PrizeTable from '@/components/campaign/PrizeTable.vue';
-
-const route = useRoute();
-const slug = route.params.slug as string
-
-const campaignStore = useCampaignStore();
-const { campaign } = storeToRefs(campaignStore);
-
-onMounted(async () => {
-    await campaignStore.getCampaignBySlug(slug)
-})
-
+import RandomPrizeTable from '@/components/random/RandomPrizeTable.vue';
 </script>
 
 <style scoped lang="scss">

@@ -14,11 +14,16 @@
         </VListItem>
       </VList>
     </VMenu>
-    <v-btn class="text-none">
+    <!-- <v-btn class="text-none">
       <v-badge content="2" color="error">
         <v-icon>mdi-bell-outline</v-icon>
       </v-badge>
+    </v-btn> -->
+    <v-btn class="text-none" variant="text" @click="handleLogout">
+      <v-icon size="24">mdi-logout</v-icon>
+      <v-tooltip activator="parent" location="bottom">Logout</v-tooltip>
     </v-btn>
+    <!-- 
     <VMenu>
       <template v-slot:activator="{ props }">
         <v-btn color="primary" v-bind="props">
@@ -34,7 +39,7 @@
           </v-list-item-title>
         </VListItem>
       </VList>
-    </VMenu>
+    </VMenu> -->
   </div>
 </template>
 
