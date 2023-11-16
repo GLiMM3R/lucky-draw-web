@@ -1,59 +1,58 @@
 {
-    "menuitem": {
-        "home": "ໜ້າຫຼັກ",
+    "sidebar": {
+        "home": "ໜ້າຫລັກ",
         "report": "ລາຍງານ",
-        "random": "ສຸ່ມຈັບລາງວັນ",
-        "wheel": "ວົງລໍ້   ",
+        "random": "ສຸ່ມ",
+        "wheel": "ວົງລໍ້ສຸ່ມ",
         "customization": "Customization",
-        "general": "ທົ່ວໄປ"
+        "general": "ທົ່ວໄປ "
     },
     "table": {
         "title": {
-            "coupon": "ຂໍ້ມູນຄູປອງ",
-            "prize": "ລາງວັນ"
+            "coupon": "ຊຸດຂໍ້ມູນຄູປອງ",
+            "prize": "ລະດັບລາງວັນ",
+            "completed": "ສຳເລັດ"
         },
-        "header": {
-            "campaign": {
-                "title": "ຊື່ແຄມເປນ",
-                "createdAt": "ວັນທີສ້າງ",
-                "createdBy": "ສ້າງໂດຍ",
-                "prizeCap": "ໂຄຕ້າຊະນະ",
-                "status": "ສະຖານະ"
-            },
-            "prize": {
-                "rank": "ອັນດັບ",
-                "title": "ຊື່ລາງວັນ",
-                "createdAt": "ວັນທີສ້າງ",
-                "createdBy": "ສ້າງໂດຍ",
-                "prizeAmount": "ຈຳນວນ",
-                "prizeLeft": "ຍັງເຫຼືອ",
-                "status": "ສະຖານະ"
-            },
-            "coupon": {
-                "title": "ຊື່ລູກຄ້າ",
-                "createdAt": "ວັນທີສ້າງ",
-                "createdBy": "ສ້າງໂດຍ",
-                "status": "ສະຖານະ"
-            },
-            "dataset": {
-                "title": "ຊື່ຊຸດຂໍ້ມູນ",
-                "createdAt": "ວັນທີສ້າງ",
-                "createdBy": "ສ້າງໂດຍ"
-            },
-            "winner": {
-                "no": "ອັນດັບ",
-                "winnerName": "ຊື່ຜູ້ໂຊກດີ",
-                "winnerPhone": "ເບີໂທລະສັບ",
-                "createdAt": "ວັນທີສ້າງ",
-                "status": "ສະຖານະ"
-            }
+        "campaign": {
+            "title": "ຊື່ແຄມເປນ",
+            "createdAt": "ສ້າງວັນທີ ",
+            "createdBy": "ສ້າງໂດຍ",
+            "prizeCap": "ໂຄຕ້າຜູ້ຊະນະ",
+            "status": "ສະຖານະ"
+        },
+        "prize": {
+            "rank": "ອັນດັບລາງວັນ",
+            "title": "ຊື່ລາງວັນ",
+            "createdAt": "ສ້າງວັນທີ",
+            "createdBy": "ສ້າງໂດຍ ",
+            "prizeAmount": "ຈຳນວນຂອງລາງວັນ",
+            "prizeLeft": "ຍັງເຫຼືອ",
+            "status": "ສະຖານະ "
+        },
+        "dataset": {
+            "title": "ຊຸດຂໍ້ມູນຊື່",
+            "createdAt": "ວັນທີອັບໂຫລດ",
+            "createdBy": "ອັບໂຫລດໂດຍ "
+        },
+        "winner": {
+            "no": "ອັນດັບ ",
+            "customerId": "ລະຫັດ",
+            "winnerName": "ຊື່ຜູ້ຊະນະ",
+            "winnerPhone": "ເບີໂທ",
+            "createdAt": "ວັນທີສຸ່ມ",
+            "status": "ສະຖານະ"
         }
     },
-    "report": {
-        "statisticTitle": {
-            "wheel": "ຈຳນວນຜູ້ຊະນະແຄມເປນວົງລໍ້ສ່ຽງໂຊກ",
-            "random": "ຈຳນວນຜູ້ຊະນະແຄມເປນສຸ່ມສ່ຽງໂຊກ"
-        }
+    "pageTitle": {
+        "report": "ລາຍງານ",
+        "random": "ແຄມເປນສຸ່ມ",
+        "wheel": "ວົງລໍ້ສຸ່ມ "
+    },
+    "statistic": {
+        "wheel": "ຜູ້ຊະນະທັງໝົດຂອງ  ວົງລໍ້ສຸ່ມແຄມເປນ",
+        "random": "ຜູ້ຊະນະທັງໝົດຂອງ ແຄມເປນສຸ່ມ",
+        "current": "ແຄມເປນປະຈຸບັນ",
+        "finish": "ສຳເລັດແລ້ວ"
     },
     "textfield": {
         "placeholder": {
@@ -61,56 +60,77 @@
         },
         "label": {
             "campaignName": "ຊື່ແຄມເປນ",
-            "winningQuota": "ໂຄຕ້າຊະນະ",
+            "winningQuota": "ໂຄຕ້າຜູ້ຊະນະ ",
             "prizeName": "ຊື່ລາງວັນ",
-            "prizeRank": "ອັນດັບ",
-            "prizeAmount": "ຈຳນວນ",
-            "customerName": "ຊື່ລູກຄ້າ",
-            "customerPhone": "ເບີໂທລູກຄ້າ",
-            "username": "ຊື່ຜູ້ໃຊ້",
-            "password": "ລະຫັດຜ່ານ"
+            "prizeRank": "ອັນດັບລາງວັນ",
+            "prizeAmount": "ຈຳນວນລາງວັນ",
+            "bgImage": "ຮູບພາບພື້ນຫລັງແຄມເປນ",
+            "loadingImage": "ຮູບພາບເຄື່ອນໄຫວ"
         }
     },
+    "uploadFile": {
+        "bgImage": "ເພີ່ມພື້ນຫລັງແຄມເປນ",
+        "dropFile": "ວາງໄຟລ໌ໄວ້ບ່ອນນີ້ ຫຼືຄລິກ browse ຢ່າງລະອຽດຖີ່ຖ້ວນໃນເຄື່ອງຂອງເຈົ້າ",
+        "loadingImage": "ເພີ່ມຮູບເຄື່ອນໄຫວ (ສະແດງເມື່ອສຸ່ມ)",
+        "chooseFile": "ເລືອກໄຟລ໌"
+    },
     "tab": {
-        "new": "ໃໝ່",
-        "done": "ສຳເລັດ",
-        "all": "ທັງໝົດ",
-        "current": "ປະຈຸບັນ"
+        "current": "ປະຈຸບັນ",
+        "finish": "ສຳເລັດ",
+        "random": "ສຸ່ມ",
+        "wheel": "ວົງລໍ້ສຸ່ມ"
     },
     "button": {
-        "newCampaign": "ແຄມເປນໃໝ່",
+        "newCampaign": "ແຄມເປນໃໜ່",
         "createPrize": "ສ້າງລາງວັນ",
         "editPrize": "ແກ້ໄຂລາງວັນ",
         "campaignSetting": "ຕັ້ງຄ່າແຄມເປນ",
-        "importCoupon": "ນຳເຂົ້າຄູປອງ",
-        "exportCoupon": "ສົ່ງອອກຄູປອງ",
-        "createCustomer": "ສ້າງລູກຄ້າ",
-        "confirm": "ຢືນຢັນ",
-        "randomNow": "ສຸ່ມ",
+        "finishCampaign": "ສຳເລັດແຄມເປນ",
+        "duplicateCampaign": "ຄັດລອກແຄມເປນ ",
+        "importCoupon": "Import Coupon",
+        "exportCoupon": "Export Coupon",
+        "exportAsPNG": "Export As PNG",
+        "confirm": "ຢືນຍັນ ",
+        "randomNow": "ສູ່ມດຽວນີ້ ",
+        "openRandomPage": "ເປີດໜ້າສຸ່ມ",
         "exit": "ອອກ",
-        "startRandom": "ເລີ່ມສຸ່ມ",
-        "login": "ເຂົ້າສູ່ລະບົບ",
-        "viewall": "ທັງໝົດ"
+        "startRandom": "ເລີ່ມສຸ່ມ ",
+        "stopRandom": "ຢຸດສຸ່ມ ",
+        "login": "Login",
+        "viewall": "ເບິ່ງທັງໝົດ",
+        "finishCampaignNow": "ປິດແຄມເປນດຽວນີ້"
     },
     "modalTitle": {
         "createCampaign": "ສ້າງແຄມເປນ",
         "editCampaign": "ແກ້ໄຂແຄມເປນ",
         "createPrize": "ສ້າງລາງວັນ",
         "editPrize": "ແກ້ໄຂລາງວັນ",
-        "createCustomer": "ສ້າງລູກຄ້າ",
-        "editCustomer": "ແກ້ໄຂລູກຄ້າ"
+        "winnerName": "ຊື່ຜູ້ຊະນະ",
+        "confirm": "ເຈົ້າແນ່ໃຈບໍ່?",
+        "duplicateCampaign": "ຄັດລອກແຄມເປນ"
+    },
+    "message": {
+        "congratz": "ຂໍສະແດງຄວາມຍິນດີ ! ເຈົ້າເປັນຜູ້ຊະນະ!",
+        "finishCampaign": "ແຄມເປນຂອງທ່ານຈະສຳເລັດ",
+        "deleteCampaign": "ແຄມເປນຂອງທ່ານຈະຖືກລຶບ",
+        "deletePrize": "ລາງວັນຂອງທ່ານຈະຖືກລຶບ"
+    },
+    "breadcrumbs": {
+        "home": "ໜ້າຫຼັກ",
+        "random": "ສຸ່ມ",
+        "wheel": "ວົງລໍ້ສຸ່ມ",
+        "report": "ລາຍງານ"
     },
     "validate": {
-        "campaignTitle": "ກະລຸນາປ້ອນຊື່ແຄມເປນ",
-        "prizeCap": "ໂຄຕ້າຊະນະຕ້ອງຫຼາຍກວ່າ 0!",
-        "customerName": "ກະລຸນາປ້ອນຊື່ລູກຄ້າ!",
-        "customerPhone": "ເບີໂທລູກຄ້າຕ້ອງຫຼາຍກວ່າ 7!"
+        "campaignTitle": "Please input campaign title!",
+        "prizeCap": "Winning Quota must greater than 0!",
+        "customerName": "Please input customer name!",
+        "customerPhone": "Customer phone must greater than 7!"
     },
     "alert": {
         "apiError": "ມີບາງຢ່າງຜິດພາດ!",
-        "selectCoupon": "ເລືອກຊຸດຂໍ້ມູນກ່ອນ!",
-        "noPrize": "ບໍ່ມີລາຍການຂອງລາງວັນ",
-        "noCustomer": "ເລືອກລາຍຊື່ຜູ້ໂຊກດີ!",
-        "alreadyRandom": "ລາຍການນີ້ໄດ້ທຳການສຸ່ມແລ້ວ!"
+        "selectCoupon": "ບໍ່ມີຊຸດຂໍ້ມູນຄູປອງ!",
+        "noPrize": "ບໍ່ມີຂອງລາງວັນ!",
+        "alreadyRandom": "ລາງວັນນີ້ມີການສຸ່ມແລ້ວ"
     }
 }

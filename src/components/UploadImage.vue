@@ -1,8 +1,10 @@
 <template>
     <div :class="['dropZone', dragging ? 'dropZone-over' : '']" @dragenter="dragging = true" @dragleave="dragging = false">
+        <VBtn v-if="selectFile || propImage" variant="text" class="text-none removeBtn" color="red" icon="mdi-close-circle"
+            @click="removeImage"></VBtn>
         <div @drag="onFileChange">
             <div class="dropZone-info">
-                <div v-if="selectFile || props.image">
+                <div v-if="selectFile || propImage">
                     <VIcon size="34" class="change-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="34px" height="34px" viewBox="0 0 34 34" fill="none">
                             <path
@@ -10,15 +12,13 @@
                                 fill="#028947" />
                         </svg>
                     </VIcon>
-                    <VAvatar size="240" :rounded="isRounded ? 1 : 0">
-                        <VImg :src="previewImage" />
-                    </VAvatar>
+                    <VImg :src="previewImage" cover width="320" height="240" />
                 </div>
                 <div v-else class="dropZone-detail">
-                    <span class="dropZone-title">Select file</span>
+                    <VImg :src="UploadImage" width="200" class="mx-auto" />
+                    <span class="dropZone-title">{{ props.title }}</span>
                     <div class="dropZone-upload-limit-info">
-                        <div>Drop file or click <span>browse</span> through</div>
-                        <div>your machine</div>
+                        <div>{{ props.description }}</div>
                     </div>
                 </div>
             </div>
@@ -29,26 +29,36 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import useImage from '@/composables/useImage'
 import { useToast } from 'vue-toast-notification';
+import useImage from '@/composables/useImage'
+import UploadImage from '@/assets/images/upload_img.png'
 
-const emit = defineEmits(['getImage'])
-const props = defineProps(['image', 'isRounded'])
+const emit = defineEmits(['handleGetImage', 'handleRemove'])
+const props = defineProps(['image', 'title', 'description'])
 
 const { getImage } = useImage();
 const $toast = useToast();
 
+const propImage = ref();
 const selectFile = ref();
 const previewImage = ref();
 const dragging = ref(false)
+
+propImage.value = props.image
 
 if (props.image) {
     previewImage.value = await getImage(props.image)
 }
 
+const removeImage = () => {
+    selectFile.value = '';
+    previewImage.value = null;
+    propImage.value = null;
+    emit('handleRemove')
+}
+
 const onFileChange = (event: any) => {
     var files = event.target.files || event.dataTransfer.files;
-
     if (!files.length) {
         dragging.value = false;
         previewImage.value = null
@@ -64,7 +74,7 @@ const onFileChange = (event: any) => {
     createFile(files[0]);
     reader.readAsDataURL(event.target.files[0])
 
-    emit('getImage', selectFile.value)
+    emit('handleGetImage', selectFile.value)
 }
 
 const createFile = (file: File) => {
@@ -88,7 +98,7 @@ const createFile = (file: File) => {
 <style scoped lang="scss">
 .dropZone {
     width: 100%;
-    height: 276px;
+    height: 240px;
     flex-shrink: 0;
     position: relative;
     border: 2px dashed #eee;
@@ -97,8 +107,31 @@ const createFile = (file: File) => {
     background-color: rgba(145, 158, 171, 0.16);
 }
 
+.removeBtn {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
+}
+
+.change-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 10;
+}
+
 .dropZone:hover {
     border: 2px dashed rgba(2, 137, 71, 0.3);
+
+    .removeBtn {
+        display: block;
+    }
+
+    .change-icon {
+        display: none;
+    }
 }
 
 .dropZone:hover .dropZone-title {
@@ -108,7 +141,7 @@ const createFile = (file: File) => {
 .dropZone-info {
     color: #A8A8A8;
     width: 100%;
-    height: 273px;
+    height: 240px;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -128,6 +161,7 @@ const createFile = (file: File) => {
         display: flex;
         justify-content: flex-start;
         flex-direction: column;
+        padding: 0 10px;
 
         & span {
             color: #028947;
@@ -148,14 +182,10 @@ const createFile = (file: File) => {
     width: 100%;
     height: 100%;
     opacity: 0;
-    z-index: 999;
-}
-
-.change-icon {
-    position: absolute;
-    right: 20px;
     z-index: 10;
 }
+
+
 
 .dropZone-over {
     background: rgba(2, 137, 71, 0.2);

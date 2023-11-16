@@ -4,7 +4,7 @@
         <FormRandomPrize />
     </div>
     <VCard rounded="lg" color="white" class="shadow">
-        <VDataTable :headers="prizeHeaders" :items="randomPrizes" class="text-center">
+        <VDataTable :headers="prizeHeaders" :items="drawPrizes" class="text-center">
             <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
                 <tr>
                     <template v-for="column in columns" :key="column.key">
@@ -37,14 +37,14 @@
                 </VChip>
             </template>
             <template v-slot:item.isComplete="{ item }">
-                <VChip v-if="item.columns.isComplete" rounded="sm" :color="getColor(item.columns.isComplete)">
-                    {{ item.columns.isComplete ? 'Complete' : '' }}
+                <VChip v-if="item.columns.isComplete" rounded="sm" :color="item.columns.isComplete ? 'green' : ''">
+                    {{ item.columns.isComplete ? $t('table.title.completed') : '' }}
                 </VChip>
             </template>
             <template v-slot:item.actions="{ item }">
                 <div style="border-bottom: none; text-align: center; display: flex; align-items: center;">
                     <div>
-                        <ConfirmDialog message="Do you want to delete this?" icon="mdi-trash-can-outline" color="red"
+                        <ConfirmDialog :message="$t('message.deletePrize')" icon="mdi-trash-can-outline" color="red"
                             @handleConfirm="handleConfirm(item.raw.id)" />
                     </div>
                     <div>
@@ -57,52 +57,62 @@
 </template>
 
 <script setup lang="ts">
-import ConfirmDialog from '../ConfirmDialog.vue';
-import { useRoute } from 'vue-router';
-import { useI18n } from "vue-i18n";
-import { capitalizeLetter } from '@/utils/capitalizeLetter';
-import { useRandomPrizeStore } from '@/stores/randomPrize';
+import { onUnmounted, ref, watchEffect } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from "vue-i18n";
+import { useRoute } from 'vue-router';
+import { capitalizeLetter } from '@/utils/capitalizeLetter';
+import { useDrawPrizeStore } from '@/stores/drawPrize';
+import ConfirmDialog from '../ConfirmDialog.vue';
 import FormRandomPrize from './FormRandomPrize.vue';
+import { useReactiveLocalStorage } from '@/composables/useReactiveLocalStorage';
+import { watch } from 'vue';
 
 const i18n = useI18n();
 const route = useRoute();
 const slug = route.params.slug as string
 
-const randomPrizeStore = useRandomPrizeStore();
-const { randomPrizes } = storeToRefs(randomPrizeStore)
-console.log("🚀 ~ file: RandomPrizeTable.vue:74 ~ randomPrizes:", randomPrizes.value)
+const drawPrizeStore = useDrawPrizeStore();
+const { drawPrizes } = storeToRefs(drawPrizeStore)
+const { localStorageData, updateLocalStorage, performAction } = useReactiveLocalStorage('status');
 
-await randomPrizeStore.fetchRandomPrizeBySlug(slug)
+
+await drawPrizeStore.fetchDrawPrizeBySlug(slug)
 
 const handleConfirm = async (id: string) => {
-    await randomPrizeStore.deleteRandomPrize(id, slug)
+    await drawPrizeStore.deleteDrawPrize(id, slug)
 }
+
+watch(localStorageData, async () => {
+    if (localStorageData.value === 'processing') {
+        await drawPrizeStore.fetchDrawPrizeBySlug(slug)
+    }
+})
 
 const prizeHeaders = [
     {
         key: 'rank',
-        title: i18n.t('table.header.prize.rank')
+        title: i18n.t('table.prize.rank')
     },
     {
         key: 'title',
-        title: i18n.t('table.header.prize.title')
+        title: i18n.t('table.prize.title')
     },
     {
         key: 'createdAt',
-        title: i18n.t('table.header.prize.createdAt')
+        title: i18n.t('table.prize.createdAt')
     },
     {
         key: 'createdBy',
-        title: i18n.t('table.header.prize.createdBy')
+        title: i18n.t('table.prize.createdBy')
     },
     {
         key: 'amount',
-        title: i18n.t('table.header.prize.prizeAmount')
+        title: i18n.t('table.prize.prizeAmount')
     },
     {
         key: 'isComplete',
-        title: i18n.t('table.header.prize.status')
+        title: i18n.t('table.prize.status')
     },
     { title: '', key: "actions", sortable: false },
 ]
@@ -113,6 +123,10 @@ const getColor = (quota: number) => {
     else if (quota < 5) return 'orange'
     else return 'green'
 };
+
+onUnmounted(() => {
+    drawPrizeStore.$reset();
+})
 </script>
 
 <style scoped lang="scss">
@@ -131,4 +145,4 @@ const getColor = (quota: number) => {
 .shadow {
     box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
-</style>@/stores/drawPrize
+</style>

@@ -13,14 +13,15 @@
                     <VBtn variant="text" size="md" color="red" icon="mdi-close" @click="isActive.value = false"></VBtn>
                 </template>
                 <v-card-title class="text-center font-weight-bold">
-                    Confirm?
+                    {{ $t('modalTitle.confirm') }}
                 </v-card-title>
                 <v-card-text class="text-center mb-4">
                     {{ props.message }}
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn class="text-none" color="primary" block variant="elevated" rounded="lg"
-                        @click="handleConfirm">Confirm</v-btn>
+                    <v-btn class="text-none" color="primary" block variant="elevated" rounded="lg" @click="handleConfirm">
+                        {{ $t('button.confirm') }}
+                    </v-btn>
                 </v-card-actions>
             </v-card>
         </template>

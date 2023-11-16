@@ -2,31 +2,31 @@
   <VContainer>
     <VRow>
       <VCol>
-        <div class="title">Wheel Draw</div>
-        <Breadcrumbs :items="items" />
+        <div class="title">{{ $t('pageTitle.wheel') }}</div>
+        <Breadcrumbs :items="meta" />
       </VCol>
     </VRow>
   </VContainer>
-  <RouterView>
-  </RouterView>
+  <Suspense>
+    <RouterView />
+    <template #fallback>
+      <div class="text-center">
+        <LoadingIcon width="200px" height="200px" />
+      </div>
+    </template>
+  </Suspense>
 </template>
 
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
+import { computed } from 'vue'
+import { RouterView, useRoute } from 'vue-router';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import LoadingIcon from '@/components/icons/LoadingIcon.vue'
 
-const items = [
-  {
-    title: 'Home',
-    disabled: false,
-    href: '/home',
-  },
-  {
-    title: 'Wheel Draw',
-    disabled: false,
-    href: '/random',
-  },
-];
+const route = useRoute();
+const meta = computed(() => {
+  return route.meta.breadcrumb;
+});
 </script>
 
 <style scoped lang="scss">

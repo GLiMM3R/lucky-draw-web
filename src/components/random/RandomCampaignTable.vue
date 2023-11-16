@@ -5,9 +5,6 @@
                 :placeholder="$t('textfield.placeholder.search')" />
             <Suspense>
                 <FormRandomCampaign />
-                <template #fallback>
-                    Loading...
-                </template>
             </Suspense>
         </VCardTitle>
         <VDataTable :headers="headers" :items="props.campaigns" :search="search" :hover="true" class="text-center"
@@ -43,7 +40,7 @@
             <template v-slot:item.actions="{ item }">
                 <div v-if="!item.raw.isComplete" style="text-align: center; display: flex; justify-content: center;">
                     <div>
-                        <ConfirmDialog message="Do you want to delete this?" icon="mdi-trash-can-outline" color="red"
+                        <ConfirmDialog :message="$t('message.deleteCampaign')" icon="mdi-trash-can-outline" color="red"
                             @handleConfirm="handleDeleteCampaign(item)" />
                     </div>
                     <div>
@@ -56,8 +53,14 @@
                                     <FormRandomCampaign :campaign="item.raw" />
                                 </v-list-item>
                                 <v-list-item>
-                                    <ConfirmDialog message="Do you want to complete this campaign?"
-                                        buttonText="Finish Campaign" @handleConfirm="handleFinishCampaign(item.raw)" />
+                                    <ConfirmDialog :message="$t('message.finishCampaign')"
+                                        :buttonText="$t('button.finishCampaign')"
+                                        @handleConfirm="handleFinishCampaign(item.raw)" />
+                                </v-list-item>
+                                <v-list-item>
+                                    <DuplicateCampaignDialog :buttonText="$t('button.duplicateCampaign')"
+                                        :campaign="item.raw" @handleConfirm="handleDuplicateDrawCampaign"
+                                        :loading="isLoading" />
                                 </v-list-item>
                             </v-list>
                         </v-menu>
@@ -69,18 +72,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ConfirmDialog from '../ConfirmDialog.vue';
 import { useI18n } from "vue-i18n";
 import { capitalizeLetter } from '@/utils/capitalizeLetter';
 import FormRandomCampaign from './FormRandomCampaign.vue';
 import { useDrawStore } from '@/stores/draw';
+import DuplicateCampaignDialog from '../DuplicateCampaignDialog.vue';
+import { storeToRefs } from 'pinia';
 
 const i18n = useI18n();
 const router = useRouter();
 const props = defineProps(['campaigns'])
 const drawStore = useDrawStore();
+const { isLoading } = storeToRefs(drawStore)
 
 const search = ref('');
 
@@ -88,7 +94,7 @@ const handleSelect = async (item: any, row: any) => {
     if (!row.item.raw.isComplete) {
         await router.push(`/random/${row.item.raw.slug}`)
     } else if (row.item.raw.isComplete) {
-        await router.push(`/random/${row.item.raw.slug}/report`)
+        await router.push(`/random/report/${row.item.raw.slug}`)
     }
 }
 
@@ -102,22 +108,27 @@ const handleDeleteCampaign = async (item: any) => {
     await drawStore.fetchDraws();
 }
 
+const handleDuplicateDrawCampaign = async (values: any) => {
+    await drawStore.duplicateDraw({ id: values.id, title: values.title })
+    await drawStore.fetchDraws();
+}
+
 const headers = [
     {
         key: 'title',
-        title: i18n.t('table.header.campaign.title'),
+        title: i18n.t('table.campaign.title'),
     },
     {
         key: 'createdAt',
-        title: i18n.t('table.header.campaign.createdAt')
+        title: i18n.t('table.campaign.createdAt')
     },
     {
         key: 'createdBy',
-        title: i18n.t('table.header.campaign.createdBy')
+        title: i18n.t('table.campaign.createdBy')
     },
     {
         key: 'prizeCap',
-        title: i18n.t('table.header.campaign.prizeCap')
+        title: i18n.t('table.campaign.prizeCap')
     },
     { title: '', key: "actions", sortable: false },
 ]
@@ -126,6 +137,10 @@ const getColor = (status: boolean) => {
     if (status) return 'green'
     else return 'grey'
 };
+
+onUnmounted(() => {
+    drawStore.$reset();
+})
 </script>
 
 <style scoped lang="scss">

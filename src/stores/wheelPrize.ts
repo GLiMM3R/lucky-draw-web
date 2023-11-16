@@ -12,6 +12,12 @@ export const useWheelPrizeStore = defineStore('wheelPrize', () => {
 
   const isLoading = ref(false)
 
+  function $reset() {
+    wheelPrize.value = null
+    wheelPrizes.value = []
+    isLoading.value = false
+  }
+
   async function fetchWheelPrizes(wheelId: string) {
     isLoading.value = true
     try {
@@ -55,7 +61,7 @@ export const useWheelPrizeStore = defineStore('wheelPrize', () => {
     isLoading.value = true
     try {
       await request({
-        url: '/random-prizes',
+        url: '/wheel-prizes',
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -71,7 +77,7 @@ export const useWheelPrizeStore = defineStore('wheelPrize', () => {
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
-      $toast.error('Something went wrong')
+      $toast.error(error)
     }
   }
 
@@ -79,7 +85,7 @@ export const useWheelPrizeStore = defineStore('wheelPrize', () => {
     isLoading.value = true
     try {
       await request({
-        url: `/random-prizes/${id}`,
+        url: `/wheel-prizes/${id}`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -102,7 +108,7 @@ export const useWheelPrizeStore = defineStore('wheelPrize', () => {
   async function deleteWheelPrize(id: string, slug: string) {
     isLoading.value = true
     try {
-      await request({ url: `/random-prizes/${id}`, method: 'DELETE' })
+      await request({ url: `/wheel-prizes/${id}`, method: 'DELETE' })
 
       isLoading.value = false
     } catch (error) {
@@ -120,6 +126,7 @@ export const useWheelPrizeStore = defineStore('wheelPrize', () => {
     addWheelPrize,
     updateWheelPrize,
     deleteWheelPrize,
-    isLoading
+    isLoading,
+    $reset
   }
 })

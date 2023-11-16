@@ -1,27 +1,31 @@
 <template>
     <VContainer>
+        <VRow>
+            <VCol>
+                <div class="title">{{ $t('pageTitle.report') }}</div>
+                <Breadcrumbs :items="meta" />
+            </VCol>
+        </VRow>
         <VRow class="static">
             <VCol cols="12" sm="6" md="6" lg="4" xl="3">
-                <ReportStatistic :value="replaceNumber(wheel.length)" :text="$t('report.statisticTitle.wheel')"
-                    :logo="Wheel" />
+                <ReportStatistic :value="replaceNumber(wheel.length)" :text="$t('statistic.wheel')" :logo="Wheel" />
             </VCol>
             <VCol cols="12" sm="6" md="6" lg="4" xl="3">
-                <ReportStatistic :value="replaceNumber(random.length)" :text="$t('report.statisticTitle.random')"
-                    :logo="Lottery" />
+                <ReportStatistic :value="replaceNumber(random.length)" :text="$t('statistic.random')" :logo="Lottery" />
             </VCol>
         </VRow>
         <VRow>
             <VContainer>
                 <VTabs v-model="tab" color="primary" align-tabs="start">
-                    <VTab value="random">Random Draw</VTab>
-                    <VTab value="wheel">Wheel Draw</VTab>
+                    <VTab value="random">{{ $t('tab.random') }}</VTab>
+                    <VTab value="wheel">{{ $t('tab.wheel') }}</VTab>
                 </VTabs>
                 <VWindow v-model="tab">
                     <VWindowItem value="random" style="padding: 16px 4px;">
-                        <ReportTable :campaigns="random" />
+                        <ReportTable :campaigns="random" @handleDownload="handleDownloadDrawReport" />
                     </VWindowItem>
                     <VWindowItem value="wheel" style="padding: 16px 4px;">
-                        <ReportTable :campaigns="wheel" />
+                        <ReportTable :campaigns="wheel" @handleDownload="handleDownloadWheelReport" />
                     </VWindowItem>
                 </VWindow>
             </VContainer>
@@ -37,23 +41,41 @@ import Wheel from '@/assets/images/wheel.png'
 import Lottery from '@/assets/images/lottery.png'
 import ReportTable from '@/components/report/ReportTable.vue';
 import ReportStatistic from '@/components/report/ReportStatistic.vue';
-import { useRandomStore } from '@/stores/random';
 import { useWheelStore } from '@/stores/wheel';
+import { useDrawStore } from '@/stores/draw';
+import { useWheelReportStore } from '@/stores/wheelReport';
+import { useDrawReportStore } from '@/stores/drawReport';
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
+const meta = computed(() => {
+    return route.meta.breadcrumb;
+});
 
-const randomStore = useRandomStore();
+const drawStore = useDrawStore();
 const wheelStore = useWheelStore();
-const { randoms } = storeToRefs(randomStore);
+const drawReportStore = useDrawReportStore();
+const wheelReportStore = useWheelReportStore();
+const { draws } = storeToRefs(drawStore);
 const { wheels } = storeToRefs(wheelStore);
 
-const random = computed(() => randoms.value.filter((item) => item.isComplete === true))
+const random = computed(() => draws.value.filter((item) => item.isComplete === true))
 const wheel = computed(() => wheels.value.filter((item) => item.isComplete === true))
 
+const handleDownloadDrawReport = async (values: any) => {
+    await drawReportStore.downloadDrawReportById(values.id, values.title)
+}
+
+const handleDownloadWheelReport = async (values: any) => {
+    await wheelReportStore.downloadWheelReportById(values.id, values.title)
+}
 const tab = ref('')
 
 onMounted(async () => {
-    await randomStore.fetchRandoms();
+    await drawStore.fetchDraws();
     await wheelStore.fetchWheels();
+    document.title = `Report`
 })
 </script>
   

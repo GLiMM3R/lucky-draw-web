@@ -12,6 +12,12 @@ export const useWheelReportStore = defineStore('wheelReport', () => {
 
   const isLoading = ref(false)
 
+  function $reset() {
+    wheelReports.value = []
+    wheelReportsWithIncludes.value = []
+    isLoading.value = false
+  }
+
   async function fetchWheelReports(wheelId: string) {
     isLoading.value = true
     try {
@@ -38,11 +44,73 @@ export const useWheelReportStore = defineStore('wheelReport', () => {
     }
   }
 
+  async function addWheelReport(wheelId: string, prizeId: string) {
+    isLoading.value = true
+    try {
+      await request({
+        url: `/wheel-reports`,
+        method: 'POST',
+        data: { wheelId, prizeId }
+      })
+
+      isLoading.value = false
+    } catch (error) {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
+
+  const downloadWheelReportById = async (wheelId: string, title: string) => {
+    try {
+      const response = await request({
+        url: `/wheel-reports/download/id=${wheelId}`,
+        method: 'GET',
+        responseType: 'blob'
+      })
+
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `${title}.xlsx`)
+      document.body.appendChild(link)
+      link.click()
+      isLoading.value = false
+    } catch (error) {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
+
+  const downloadWheelReportBySlug = async (slug: string, title: string) => {
+    try {
+      const response = await request({
+        url: `/wheel-reports/download/slug=${slug}`,
+        method: 'GET',
+        responseType: 'blob'
+      })
+
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `${title}.xlsx`)
+      document.body.appendChild(link)
+      link.click()
+      isLoading.value = false
+    } catch (error) {
+      isLoading.value = false
+      $toast.error('Something went wrong')
+    }
+  }
+
   return {
     wheelReports,
     wheelReportsWithIncludes,
     isLoading,
+    addWheelReport,
     fetchWheelReportsByPrizeId,
-    fetchWheelReports
+    fetchWheelReports,
+    downloadWheelReportById,
+    downloadWheelReportBySlug,
+    $reset
   }
 })

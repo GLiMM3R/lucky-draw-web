@@ -1,7 +1,7 @@
 <template>
     <div class="dataset-header">
         <h2 class="title">{{ $t('table.title.prize') }}</h2>
-        <FormRandomPrize />
+        <FormWheelPrize />
     </div>
     <VCard rounded="lg" color="white" class="shadow">
         <VDataTable :headers="prizeHeaders" :items="wheelPrizes" class="text-center">
@@ -19,9 +19,6 @@
                     </template>
                 </tr>
             </template>
-            <template v-slot:item.rank="{ item }">
-                {{ item.columns.rank }}
-            </template>
             <template v-slot:item.title="{ item }">
                 {{ capitalizeLetter(item.columns.title) }}
             </template>
@@ -36,20 +33,20 @@
                     {{ item.columns.amount }}
                 </VChip>
             </template>
-            <template v-slot:item.leftAmount="{ item }">
-                <VChip rounded="sm" :color="getColor(item.columns.leftAmount)">
-                    {{ item.columns.leftAmount }}
+            <template v-slot:item.remainingAmount="{ item }">
+                <VChip rounded="sm" :color="getColor(item.columns.remainingAmount)">
+                    {{ item.columns.remainingAmount }}
                 </VChip>
             </template>
-            <template v-slot:item.isDone="{ item }">
-                <VChip v-if="item.columns.isDone" rounded="sm" :color="getColor(item.columns.prizeCap)">
-                    {{ item.columns.isDone ? 'Complete' : '' }}
+            <template v-slot:item.isComplete="{ item }">
+                <VChip v-if="item.columns.isComplete" rounded="sm">
+                    {{ item.columns.isComplete ? 'Complete' : '' }}
                 </VChip>
             </template>
             <template v-slot:item.actions="{ item }">
                 <div style="border-bottom: none; text-align: center; display: flex; align-items: center;">
                     <div>
-                        <ConfirmDialog message="Do you want to delete this?" icon="mdi-trash-can-outline" color="red"
+                        <ConfirmDialog :message="$t('message.deletePrize')" icon="mdi-trash-can-outline" color="red"
                             @handleConfirm="handleConfirm(item.raw.id)" />
                     </div>
                     <div>
@@ -66,7 +63,6 @@ import ConfirmDialog from '../ConfirmDialog.vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from "vue-i18n";
 import { capitalizeLetter } from '@/utils/capitalizeLetter';
-import { useRandomPrizeStore } from '@/stores/randomPrize';
 import { storeToRefs } from 'pinia';
 import FormWheelPrize from './FormWheelPrize.vue';
 import { useWheelPrizeStore } from '@/stores/wheelPrize';
@@ -82,32 +78,33 @@ await wheelPrizeStore.fetchWheelPrizeBySlug(slug)
 
 const handleConfirm = async (id: string) => {
     await wheelPrizeStore.deleteWheelPrize(id, slug)
+    await wheelPrizeStore.fetchWheelPrizeBySlug(slug)
 }
 
 const prizeHeaders = [
     {
         key: 'title',
-        title: i18n.t('table.header.prize.title')
+        title: i18n.t('table.prize.title')
     },
     {
         key: 'createdAt',
-        title: i18n.t('table.header.prize.createdAt')
+        title: i18n.t('table.prize.createdAt')
     },
     {
         key: 'createdBy',
-        title: i18n.t('table.header.prize.createdBy')
+        title: i18n.t('table.prize.createdBy')
     },
     {
         key: 'amount',
-        title: i18n.t('table.header.prize.prizeAmount')
+        title: i18n.t('table.prize.prizeAmount')
     },
     {
-        key: 'left',
-        title: i18n.t('table.header.prize.prizeAmount')
+        key: 'remainingAmount',
+        title: i18n.t('table.prize.prizeLeft')
     },
     {
         key: 'isComplete',
-        title: i18n.t('table.header.prize.status')
+        title: i18n.t('table.prize.status')
     },
     { title: '', key: "actions", sortable: false },
 ]

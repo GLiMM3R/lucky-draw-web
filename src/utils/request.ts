@@ -8,8 +8,8 @@ import {
 } from '@/utils/token'
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:3000/api'
-// const BASE_URL = 'http://192.168.1.220:3008'
+// const BASE_URL = 'http://localhost:3000/api'
+const BASE_URL = 'http://192.168.1.220:3000/api'
 
 const axiosApiInstance = axios.create({
   baseURL: BASE_URL,
@@ -57,10 +57,6 @@ axiosApiInstance.interceptors.response.use(
         location.replace('/login')
         return Promise.reject(error)
       }
-    }
-
-    if (error.response.status === 400) {
-      return error
     }
 
     return Promise.reject(error)

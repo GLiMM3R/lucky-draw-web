@@ -34,7 +34,7 @@
           transform: `skewY(${90 - itemAngle}deg) rotate(${itemAngle / 2
             }deg)`,
         }">
-          <span :style="{ color: item.textColor }" v-html="item.htmlContent" />
+          <span :style="{ color: item.textColor, fontSize: '18px' }" v-html="item.htmlContent" />
         </div>
       </div>
     </div>
@@ -301,7 +301,7 @@ export default defineComponent({
   }
 
   &-border {
-    border: 8px solid black;
+    border: 20px solid green;
   }
 
   &-shadow {
@@ -413,9 +413,10 @@ export default defineComponent({
     left: -100%;
     width: 200%;
     height: 200%;
+    font-weight: 700;
     text-align: center;
     transform: skewY(30deg) rotate(0deg);
-    padding-top: 20px;
+    padding-top: 10px;
 
     &.horizontal-content {
       left: initial;

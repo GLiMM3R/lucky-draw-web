@@ -1,3 +1,4 @@
+# build image
 FROM node:lts-alpine as build-stage
 
 WORKDIR /app
@@ -11,11 +12,13 @@ COPY . .
 RUN npm run build-only
 
 # production stage
-FROM nginx:1.25.3-alpine as production-stage
+FROM nginx:stable-alpine as production-stage
 
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+RUN mkdir /app
 
-COPY nginx/prod.conf /etc/nginx/nginx.conf
+COPY --from=build-stage /app/dist /app
+
+COPY --from=build-stage /app/nginx/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
 

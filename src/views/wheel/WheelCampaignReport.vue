@@ -1,30 +1,29 @@
 <template>
     <VContainer>
-        <VRow>
-            <VCol>
-                <CampaignReportTable :source="winners" />
-            </VCol>
+        <VRow justify="space-between" class="mb-4 mx-2">
+            <VSpacer />
+            <VBtn class="text-none" rounded="lg" @click="handleDownloadWheelReport">Export to Excel</VBtn>
         </VRow>
+        <WheelReportTable />
     </VContainer>
 </template>
 
 <script setup lang="ts">
+import WheelReportTable from '@/components/wheel/WheelReportTable.vue';
+import { useWheelReportStore } from '@/stores/wheelReport';
+import { capitalizeLetter } from '@/utils/capitalizeLetter';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { storeToRefs } from 'pinia';
-import { useCampaignStore } from '@/stores/campaign';
-import CampaignReportTable from '@/components/campaign/CampaignReportTable.vue';
-import { useWinnerStore } from '@/stores/winner';
 
 const route = useRoute();
-const slug = route.params.slug as string
+const slug = route.params.slug as string;
 
-const campaignStore = useCampaignStore();
-const winnerStore = useWinnerStore();
-const { winners } = storeToRefs(winnerStore);
+const wheelReportStore = useWheelReportStore();
 
-onMounted(async () => {
-    await campaignStore.getCampaignBySlug(slug)
-    await winnerStore.getReport(slug)
-})
+const handleDownloadWheelReport = async () => {
+    await wheelReportStore.downloadWheelReportBySlug(slug, `${slug}-report`)
+}
+
+onMounted(() => document.title = `Wheel Report ${capitalizeLetter(slug)}`)
+
 </script>

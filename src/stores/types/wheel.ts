@@ -13,6 +13,11 @@ export interface UpdateWheel {
   isComplete?: boolean
 }
 
+export interface DuplicateWheel {
+  id: string
+  title: string
+}
+
 export interface Wheel {
   id: string
   slug: string

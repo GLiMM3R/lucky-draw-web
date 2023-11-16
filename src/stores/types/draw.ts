@@ -18,6 +18,11 @@ export interface UpdateDraw {
   isComplete?: boolean
 }
 
+export interface DuplicateDraw {
+  id: string
+  title: string
+}
+
 export interface Draw {
   id: string
   slug: string
@@ -34,6 +39,6 @@ export interface Draw {
 }
 
 export interface RequestDraw {
-  randomSlug: string
+  slug: string
   prizeId: string
 }

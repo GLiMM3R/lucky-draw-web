@@ -25,59 +25,28 @@ export const useUserStore = defineStore('user', () => {
         setAccessToken(data.data.access_token)
         setRefreshToken(data.data.refresh_token)
         isLoading.value = false
-        router.push('/home')
+        router.replace('/home')
       }
     } catch (error) {
       isLoading.value = false
       $toast.error('Username or password is not correct!')
     }
   }
-  
-  async function login(username: string, password: string) {
+
+  async function getUserProfile() {
     isLoading.value = true
     try {
       const { data, status } = await request({
-        url: '/auth/signin',
-        method: 'POST',
-        data: { username, password }
+        url: '/auth/me'
       })
 
-      if (status == 201) {
-        isAuthenticate.value = true
-        setAccessToken(data.data.access_token)
-        setRefreshToken(data.data.refresh_token)
-        isLoading.value = false
-        router.push('/home')
-      }
+      isLoading.value = false
+      return data.data.username
     } catch (error) {
       isLoading.value = false
       $toast.error('Username or password is not correct!')
     }
   }
 
-  async function refreshToken() {
-    isLoading.value = true
-
-    try {
-      const { data, status } = await request({
-        url: '/auth/refresh',
-        headers: {
-          Authorization: `Bearer ${getRefreshToken()}`
-        }
-      })
-
-      if (status == 200) {
-        isAuthenticate.value = true
-        setAccessToken(data.data.access_token)
-        setRefreshToken(data.data.refresh_token)
-        isLoading.value = false
-        $toast.success('Success!')
-      }
-    } catch (error) {
-      isLoading.value = false
-      $toast.error('Username or password is not correct!')
-    }
-  }
-
-  return { login, refreshToken, isAuthenticate, isLoading }
+  return { login, getUserProfile, isAuthenticate, isLoading }
 })

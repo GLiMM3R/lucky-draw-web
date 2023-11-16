@@ -4,7 +4,7 @@
             <VDataTable :headers="headers" :items="$props.campaigns" class="text-center">
                 <template v-slot:top>
                     <v-toolbar flat color="white">
-                        <v-toolbar-title class="text-h5 text-left">{{ props.title }}</v-toolbar-title>
+                        <v-toolbar-title class="text-left">{{ props.title }}</v-toolbar-title>
                     </v-toolbar>
                 </template>
                 <template v-slot:headers="{ columns, toggleSort, isSorted, getSortIcon }">
@@ -30,7 +30,7 @@
                 <template v-slot:item.createdBy="{ item }">
                     {{ item.columns.createdBy.username }}
                 </template>
-                <template v-slot:item.prizeCap="{ item }">
+                <template v-if="$props.campaigns.prizeCap" v-slot:item.prizeCap="{ item }">
                     <VChip rounded="sm" :color="getColor(item.columns.prizeCap)">
                         {{ item.columns.prizeCap }}
                     </VChip>
@@ -57,19 +57,19 @@ const i18n = useI18n();
 const headers = [
     {
         key: 'title',
-        title: i18n.t('table.header.campaign.title'),
+        title: i18n.t('table.campaign.title'),
     },
     {
         key: 'createdAt',
-        title: i18n.t('table.header.campaign.createdAt')
+        title: i18n.t('table.campaign.createdAt')
     },
     {
         key: 'createdBy',
-        title: i18n.t('table.header.campaign.createdBy')
+        title: i18n.t('table.campaign.createdBy')
     },
     {
         key: 'prizeCap',
-        title: i18n.t('table.header.campaign.prizeCap')
+        title: i18n.t('table.campaign.prizeCap')
     },
     { title: '', key: "actions", sortable: false },
 ]

@@ -3,10 +3,15 @@
         <template v-slot:divider>
             <v-icon icon="mdi-circle-small "></v-icon>
         </template>
+        <template v-slot:title="{ item }">
+            {{ capitalizeLetter($t(item.title)) }}
+        </template>
     </v-breadcrumbs>
 </template>
 
 <script setup lang="ts">
+import { capitalizeLetter } from '@/utils/capitalizeLetter';
+
 const props = defineProps(['items'])
 </script>
 

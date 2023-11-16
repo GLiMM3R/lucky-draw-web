@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import request from '@/utils/request'
 import { useToast } from 'vue-toast-notification'
 import { useI18n } from 'vue-i18n'
-import type { CreateWheel, UpdateWheel, Wheel } from './types/wheel'
+import type { CreateWheel, UpdateWheel, DuplicateWheel, Wheel } from './types/wheel'
 
 export const useWheelStore = defineStore('wheel', () => {
   const $toast = useToast()
@@ -13,6 +13,13 @@ export const useWheelStore = defineStore('wheel', () => {
   const wheels = ref<Wheel[]>([])
   const isLoading = ref(false)
   const errorMessage = ref('')
+
+  function $reset() {
+    wheel.value = null
+    wheels.value = []
+    isLoading.value = false
+    errorMessage.value = ''
+  }
 
   async function fetchWheels() {
     wheels.value = []
@@ -84,6 +91,24 @@ export const useWheelStore = defineStore('wheel', () => {
     }
   }
 
+  async function duplicateWheel(wheelData: DuplicateWheel) {
+    isLoading.value = true
+    try {
+      await request({
+        url: `/wheels/${wheelData.id}/duplicate`,
+        method: 'POST',
+        data: {
+          title: wheelData.title
+        }
+      })
+
+      isLoading.value = false
+    } catch (error) {
+      isLoading.value = false
+      $toast.error(error.response.data.message)
+    }
+  }
+
   async function updateWheel(wheelData: UpdateWheel) {
     isLoading.value = true
     try {
@@ -122,6 +147,21 @@ export const useWheelStore = defineStore('wheel', () => {
     }
   }
 
+  async function removeBaseIcon(id: string) {
+    isLoading.value = true
+    try {
+      await request({
+        url: `/wheels/${id}/remove-baseicon`,
+        method: 'POST'
+      })
+
+      isLoading.value = false
+    } catch (error) {
+      isLoading.value = false
+      $toast.error(i18n.t('alert.apiError'))
+    }
+  }
+
   return {
     wheel,
     wheels,
@@ -129,9 +169,12 @@ export const useWheelStore = defineStore('wheel', () => {
     fetchSingleWheelById,
     fetchWheelBySlug,
     addWheel,
+    duplicateWheel,
     updateWheel,
     deleteWheel,
+    removeBaseIcon,
     isLoading,
-    errorMessage
+    errorMessage,
+    $reset
   }
 })

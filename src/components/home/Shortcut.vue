@@ -6,7 +6,7 @@
                     <h5 style="font-size: 18px; font-weight: 500;">{{ props.title }}</h5>
                     <VIcon color="green" size="large" icon="mdi-arrow-right-circle" />
                 </VCol>
-                <VCol>
+                <VCol class="d-flex">
                     <VImg :src="props.logo" width="100" height="100" class="img" />
                 </VCol>
             </VRow>

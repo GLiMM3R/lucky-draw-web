@@ -18,6 +18,13 @@ export const useDrawPrizeStore = defineStore('drawPrize', () => {
 
   const isLoading = ref(false)
 
+  function $reset() {
+    drawPrize.value = null
+    drawPrizes.value = []
+    drawPrizesWithWinner.value = []
+    isLoading.value = false
+  }
+
   async function fetchDrawPrizes(drawId: string) {
     isLoading.value = true
     try {
@@ -34,7 +41,7 @@ export const useDrawPrizeStore = defineStore('drawPrize', () => {
   async function fetchSingleDrawPrizeById(id: string) {
     isLoading.value = true
     try {
-      const response = await request({ url: `/draws-prizes/id=${id}` })
+      const response = await request({ url: `/draw-prizes/id=${id}` })
 
       drawPrize.value = response.data.data
       isLoading.value = false
@@ -143,6 +150,7 @@ export const useDrawPrizeStore = defineStore('drawPrize', () => {
     addDrawPrize,
     updateDrawPrize,
     deleteDrawPrize,
-    isLoading
+    isLoading,
+    $reset
   }
 })

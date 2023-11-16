@@ -37,15 +37,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import useReport from '@/composables/useReport';
 import { useI18n } from "vue-i18n";
 
 const i18n = useI18n();
 const props = defineProps(['campaigns'])
-const { downloadReport, } = useReport()
+const emits = defineEmits(['handleDownload'])
 
 const handleDownloadReport = async (item: any) => {
-    await downloadReport(item.id, item.title)
+    emits('handleDownload', { id: item.id, title: item.title })
 }
 
 
@@ -55,26 +54,19 @@ const search = ref('');
 const headers = [
     {
         key: 'title',
-        title: i18n.t('table.header.campaign.title')
+        title: i18n.t('table.campaign.title')
     },
     {
         key: 'createdAt',
-        title: i18n.t('table.header.campaign.createdAt')
+        title: i18n.t('table.campaign.createdAt')
     },
     {
         key: 'createdBy',
-        title: i18n.t('table.header.campaign.createdBy')
+        title: i18n.t('table.campaign.createdBy')
     },
     { title: '', key: "actions", sortable: false },
 
 ]
-
-const getColor = (quota: number) => {
-    if (quota < 1) return 'grey'
-    else if (quota < 3) return 'red'
-    else if (quota < 5) return 'orange'
-    else return 'green'
-};
 </script>
 
 <style scoped lang="scss">

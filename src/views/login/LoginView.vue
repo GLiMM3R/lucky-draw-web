@@ -13,10 +13,10 @@
               Login
             </VCardTitle>
             <VCardItem>
-              <VLabel class="mb-2" style="color: white">{{ $t('textfield.label.username') }}</VLabel>
+              <VLabel class="mb-2" style="color: white">Username</VLabel>
               <VTextField v-model="username.value.value" :error-messages="username.errorMessage.value" variant="outlined"
-                bgColor="white" rounded="lg" density="comfortable" />
-              <VLabel class="mb-2" style="color: white">{{ $t('textfield.label.password') }}</VLabel>
+                autofocus bgColor="white" rounded="lg" density="comfortable" />
+              <VLabel class="mb-2" style="color: white">Password</VLabel>
               <VTextField v-model="password.value.value" :error-messages="password.errorMessage.value"
                 :type="isShowPassword ? 'text' : 'password'" variant="outlined" bgColor="white" rounded="lg"
                 density="comfortable" :append-inner-icon="isShowPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
@@ -35,20 +35,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useForm, useField } from 'vee-validate'
-import SplashScreen from '@/components/SplashScreen.vue'
-import { useUserStore } from '@/stores/user'
-import Logo from '@/assets/images/logo-banner.png'
+import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useForm, useField } from 'vee-validate'
+import { useUserStore } from '@/stores/user'
+import { useAppSettingStore } from '@/stores/appsetting'
+import SplashScreen from '@/components/SplashScreen.vue'
+import Logo from '@/assets/images/logo-banner.png'
+import { removeAccessToken, removeRefreshToken } from '@/utils/token'
 
 const userStore = useUserStore()
 const { isLoading } = storeToRefs(userStore)
+const { setLanguage } = useAppSettingStore()
 
 const loading = ref(true)
 const isShowPassword = ref(false)
 
 const showPassword = () => isShowPassword.value = !isShowPassword.value;
+
+onMounted(() => {
+  setLanguage('en')
+  removeAccessToken()
+  removeRefreshToken()
+  document.title = `Login`
+})
 
 const { handleSubmit, handleReset } = useForm({
   validationSchema: {

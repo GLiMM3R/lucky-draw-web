@@ -4,30 +4,20 @@
             <VCol cols="9">
                 <VRow>
                     <VCol cols="12" md="6" lg="4">
-                        <Shortcut title="Random Draw" :logo="Lottery" url="/random" />
+                        <Shortcut :title="$t('sidebar.random')" :logo="Lottery" url="/random" />
                     </VCol>
                     <VCol cols="12" md="6" lg="4">
-                        <Shortcut title="Wheel Draw" :logo="Wheel" url="/wheel" />
+                        <Shortcut :title="$t('sidebar.wheel')" :logo="Wheel" url="/wheel" />
                     </VCol>
                 </VRow>
                 <VRow>
-                    <HomeCampaignTable title="Random Draw" url="/random" :campaigns="drawCampaigns"
+                    <HomeCampaignTable :title="$t('sidebar.random')" url="/random" :campaigns="drawCampaigns"
                         :isLoading="randomLoading" />
                 </VRow>
                 <VRow>
-                    <HomeCampaignTable title="Wheel Draw" url="/wheel" :campaigns="wheelCapaigns"
+                    <HomeCampaignTable :title="$t('sidebar.wheel')" url="/wheel" :campaigns="wheelCapaigns"
                         :isLoading="wheelLoading" />
                 </VRow>
-            </VCol>
-            <VCol cols="3">
-                <VContainer>
-                    <VRow justify="center">
-                        <DoughnutChart />
-                    </VRow>
-                    <VRow justify="center" class="mt-8">
-                        <DoughnutChart />
-                    </VRow>
-                </VContainer>
             </VCol>
         </VRow>
     </VContainer>
@@ -41,7 +31,6 @@ import Lottery from '@/assets/images/lottery.png'
 import HomeCampaignTable from '@/components/home/HomeCampaignTable.vue';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
-import DoughnutChart from '@/components/home/DoughnutChart.vue';
 import { computed } from 'vue';
 import { useWheelStore } from '@/stores/wheel';
 import { useDrawStore } from '@/stores/draw';
@@ -57,6 +46,7 @@ const wheelCapaigns = computed(() => wheels.value.slice(0, 5))
 onMounted(async () => {
     await drawStore.fetchDraws();
     await wheelStore.fetchWheels();
+    document.title = `Jmart Lucky Draw`
 })
 </script>
 

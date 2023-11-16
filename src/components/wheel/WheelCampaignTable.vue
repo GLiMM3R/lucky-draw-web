@@ -46,8 +46,14 @@
                                     <FormWheelCampaign :campaign="item.raw" />
                                 </v-list-item>
                                 <v-list-item>
-                                    <ConfirmDialog message="Do you want to complete this campaign?"
-                                        buttonText="Finish Campaign" @handleConfirm="handleFinishCampaign(item.raw)" />
+                                    <ConfirmDialog :message="$t('message.finishCampaign')"
+                                        :buttonText="$t('button.finishCampaign')"
+                                        @handleConfirm="handleFinishCampaign(item.raw)" />
+                                </v-list-item>
+                                <v-list-item>
+                                    <DuplicateCampaignDialog :buttonText="$t('button.duplicateCampaign')"
+                                        :campaign="item.raw" @handleConfirm="handleDuplicateCampaign"
+                                        :loading="isLoading" />
                                 </v-list-item>
                             </v-list>
                         </v-menu>
@@ -66,11 +72,14 @@ import { useI18n } from "vue-i18n";
 import { capitalizeLetter } from '@/utils/capitalizeLetter';
 import FormWheelCampaign from './FormWheelCampaign.vue';
 import { useWheelStore } from '@/stores/wheel';
+import DuplicateCampaignDialog from '../DuplicateCampaignDialog.vue';
+import { storeToRefs } from 'pinia';
 
 const i18n = useI18n();
 const router = useRouter();
 const props = defineProps(['campaigns'])
 const wheelStore = useWheelStore();
+const { isLoading } = storeToRefs(wheelStore)
 
 const search = ref('');
 
@@ -78,30 +87,37 @@ const handleSelect = async (item: any, row: any) => {
     if (!row.item.raw.isComplete) {
         await router.push(`/wheel/${row.item.raw.slug}`)
     } else if (row.item.raw.isComplete) {
-        await router.push(`/wheel/${row.item.raw.slug}/report`)
+        await router.push(`/wheel/report/${row.item.raw.slug}`)
     }
+}
+
+const handleDuplicateCampaign = async (values: any) => {
+    await wheelStore.duplicateWheel({ id: values.id, title: values.title })
+    await wheelStore.fetchWheels();
 }
 
 const handleFinishCampaign = async (values: any) => {
     await wheelStore.updateWheel({ id: values.id, isComplete: true })
+    await wheelStore.fetchWheels();
 }
 
 const handleDeleteCampaign = async (item: any) => {
     await wheelStore.deleteWheel(item.raw.id)
+    await wheelStore.fetchWheels();
 }
 
 const headers = [
     {
         key: 'title',
-        title: i18n.t('table.header.campaign.title'),
+        title: i18n.t('table.campaign.title'),
     },
     {
         key: 'createdAt',
-        title: i18n.t('table.header.campaign.createdAt')
+        title: i18n.t('table.campaign.createdAt')
     },
     {
         key: 'createdBy',
-        title: i18n.t('table.header.campaign.createdBy')
+        title: i18n.t('table.campaign.createdBy')
     },
     { title: '', key: "actions", sortable: false },
 ]

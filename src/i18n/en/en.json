@@ -1,5 +1,5 @@
 {
-    "menuitem": {
+    "sidebar": {
         "home": "Home",
         "report": "Report",
         "random": "Random Draw",
@@ -10,50 +10,49 @@
     "table": {
         "title": {
             "coupon": "Coupon Data Set",
-            "prize": "Prize"
+            "prize": "Prize",
+            "completed": "Completed"
         },
-        "header": {
-            "campaign": {
-                "title": "Campaign Name",
-                "createdAt": "Create Date",
-                "createdBy": "Create By",
-                "prizeCap": "Winning Quota",
-                "status": "Status"
-            },
-            "prize": {
-                "rank": "Prize Rank",
-                "title": "Prize Name",
-                "createdAt": "Create Date",
-                "createdBy": "Create By",
-                "prizeAmount": "Prize Amount",
-                "prizeLeft": "Prize Left",
-                "status": "Status"
-            },
-            "coupon": {
-                "title": "Customer Name",
-                "createdAt": "Create Date",
-                "createdBy": "Create By",
-                "status": "Status"
-            },
-            "dataset": {
-                "title": "Dataset Name",
-                "createdAt": "Create Date",
-                "createdBy": "Create By"
-            },
-            "winner": {
-                "no": "NO",
-                "winnerName": "Winner Name",
-                "winnerPhone": "Winner Phone",
-                "createdAt": "Create Date",
-                "status": "Status"
-            }
+        "campaign": {
+            "title": "Campaign Name",
+            "createdAt": "Create Date",
+            "createdBy": "Create By",
+            "prizeCap": "Winning Quota",
+            "status": "Status"
+        },
+        "prize": {
+            "rank": "Prize Rank",
+            "title": "Prize Name",
+            "createdAt": "Create Date",
+            "createdBy": "Create By",
+            "prizeAmount": "Prize Amount",
+            "prizeLeft": "Remaining",
+            "status": "Status"
+        },
+        "dataset": {
+            "title": "Dataset Name",
+            "createdAt": "Create Date",
+            "createdBy": "Create By"
+        },
+        "winner": {
+            "no": "NO",
+            "customerId": "ID",
+            "winnerName": "Winner Name",
+            "winnerPhone": "Winner Phone",
+            "createdAt": "Create Date",
+            "status": "Status"
         }
     },
-    "report": {
-        "statisticTitle": {
-            "wheel": "Total Winner of Wheel Draw Campagin",
-            "random": "Total Winner of Random Draw Campagin"
-        }
+    "pageTitle": {
+        "report": "Report",
+        "random": "Random Draw Campaign",
+        "wheel": "Wheel Draw Campaign"
+    },
+    "statistic": {
+        "wheel": "Total Winner of Wheel Draw Campagin",
+        "random": "Total Winner of Random Draw Campagin",
+        "current": "Current Campaign",
+        "finish": "Done"
     },
     "textfield": {
         "placeholder": {
@@ -65,40 +64,63 @@
             "prizeName": "Prize Name",
             "prizeRank": "Prize Rank",
             "prizeAmount": "Prize Amount",
-            "customerName": "Customer Name",
-            "customerPhone": "Customer Phone",
-            "username": "Username",
-            "password": "Password"
+            "bgImage": "Background Campaign",
+            "loadingImage": "GIF Animation",
+            "baseIcon": "Icon"
         }
     },
+    "uploadFile": {
+        "bgImage": "Add Campaign Background",
+        "dropFile": "Drop files here or click browse thorough your machine",
+        "loadingImage": "Add GIF Animation (show when drawing)",
+        "chooseFile": "Choose File"
+    },
     "tab": {
-        "new": "New",
-        "done": "Done",
-        "all": "All",
-        "current": "Current"
+        "current": "Current",
+        "finish": "Finish",
+        "random": "Random Draw",
+        "wheel": "Wheel Draw"
     },
     "button": {
         "newCampaign": "New Campaign",
         "createPrize": "Create Prize",
         "editPrize": "Edit Prize",
         "campaignSetting": "Campaign Setting",
+        "finishCampaign": "Finish Campaign",
+        "duplicateCampaign": "Duplicate Campaign",
         "importCoupon": "Import Coupon",
         "exportCoupon": "Export Coupon",
-        "createCustomer": "Create Customer",
+        "exportAsPNG": "Export As PNG",
         "confirm": "Confirm",
         "randomNow": "Random Now",
+        "openRandomPage": "Open Random Page ",
         "exit": "Exit",
         "startRandom": "Start Random",
+        "stopRandom": "Stop Random",
         "login": "Login",
-        "viewall": "View All"
+        "viewall": "View All",
+        "finishCampaignNow": "Close Campaign Now"
     },
     "modalTitle": {
         "createCampaign": "Create Campaign",
         "editCampaign": "Edit Campaign",
         "createPrize": "Create Prize",
         "editPrize": "Edit Prize",
-        "createCustomer": "Create Customer",
-        "editCustomer": "Edit Customer"
+        "winnerName": "Winner Name",
+        "confirm": "Are you sure?",
+        "duplicateCampaign": "Duplicate Campaign"
+    },
+    "message": {
+        "congratz": "Congratulation ! you are the winner!",
+        "finishCampaign": "your campaign will be finished",
+        "deleteCampaign": "your campaign will be deleted",
+        "deletePrize": "your prize will be deleted"
+    },
+    "breadcrumbs": {
+        "home": "Home",
+        "random": "Random Draw",
+        "wheel": "Wheel Draw",
+        "report": "Report"
     },
     "validate": {
         "campaignTitle": "Please input campaign title!",

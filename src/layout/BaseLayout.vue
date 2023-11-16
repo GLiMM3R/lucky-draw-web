@@ -8,7 +8,6 @@ import { RouterView } from 'vue-router'
   <VLayout>
     <BaseSidebar />
     <BaseAppbar />
-    <!-- <VMain style="background: #F9FFFC;"> -->
     <VMain>
       <RouterView></RouterView>
     </VMain>

@@ -5,6 +5,7 @@ export interface WheelPrize {
   wheelId: string
   title: string
   amount: number
+  remainingAmount: number
   image: string
   isComplete: boolean
   createdBy: object

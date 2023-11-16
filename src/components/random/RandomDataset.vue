@@ -2,7 +2,7 @@
     <div class="dataset-header">
         <h2 class="title">{{ $t('table.title.coupon') }}</h2>
         <div>
-            <VBtn v-if="!random?.isComplete" class="text-none" variant="outlined" rounded="lg" prepend-icon='mdi-plus'
+            <VBtn v-if="!draw?.isComplete" class="text-none" variant="outlined" rounded="lg" prepend-icon='mdi-plus'
                 :loading="isSelecting" @click="handleFileImport">
                 {{ $t('button.importCoupon') }}</VBtn>
             <input ref="uploader" accept=".csv" type="file" class="d-none" @change="onFileChanged" />
@@ -15,25 +15,25 @@
             <thead>
                 <tr style="background-color: rgba(244, 246, 248, 1); color: #637381;">
                     <th class=" text-center border-0">
-                        {{ $t('table.header.dataset.title') }}
+                        {{ $t('table.dataset.title') }}
                     </th>
                     <th class="text-center border-0">
-                        {{ $t('table.header.dataset.createdAt') }}
+                        {{ $t('table.dataset.createdAt') }}
                     </th>
                     <th class="text-center border-0">
-                        {{ $t('table.header.dataset.createdBy') }}
+                        {{ $t('table.dataset.createdBy') }}
                     </th>
                     <th class="text-center border-0">
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="random?.dataset" class="text-center">
-                    <td>{{ random?.dataset ? random?.dataset.replace(`dataset/${random?.slug}/`, '') : '' }}
+                <tr v-if="draw?.dataset" class="text-center">
+                    <td>{{ draw.dataset ? draw.dataset.replace(`draw/${draw.id}/dataset/`, '') : '' }}
                     </td>
-                    <td>{{ new Date(random?.createdAt).toDateString() ?? '' }}</td>
-                    <td>{{ random?.createdBy.username ?? '' }}</td>
-                    <td v-if="random?.isComplete === false">
+                    <td>{{ new Date(draw?.createdAt).toDateString() ?? '' }}</td>
+                    <td>{{ draw?.createdBy.username ?? '' }}</td>
+                    <td v-if="draw?.isComplete === false">
                         <v-btn size="small" variant="text" icon="mdi-trash-can-outline" color="red" :loading="isLoading"
                             @click="handleRemoveFile" />
                     </td>
@@ -50,17 +50,18 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import useCsv from '@/composables/useCsv';
-import { useRandomStore } from '@/stores/random';
 import { storeToRefs } from 'pinia';
+import { useDrawStore } from '@/stores/draw';
+import { onUnmounted } from 'vue';
 
 const route = useRoute();
 const slug = route.params.slug as string
 
-const randomStore = useRandomStore()
-const { random, isLoading } = storeToRefs(randomStore)
+const drawStore = useDrawStore()
+const { draw, isLoading } = storeToRefs(drawStore)
 const { downloadCsv } = useCsv();
 
-await randomStore.fetchRandomBySlug(slug)
+await drawStore.fetchDrawBySlug(slug)
 
 const uploader = ref();
 const isSelecting = ref(false);
@@ -84,23 +85,27 @@ async function onFileChanged(event: any) {
     if (files) {
         selectedFile.value = files;
         uploader.value.value = null;
-        await randomStore.uploadFileDataset(random.value!.id, selectedFile.value)
-        await randomStore.fetchRandomBySlug(slug)
+        await drawStore.uploadFileDataset(draw.value!.id, selectedFile.value)
+        await drawStore.fetchDrawBySlug(slug)
     }
 };
 
 async function handleDownload() {
-    if (!random.value?.dataset) {
+    if (!draw.value?.dataset) {
         return alert('No file!')
     }
-    await downloadCsv(random.value.dataset, random.value.dataset.replace(`dataset/${slug}`, ''));
+    await downloadCsv(draw.value.dataset, draw.value.dataset.replace(`dataset/${slug}`, ''));
 }
 
 async function handleRemoveFile() {
     selectedFile.value = null;
-    await randomStore.uploadFileDataset(random.value!.id, selectedFile.value)
-    await randomStore.fetchRandomBySlug(slug)
+    await drawStore.uploadFileDataset(draw.value!.id, selectedFile.value)
+    await drawStore.fetchDrawBySlug(slug)
 }
+
+onUnmounted(() => {
+    drawStore.$reset();
+})
 </script>
 
 <style scoped lang="scss">
@@ -119,4 +124,4 @@ async function handleRemoveFile() {
 .shadow {
     box-shadow: 0px 12px 24px -4px rgba(145, 158, 171, 0.12), 0px 0px 2px 0px rgba(145, 158, 171, 0.20);
 }
-</style>@/stores/draw
+</style>
