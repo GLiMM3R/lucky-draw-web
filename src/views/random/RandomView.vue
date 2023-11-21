@@ -1,11 +1,6 @@
 <template>
     <VContainer>
-        <VRow>
-            <VCol>
-                <div class="title">{{ $t('pageTitle.random') }}</div>
-                <Breadcrumbs :items="meta" />
-            </VCol>
-        </VRow>
+        <Breadcrumbs :items="meta" :page-title="pageTitle" />
     </VContainer>
     <Suspense>
         <RouterView />
@@ -26,6 +21,9 @@ import LoadingIcon from '@/components/icons/LoadingIcon.vue'
 const route = useRoute();
 const meta = computed(() => {
     return route.meta.breadcrumb;
+});
+const pageTitle = computed(() => {
+    return route.meta.pageTitle;
 });
 </script>
 

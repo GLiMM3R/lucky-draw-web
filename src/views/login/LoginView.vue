@@ -1,37 +1,44 @@
 <template>
-  <SplashScreen :isLoading="loading" v-if="loading" />
-  <VContainer v-else class="layout-wrapper" :fluid="true">
-    <VRow class="content" justify="center">
-      <VCol cols="12" sm="12" md="12" lg="6" class="logo">
-        <VImg :src="Logo" width="600" height="300" />
-        <!-- <p>Lucky Draw System</p> -->
-      </VCol>
-      <VCol cols="12" sm="12" md="12" lg="6" style="display: flex; justify-content: center;">
-        <VCard class="card" width="600" height="620">
-          <VForm @submit.prevent="submit">
-            <VCardTitle style="color: white; text-align: center; font-size: 48px" class="py-16">
-              Login
-            </VCardTitle>
-            <VCardItem>
-              <VLabel class="mb-2" style="color: white">Username</VLabel>
-              <VTextField v-model="username.value.value" :error-messages="username.errorMessage.value" variant="outlined"
-                autofocus bgColor="white" rounded="lg" density="comfortable" />
-              <VLabel class="mb-2" style="color: white">Password</VLabel>
-              <VTextField v-model="password.value.value" :error-messages="password.errorMessage.value"
-                :type="isShowPassword ? 'text' : 'password'" variant="outlined" bgColor="white" rounded="lg"
-                density="comfortable" :append-inner-icon="isShowPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
-                @click:append-inner="showPassword" />
-              <div class="d-flex justify-center my-10">
-                <VBtn type="submit" :loading="isLoading" color="#12BA68" rounded="lg" class="my-6" width="140px">{{
-                  $t('button.login') }}
-                </VBtn>
-              </div>
-            </VCardItem>
-          </VForm>
-        </VCard>
-      </VCol>
-    </VRow>
-  </VContainer>
+  <VApp>
+    <VLayout :full-height="true">
+      <VMain style="position: relative;" class="layout-wrapper">
+        <SplashScreen :isLoading="loading" v-if="loading" />
+        <VContainer v-else class="content-wrapper">
+          <VRow class="content" justify="center">
+            <VCol cols="12" sm="12" md="12" lg="5" class="logo">
+              <VImg :src="Logo" :width="width * 0.4" class="mx-auto" />
+            </VCol>
+            <VSpacer />
+            <VCol cols="12" sm="12" md="12" lg="5" style="display: flex; justify-content: center;">
+              <VCard class="card" width="600" height="620">
+                <VForm @submit.prevent="submit">
+                  <VCardTitle style="color: white; text-align: center; font-size: 48px;" class="py-16">
+                    Login
+                  </VCardTitle>
+                  <VCardItem>
+                    <VLabel class="mb-2" style="color: white">Username</VLabel>
+                    <VTextField v-model="username.value.value" :error-messages="username.errorMessage.value"
+                      variant="outlined" autofocus bgColor="white" rounded="lg" density="comfortable" />
+                    <VLabel class="mb-2" style="color: white">Password</VLabel>
+                    <VTextField v-model="password.value.value" :error-messages="password.errorMessage.value"
+                      :type="isShowPassword ? 'text' : 'password'" variant="outlined" bgColor="white" rounded="lg"
+                      density="comfortable"
+                      :append-inner-icon="isShowPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
+                      @click:append-inner="showPassword" />
+                    <div class="d-flex justify-center my-10">
+                      <VBtn type="submit" :loading="isLoading" color="#12BA68" rounded="lg" class="my-6" width="140px">{{
+                        $t('button.login') }}
+                      </VBtn>
+                    </div>
+                  </VCardItem>
+                </VForm>
+              </VCard>
+            </VCol>
+          </VRow>
+        </VContainer>
+      </VMain>
+    </VLayout>
+  </VApp>
 </template>
 
 <script setup lang="ts">
@@ -43,10 +50,12 @@ import { useAppSettingStore } from '@/stores/appsetting'
 import SplashScreen from '@/components/SplashScreen.vue'
 import Logo from '@/assets/images/logo-banner.png'
 import { removeAccessToken, removeRefreshToken } from '@/utils/token'
+import { useDisplay } from 'vuetify'
 
 const userStore = useUserStore()
 const { isLoading } = storeToRefs(userStore)
 const { setLanguage } = useAppSettingStore()
+const { width } = useDisplay();
 
 const loading = ref(true)
 const isShowPassword = ref(false)
@@ -89,11 +98,17 @@ setTimeout(() => {
 
 <style scoped lang="scss">
 .layout-wrapper {
-  height: 100vh;
   background-color: #028947;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1400px;
 }
 
 .content {
@@ -104,9 +119,9 @@ setTimeout(() => {
 }
 
 .logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
   position: relative;
 
   p {
@@ -114,7 +129,6 @@ setTimeout(() => {
     transform: translate(7%, 150%);
     color: #fff;
     font-size: 24px;
-    font-family: 'Poppins';
   }
 }
 

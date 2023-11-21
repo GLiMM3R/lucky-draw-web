@@ -74,13 +74,14 @@ const slug = route.params.slug as string
 
 const drawPrizeStore = useDrawPrizeStore();
 const { drawPrizes } = storeToRefs(drawPrizeStore)
-const { localStorageData, updateLocalStorage, performAction } = useReactiveLocalStorage('status');
+const { localStorageData } = useReactiveLocalStorage('status');
 
 
 await drawPrizeStore.fetchDrawPrizeBySlug(slug)
 
 const handleConfirm = async (id: string) => {
     await drawPrizeStore.deleteDrawPrize(id, slug)
+    await drawPrizeStore.fetchDrawPrizeBySlug(slug)
 }
 
 watch(localStorageData, async () => {

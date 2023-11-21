@@ -1,6 +1,8 @@
 <template>
     <div class="dataset-header">
         <h2 class="title">{{ $t('table.title.prize') }}</h2>
+        <VBtn class="text-none" rounded="lg" prepend-icon='mdi-export' @click="handleDownloadWheelReport">
+            Export to Excel</VBtn>
     </div>
     <VCard class="shadow">
         <v-data-table :groupBy="groupBy" :sort-by="sortBy" :headers="headers" :items="drawReportsWithIncludes"
@@ -39,6 +41,10 @@ const drawReportStore = useDrawReportStore();
 const { drawReportsWithIncludes } = storeToRefs(drawReportStore);
 
 await drawReportStore.fetchDrawReportsBySlug(slug)
+
+const handleDownloadWheelReport = async () => {
+    await drawReportStore.downloadDrawReportBySlug(slug, `${slug}-report`)
+}
 
 const sortBy = [{ key: 'createdAt', order: 'asc' }];
 const groupBy = [{ key: 'prize.title', order: 'asc' }];

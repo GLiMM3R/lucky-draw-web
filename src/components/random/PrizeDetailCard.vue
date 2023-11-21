@@ -4,20 +4,20 @@
         <VCardTitle class="text-center prize-header-detail pa-1">
             {{ $t('table.prize.rank') }} {{ props.rank }}
         </VCardTitle>
-        <VCardItem class="pa-0">
-            <!-- <VRow align-content="center" no-gutters>
+        <VCardItem class="px-2">
+            <VRow align-content="center">
                 <VCol>
                     <VCardText class="pa-0 prize-detail">
                         {{ $t('table.prize.title') }}:
                     </VCardText>
                 </VCol>
                 <VCol>
-                    <VCardText class="pa-0 text-right prize-detail text-center">
+                    <VCardText class="pa-0 text-right prize-detail">
                         {{ capitalizeLetter(props.title) }}
                     </VCardText>
                 </VCol>
             </VRow>
-            <VRow align-content="center" class="" no-gutters>
+            <VRow align-content="center">
                 <VCol>
                     <VCardText class="pa-0 prize-detail">
                         {{ $t('table.prize.prizeAmount') }}:
@@ -28,9 +28,9 @@
                         {{ props.amount }}
                     </VCardText>
                 </VCol>
-            </VRow> -->
-            <v-list-item :title="$t('table.prize.title')" :subtitle="capitalizeLetter(props.title)"></v-list-item>
-            <v-list-item :title="$t('table.prize.prizeAmount')" :subtitle="props.amount"></v-list-item>
+            </VRow>
+            <!-- <v-list-item :title="$t('table.prize.title')" :subtitle="capitalizeLetter(props.title)"></v-list-item>
+            <v-list-item :title="$t('table.prize.prizeAmount')" :subtitle="props.amount"></v-list-item> -->
         </VCardItem>
     </VCard>
 </template>

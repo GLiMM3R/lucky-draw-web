@@ -2,11 +2,11 @@
     <div class="dataset-header">
         <h2 class="title">{{ $t('table.title.coupon') }}</h2>
         <div>
-            <VBtn v-if="!draw?.isComplete" class="text-none" variant="outlined" rounded="lg" prepend-icon='mdi-plus'
+            <VBtn v-if="!draw?.isComplete" class="text-none" variant="outlined" rounded="lg" prepend-icon='mdi-import'
                 :loading="isSelecting" @click="handleFileImport">
                 {{ $t('button.importCoupon') }}</VBtn>
             <input ref="uploader" accept=".csv" type="file" class="d-none" @change="onFileChanged" />
-            <VBtn class="text-none ml-4" prepend-icon='mdi-plus' rounded="lg" @click="handleDownload">{{
+            <VBtn class="text-none ml-4" prepend-icon='mdi-export' rounded="lg" @click="handleDownload">{{
                 $t('button.exportCoupon') }}</VBtn>
         </div>
     </div>

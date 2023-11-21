@@ -5,7 +5,7 @@
                 <WheelPrizeTable />
             </VCol>
         </VRow>
-        <VRow justify="center">
+        <VRow justify="center" class="my-8">
             <WheelDialog :campaign="wheel" />
         </VRow>
     </VContainer>

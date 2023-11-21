@@ -59,7 +59,7 @@ export const useDrawReportStore = defineStore('drawReport', () => {
   const downloadDrawReportById = async (id: string, title: string) => {
     try {
       const response = await request({
-        url: `/draw-reports/id=${id}`,
+        url: `/draw-reports/download/id=${id}`,
         method: 'GET',
         responseType: 'blob'
       })
@@ -80,7 +80,7 @@ export const useDrawReportStore = defineStore('drawReport', () => {
   const downloadDrawReportBySlug = async (slug: string, title: string) => {
     try {
       const response = await request({
-        url: `/draw-reports/slug=${slug}`,
+        url: `/draw-reports/download/slug=${slug}`,
         method: 'GET',
         responseType: 'blob'
       })

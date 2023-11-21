@@ -24,11 +24,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import Logo from '@/assets/images/jmart.png'
 import { useI18n } from "vue-i18n";
 import { useUserStore } from '@/stores/user';
 import { capitalizeLetter } from '@/utils/capitalizeLetter';
 import { onMounted } from 'vue';
+import Logo from '@/assets/images/jmart.png'
 
 const i18n = useI18n();
 const drawer = ref(true)

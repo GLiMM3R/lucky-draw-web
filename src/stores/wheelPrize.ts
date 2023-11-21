@@ -77,7 +77,7 @@ export const useWheelPrizeStore = defineStore('wheelPrize', () => {
       isLoading.value = false
     } catch (error) {
       isLoading.value = false
-      $toast.error(error)
+      $toast.error('Something went wrong')
     }
   }
 

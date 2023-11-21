@@ -2,8 +2,7 @@
     <VContainer>
         <VRow>
             <VCol>
-                <div class="title">{{ $t('pageTitle.report') }}</div>
-                <Breadcrumbs :items="meta" />
+                <Breadcrumbs :items="meta" :page-title="pageTitle" />
             </VCol>
         </VRow>
         <VRow class="static">
@@ -51,6 +50,9 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const meta = computed(() => {
     return route.meta.breadcrumb;
+});
+const pageTitle = computed(() => {
+    return route.meta.pageTitle;
 });
 
 const drawStore = useDrawStore();

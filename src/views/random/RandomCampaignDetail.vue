@@ -10,7 +10,7 @@
                 <RandomPrizeTable />
             </VCol>
         </VRow>
-        <VRow justify="center">
+        <VRow justify="center" class="my-8">
             <RandomDrawDialog />
         </VRow>
     </VContainer>

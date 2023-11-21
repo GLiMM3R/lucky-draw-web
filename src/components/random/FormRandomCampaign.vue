@@ -76,12 +76,12 @@ const props = defineProps(['campaign'])
 
 const i18n = useI18n();
 const dialog = ref(false);
-const device = ref(props.campaign?.device);
+const device = ref(props.campaign?.device ?? 'desktop');
 const backgroundImage = ref();
 const loadingImage = ref();
 
 const drawStore = useDrawStore()
-const { isLoading } = storeToRefs(drawStore)
+const { draws, isLoading } = storeToRefs(drawStore)
 
 const { handleSubmit, handleReset } = useForm({
     initialValues: {
@@ -91,6 +91,11 @@ const { handleSubmit, handleReset } = useForm({
     validationSchema: {
         title(val: string) {
             if (val?.trim().length <= 0) return i18n.t('validate.campaignTitle')
+
+            if (props.campaign?.title != val) {
+                if (draws.value.filter((item: any) => item.title === val?.trim()).length > 0) return i18n.t('validate.campaignExist')
+            }
+
             return true
         },
         prizeCap(val: number) {

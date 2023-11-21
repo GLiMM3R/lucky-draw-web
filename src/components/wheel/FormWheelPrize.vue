@@ -44,7 +44,9 @@ import { useRoute } from 'vue-router';
 import { useWheelPrizeStore } from '@/stores/wheelPrize';
 import UploadImage from '@/components/UploadImage.vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
+const i18n = useI18n()
 const route = useRoute();
 const slug = route.params.slug as string
 
@@ -59,16 +61,18 @@ const file = ref<File>();
 const { handleSubmit, handleReset } = useForm({
     initialValues: {
         title: props.prize?.title ?? '',
-        amount: props.prize?.amount ?? '',
+        amount: props.prize?.amount ?? 1,
     },
     validationSchema: {
         title(val: string) {
-            if (val?.trim().length > 0) return true
-            return 'Title is required!'
+            if (val?.trim().length < 3) return i18n.t('validate.campaignTitle')
+
+            return true
         },
         amount(val: number) {
-            if (val > 0) return true
-            return 'Prize amount > 0!'
+            if (val < 1) return i18n.t('validate.prizeAmount')
+
+            return true
         }
     }
 })

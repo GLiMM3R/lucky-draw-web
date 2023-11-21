@@ -38,7 +38,6 @@ import LogoStatic from '@/assets/images/campaign_static.png'
 import LogoDone from '@/assets/images/done.png'
 import StatisticCard from '@/components/StatisticCard.vue';
 import RandomCampaignTable from '@/components/random/RandomCampaignTable.vue';
-import { onBeforeRouteLeave } from 'vue-router';
 
 const drawStore = useDrawStore()
 const { draws } = storeToRefs(drawStore)

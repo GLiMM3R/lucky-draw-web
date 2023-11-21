@@ -40,9 +40,10 @@
                                         </transition-group>
                                     </VRow>
                                 </VContainer>
-                                <v-pagination v-model="page" color="primary"
-                                    style="position: absolute; bottom: 0; width: 100%;"
-                                    :length="Math.ceil(drawReports.length / perPage)" size="24" />
+                                <VContainer style="position: absolute; bottom: 0; width: 100%;">
+                                    <v-pagination v-model="page" color="primary"
+                                        :length="Math.ceil(drawReports.length / perPage)" size="24" />
+                                </VContainer>
                             </VSheet>
                         </VCol>
                         <VCol class="d-flex flex-column">
@@ -53,27 +54,26 @@
                                     {{ capitalizeLetter(draw?.title) }}
                                 </VCardTitle>
                             </VCard>
-                            <VSheet class="rounded-lg main-content-no-flex flex-1 overflow-hidden">
-                                <VContainer class="fill-height pa-0">
-                                    <VRow class="fill-height">
-                                        <VCol :cols="12" class="d-flex flex-column justify-space-between">
-                                            <VRow justify="space-evenly" align="center" class="flex-1">
-                                                <RandomButton v-if="!startRandom" :title="$t('button.startRandom')"
-                                                    color="#FFCD00" text-color="primary" @handleClick="handleStartRandom" />
-                                                <RandomButton v-else :title="$t('button.stopRandom')" color="red"
-                                                    text-color="white" :disabled="isEnabled"
-                                                    @handleClick="handleStopRandom" />
-                                                <PrizeDetailCard :amount="drawPrize?.amount" :title="drawPrize?.title"
-                                                    :rank="drawPrize?.rank" :height="height * 0.18" />
-                                                <div v-if="prizeImage" class="rounded-lg img-wrapper">
-                                                    <VSheet elevation="1" class="rounded-lg overflow-hidden">
-                                                        <VImg :width="240" :height="height * 0.18" :src="prizeImage" />
-                                                    </VSheet>
-                                                    <VImg width="30" :src="Badge"
-                                                        style="position: absolute; top: 5px; right: 5px;" />
-                                                </div>
-                                            </VRow>
-                                            <VRow v-if="startRandom" class="flex-1 d-flex justify-center align-center">
+                            <VSheet class="rounded-lg main-content-no-flex pa-4">
+                                <VContainer class="fill-height">
+                                    <VRow justify="space-evenly" align="center">
+                                        <RandomButton v-if="!startRandom" :title="$t('button.startRandom')" color="#FFCD00"
+                                            text-color="primary" @handleClick="handleStartRandom" />
+                                        <RandomButton v-else :title="$t('button.stopRandom')" color="red" text-color="white"
+                                            :disabled="isEnabled" @handleClick="handleStopRandom" />
+                                        <PrizeDetailCard :amount="drawPrize?.amount" :title="drawPrize?.title"
+                                            :rank="drawPrize?.rank" :height="height * 0.18" />
+                                        <div class="rounded-lg img-wrapper">
+                                            <VSheet elevation="1"
+                                                class="rounded-lg overflow-hidden d-flex justify-center align-center"
+                                                :width="260" :height="height * 0.18">
+                                                <VImg v-if="prizeImage" :src="prizeImage" width="auto" />
+                                                <p v-else>No Image</p>
+                                            </VSheet>
+                                            <VImg width="30" :src="Badge"
+                                                style="position: absolute; top: 5px; right: 5px;" />
+                                        </div>
+                                        <!-- <VRow v-if="startRandom" class="flex-1 d-flex justify-center align-center">
                                                 <div v-if="!loadingImage">
                                                     <NumberGenerator :numbers="numbers" />
                                                 </div>
@@ -81,16 +81,31 @@
                                             </VRow>
                                             <VRow v-else class="flex-1 d-flex justify-center align-center">
                                                 <p v-if="!drawReports">Start random to Get Winner</p>
-                                            </VRow>
-                                        </VCol>
+                                            </VRow> -->
                                     </VRow>
                                 </VContainer>
                             </VSheet>
-                            <VSheet class="rounded-lg main-content d-md-flex d-none mt-4 flex-1">
-                            </VSheet>
+                            <!-- <VSheet class="rounded-lg main-content d-md-flex d-none mt-4 flex-1">
+                            </VSheet> -->
                         </VCol>
                     </VRow>
                 </VContainer>
+                <v-dialog v-model="dialog" persistent width="auto">
+                    <VRow>
+                        <VCol>
+                            <div v-if="!loadingImage">
+                                <NumberGenerator :numbers="numbers" />
+                            </div>
+                            <VAvatar v-else rounded="lg" size="auto">
+                                <VImg :src="loadingImage" width="auto" />
+                            </VAvatar>
+                        </VCol>
+                    </VRow>
+                    <VRow justify="center">
+                        <VBtn rounded="large" class="text-none" color="red" @click="handleStopRandom">
+                            {{ $t('button.stopRandom') }}</VBtn>
+                    </VRow>
+                </v-dialog>
             </VMain>
         </VLayout>
     </VApp>
@@ -116,8 +131,6 @@ import NumberGenerator from '@/components/random/NumberGenerator.vue';
 import type { DrawReport } from '@/stores/types/drawReport';
 import { useReactiveLocalStorage } from '@/composables/useReactiveLocalStorage';
 
-const { performAction } = useReactiveLocalStorage('status');
-
 const route = useRoute();
 const slug = route.params.slug as string
 const prizeId = route.params.prizeId as string
@@ -130,6 +143,7 @@ const { draw } = storeToRefs(drawStore)
 const { drawPrize } = storeToRefs(drawPrizeStore)
 const { drawReports } = storeToRefs(drawReportStore)
 const { getImage } = useImage();
+const { performAction } = useReactiveLocalStorage('status');
 
 const { width, height } = useDisplay()
 const breakpoint = computed(() => width.value > 1366)
@@ -155,12 +169,13 @@ const numbers = reactive({
     number_8: 0
 })
 const perPage = computed(() => {
-    if (height.value > 750) {
-        return 10
+    if (height.value > 800) {
+        return 8
     } else {
-        return 7
+        return 6
     }
 })
+const dialog = ref(false)
 
 onMounted(async () => {
     document.title = `Random ${capitalizeLetter(slug)}`
@@ -188,12 +203,12 @@ const visiblePages = computed(() => {
     return drawReports.value.slice((page.value - 1) * perPage.value, page.value * perPage.value)
 })
 
-watch(() => visiblePages.value, () => {
+watch(visiblePages, () => {
     items.value = []
     visiblePages.value.forEach((item, index) => {
         setTimeout(() => {
             items.value.push(item)
-        }, 360 * (index + 1))
+        }, 300 * (index + 1))
     })
 })
 
@@ -211,16 +226,17 @@ const handleStartRandom = async () => {
     }, 3000);
 
     animateRandomNumber()
-
+    dialog.value = true
     await drawStore.luckyDraw({ slug: slug, prizeId: prizeId })
 }
 
 const handleStopRandom = async () => {
     startRandom.value = false
+
     await drawPrizeStore.fetchSingleDrawPrizeById(prizeId)
     await drawReportStore.fetchDrawReportsByPrizeId(slug, prizeId)
-    // localStorage.setItem('status', 'processing');
     performAction()
+    dialog.value = false
 }
 
 const animateRandomNumber = () => {
@@ -273,6 +289,11 @@ const animateRandomNumber = () => {
 .v-leave-to {
     opacity: 0;
     translate: 50px 0;
+}
+
+.v-overlay--active {
+    backdrop-filter: blur(2px);
+    background: rgb(0 0 0 / 0.9);
 }
 
 .item {

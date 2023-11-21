@@ -56,7 +56,7 @@ const dialog = ref(false)
 const baseIcon = ref()
 
 const wheelStore = useWheelStore()
-const { isLoading } = storeToRefs(wheelStore)
+const { wheels, isLoading } = storeToRefs(wheelStore)
 
 const { handleSubmit, handleReset } = useForm({
     initialValues: {
@@ -65,6 +65,11 @@ const { handleSubmit, handleReset } = useForm({
     validationSchema: {
         title(val: string) {
             if (val?.trim().length < 0) return i18n.t('validate.campaignTitle')
+
+            if (props.campaign?.title !== val) {
+                if (wheels.value.filter((item: any) => item.title === val?.trim()).length > 0) return i18n.t('validate.campaignExist')
+            }
+
             return true
         },
     }

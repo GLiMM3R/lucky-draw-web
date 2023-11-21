@@ -1,13 +1,8 @@
 <template>
-    <v-btn variant="elevated" rounded="lg" @click="handleDialog" prepend-icon='mdi-plus' class="text-none">
+    <v-btn variant="elevated" rounded="lg" @click="handleDialog" class="text-none">
         {{ $t('button.startRandom') }}
     </v-btn>
     <v-dialog v-model="dialog" class="overlay" persistent width="900">
-        <!-- <VCard width="auto" class="bg-primary rounded-lg" height="100">
-            <VCardTitle v-if="draw" class="text-center d-flex align-center justify-center text-h3 font-weight-bold">
-                {{ capitalizeLetter(draw.title) }}
-            </VCardTitle>
-        </VCard> -->
         <VCard color="primary" rounded="lg" height="5rem" class="d-flex justify-center align-center">
             <VCardTitle class="text-center" style="font-size: 2rem; font-weight: 700;">
                 {{ capitalizeLetter(draw?.title) }}
@@ -72,6 +67,7 @@ import { useDrawPrizeStore } from '@/stores/drawPrize';
 import { useDrawReportStore } from '@/stores/drawReport';
 import { capitalizeLetter } from '@/utils/capitalizeLetter';
 import html2canvas from 'html2canvas';
+import { useReactiveLocalStorage } from '@/composables/useReactiveLocalStorage';
 
 const i18n = useI18n();
 const $toast = useToast()
@@ -87,16 +83,26 @@ const { drawReports } = storeToRefs(drawReportStore)
 
 const dialog = ref(false)
 const selectedPrize = ref(99)
+const { localStorageData } = useReactiveLocalStorage('status');
 
 await drawStore.fetchDrawBySlug(slug)
 
-watch(() => selectedPrize.value, async () => {
+watch(selectedPrize, async () => {
     if (drawPrizes.value[selectedPrize.value].isComplete) {
         await drawReportStore.fetchDrawReportsByPrizeId(slug, drawPrizes.value[selectedPrize.value].id as string)
     } else {
         drawReports.value = []
     }
 })
+
+watch(localStorageData, async () => {
+    if (localStorageData.value === 'processing') {
+        await drawPrizeStore.fetchDrawPrizeBySlug(slug)
+        await drawReportStore.fetchDrawReportsByPrizeId(slug, drawPrizes.value[selectedPrize.value].id as string)
+        console.log('fetched');
+    }
+})
+
 
 function saveAsImage() {
     html2canvas(document.querySelector('#elementToCapture')!).then(canvas => {
@@ -133,7 +139,6 @@ const handleRandom = async () => {
     } else {
         window.open(`/random/${slug}/${drawPrizes.value[selectedPrize.value].id as string}/desktop`)
     }
-    dialog.value = !dialog.value
 }
 </script>
 

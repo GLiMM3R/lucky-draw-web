@@ -8,8 +8,8 @@ import {
 } from '@/utils/token'
 import axios from 'axios'
 
-// const BASE_URL = 'http://localhost:3000/api'
-const BASE_URL = 'http://192.168.1.220:3000/api'
+// const BASE_URL = 'http://192.168.1.8:3000/api'
+const BASE_URL = import.meta.env.VITE_WEB_API
 
 const axiosApiInstance = axios.create({
   baseURL: BASE_URL,

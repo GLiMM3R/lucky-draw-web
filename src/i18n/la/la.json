@@ -70,9 +70,10 @@
     },
     "uploadFile": {
         "bgImage": "ເພີ່ມພື້ນຫລັງແຄມເປນ",
-        "dropFile": "ວາງໄຟລ໌ໄວ້ບ່ອນນີ້ ຫຼືຄລິກ browse ຢ່າງລະອຽດຖີ່ຖ້ວນໃນເຄື່ອງຂອງເຈົ້າ",
+        "dropFile": "ວາງໄຟລ໌ໄວ້ບ່ອນນີ້ ຫຼືຄລິກ browse, ຂະໜາດຟາຍບໍຄວນເກີນ 5 MB",
         "loadingImage": "ເພີ່ມຮູບເຄື່ອນໄຫວ (ສະແດງເມື່ອສຸ່ມ)",
-        "chooseFile": "ເລືອກໄຟລ໌"
+        "chooseFile": "ເລືອກໄຟລ໌",
+        "dropzoneInfo": "ຮູບພາບຂະໜາດບໍຄວນເກີນ 5 MB"
     },
     "tab": {
         "current": "ປະຈຸບັນ",
@@ -87,8 +88,8 @@
         "campaignSetting": "ຕັ້ງຄ່າແຄມເປນ",
         "finishCampaign": "ສຳເລັດແຄມເປນ",
         "duplicateCampaign": "ຄັດລອກແຄມເປນ ",
-        "importCoupon": "Import Coupon",
-        "exportCoupon": "Export Coupon",
+        "importCoupon": "ນຳເຂົ້າຄູປອງ",
+        "exportCoupon": "ສົ່ງອອກຄູປອງ",
         "exportAsPNG": "Export As PNG",
         "confirm": "ຢືນຍັນ ",
         "randomNow": "ສູ່ມດຽວນີ້ ",
@@ -122,10 +123,12 @@
         "report": "ລາຍງານ"
     },
     "validate": {
-        "campaignTitle": "Please input campaign title!",
-        "prizeCap": "Winning Quota must greater than 0!",
-        "customerName": "Please input customer name!",
-        "customerPhone": "Customer phone must greater than 7!"
+        "campaignTitle": "ຊື່ແຄມເປນຕ້ອງຫຼາຍກວ່າ 3!",
+        "prizeCap": "ໂຄຕ້າຜູ້ຊະນະຕ້ອງຫຼາຍກວ່າ 0!",
+        "prizeAmount": "ຈຳນວນລາງວັນຕ້ອງຫຼາຍກວ່າ 0!",
+        "prizeRank": "ອັນດັບລາງວັນຕ້ອງຫຼາຍກວ່າ 1!",
+        "prizeRankExist": "ອັນດັບລາງວັນນີ້ມີແລ້ວ!",
+        "campaignExist": "ຊື່ແຄມເປນນີ້ມີແລ້ວ"
     },
     "alert": {
         "apiError": "ມີບາງຢ່າງຜິດພາດ!",

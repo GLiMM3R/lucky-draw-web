@@ -14,6 +14,7 @@ const router = createRouter({
           name: 'home',
           component: () => import('@/views/home/HomeView.vue'),
           meta: {
+            pageTitle: 'Jmart',
             breadcrumb: [
               {
                 title: 'Home',
@@ -28,6 +29,7 @@ const router = createRouter({
           name: 'report',
           component: () => import('@/views/report/ReportView.vue'),
           meta: {
+            pageTitle: 'pageTitle.report',
             breadcrumb: [
               {
                 title: 'breadcrumbs.home',
@@ -51,6 +53,7 @@ const router = createRouter({
               name: 'random-campaign',
               component: () => import('@/views/random/RandomCampaign.vue'),
               meta: {
+                pageTitle: 'pageTitle.random',
                 breadcrumb: [
                   {
                     title: 'breadcrumbs.home',
@@ -70,6 +73,7 @@ const router = createRouter({
               name: 'random-detail',
               component: () => import('@/views/random/RandomCampaignDetail.vue'),
               meta: {
+                pageTitle: ':slug',
                 breadcrumb: [
                   {
                     title: 'breadcrumbs.home',
@@ -89,6 +93,7 @@ const router = createRouter({
                 ]
               },
               beforeEnter: (to, from, next) => {
+                to.meta.pageTitle = `${to.params.slug}`
                 to.meta.breadcrumb[2].title = `${to.params.slug}`
                 to.meta.breadcrumb[2].href = `/random/${to.params.slug}`
                 next()
@@ -99,6 +104,7 @@ const router = createRouter({
               name: 'random-report',
               component: () => import('@/views/random/RandomCampaignReport.vue'),
               meta: {
+                pageTitle: 'pageTitle.report',
                 breadcrumb: [
                   {
                     title: 'breadcrumbs.home',
@@ -139,6 +145,7 @@ const router = createRouter({
               name: 'wheel-campaign',
               component: () => import('@/views/wheel/WheelCampaign.vue'),
               meta: {
+                pageTitle: 'pageTitle.wheel',
                 breadcrumb: [
                   {
                     title: 'breadcrumbs.home',
@@ -158,6 +165,7 @@ const router = createRouter({
               name: 'wheel-detail',
               component: () => import('@/views/wheel/WheelCampaignDetail.vue'),
               meta: {
+                pageTitle: ':slug',
                 breadcrumb: [
                   {
                     title: 'breadcrumbs.home',
@@ -177,6 +185,7 @@ const router = createRouter({
                 ]
               },
               beforeEnter: (to, from, next) => {
+                to.meta.pageTitle = `${to.params.slug}`
                 to.meta.breadcrumb[2].title = `${to.params.slug}`
                 to.meta.breadcrumb[2].href = `/wheel/${to.params.slug}`
                 next()
@@ -187,6 +196,7 @@ const router = createRouter({
               name: 'wheel-report',
               component: () => import('@/views/wheel/WheelCampaignReport.vue'),
               meta: {
+                pageTitle: 'pageTitle.report',
                 breadcrumb: [
                   {
                     title: 'breadcrumbs.home',

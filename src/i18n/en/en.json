@@ -71,9 +71,10 @@
     },
     "uploadFile": {
         "bgImage": "Add Campaign Background",
-        "dropFile": "Drop files here or click browse thorough your machine",
-        "loadingImage": "Add GIF Animation (show when drawing)",
-        "chooseFile": "Choose File"
+        "dropFile": "Drop files here or click browse, file must not exceed 5 MB",
+        "loadingImage": "Add GIF Animation",
+        "chooseFile": "Choose File",
+        "dropzoneInfo": "Image must not exceed 5 MB"
     },
     "tab": {
         "current": "Current",
@@ -123,10 +124,12 @@
         "report": "Report"
     },
     "validate": {
-        "campaignTitle": "Please input campaign title!",
+        "campaignTitle": "Campaign name is required!",
         "prizeCap": "Winning Quota must greater than 0!",
-        "customerName": "Please input customer name!",
-        "customerPhone": "Customer phone must greater than 7!"
+        "prizeAmount": "Prize amount must greater than 0!",
+        "prizeRank": "Prize rank must greater than 0!",
+        "prizeRankExist": "This rank already exists!",
+        "campaignExist": "Campaign name already exists!"
     },
     "alert": {
         "apiError": "Something went wrong!",

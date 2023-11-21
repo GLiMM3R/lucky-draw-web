@@ -15,7 +15,7 @@
                     <VImg :src="previewImage" cover width="320" height="240" />
                 </div>
                 <div v-else class="dropZone-detail">
-                    <VImg :src="UploadImage" width="200" class="mx-auto" />
+                    <VImg :src="UploadImage" width="160" class="mx-auto" />
                     <span class="dropZone-title">{{ props.title }}</span>
                     <div class="dropZone-upload-limit-info">
                         <div>{{ props.description }}</div>
@@ -34,7 +34,7 @@ import useImage from '@/composables/useImage'
 import UploadImage from '@/assets/images/upload_img.png'
 
 const emit = defineEmits(['handleGetImage', 'handleRemove'])
-const props = defineProps(['image', 'title', 'description'])
+const props = defineProps(['image', 'title', 'description', 'height'])
 
 const { getImage } = useImage();
 const $toast = useToast();
@@ -84,8 +84,8 @@ const createFile = (file: File) => {
         return;
     }
 
-    if (file.size > 5000000) {
-        alert('please check file size no over 5 MB.')
+    if (file.size > 10000000) {
+        alert('please check file size no over 10MB.')
         dragging.value = false;
         return;
     }
@@ -98,7 +98,7 @@ const createFile = (file: File) => {
 <style scoped lang="scss">
 .dropZone {
     width: 100%;
-    height: 240px;
+    height: 220px;
     flex-shrink: 0;
     position: relative;
     border: 2px dashed #eee;
@@ -141,7 +141,7 @@ const createFile = (file: File) => {
 .dropZone-info {
     color: #A8A8A8;
     width: 100%;
-    height: 240px;
+    height: 220px;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -154,7 +154,7 @@ const createFile = (file: File) => {
     .dropZone-title {
         color: #787878;
         font-weight: 600;
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .dropZone-upload-limit-info {
@@ -162,6 +162,7 @@ const createFile = (file: File) => {
         justify-content: flex-start;
         flex-direction: column;
         padding: 0 10px;
+        font-size: 14px;
 
         & span {
             color: #028947;

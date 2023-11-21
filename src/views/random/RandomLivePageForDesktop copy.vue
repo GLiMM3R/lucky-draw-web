@@ -11,19 +11,8 @@
                             <VCard color="primary" rounded="pill" height="5rem">
                                 <VImg :src="Logo" height="5rem" />
                             </VCard>
-                            {{ visiblePages.length }}
-
-                            <!-- <VSheet class="mt-10 rounded-lg main-content flex-1">
-                            </VSheet> -->
-                        </VCol>
-                        <VCol class="d-flex flex-column">
-                            <VCard color="primary" rounded="pill" height="5rem" class="d-flex justify-center align-center">
-                                <VCardTitle class="text-center"
-                                    :style="breakpoint ? 'font-size: 2.4rem; font-weight: 700;' : 'font-size: 2rem; font-weight: 700;'">
-                                    {{ capitalizeLetter(draw?.title) }}
-                                </VCardTitle>
-                            </VCard>
-                            <VSheet class="rounded-lg fill-height main-content flex-column justify-center flex-2 mt-10">
+                            <VSheet class="rounded-lg fill-height main-content flex-1 flex-column justify-center"
+                                :class="breakpoint ? 'mt-10' : 'mt-8'">
                                 <VCard style="position: absolute;" :height="breakpoint ? '3.75rem' : '2.75rem'"
                                     :style="breakpoint ? 'top: -34px;' : 'top: -24px;'" width="300" color="#FFCD00"
                                     rounded="pill" class="d-flex justify-center align-center">
@@ -31,10 +20,10 @@
                                         {{ $t('modalTitle.winnerName') }}
                                     </VCardTitle>
                                 </VCard>
-                                <VContainer v-if="drawPrize?.isComplete" class="d-flex">
-                                    <VRow justify="center">
+                                <VContainer v-if="drawPrize?.isComplete" class="d-flex flex-column">
+                                    <VRow align="start">
                                         <transition-group>
-                                            <VCol cols="5" v-for="winner, index in items" :key="winner.id"
+                                            <VCol cols="12" v-for="winner, index in items" :key="winner.id"
                                                 style="transition: all 0.5s;">
                                                 <VCard :height="breakpoint ? 48 : 48"
                                                     class="d-flex align-center rounded-lg item-wrapper"
@@ -50,20 +39,22 @@
                                             </VCol>
                                         </transition-group>
                                     </VRow>
+                                </VContainer>
+                                <VContainer style="position: absolute; bottom: 0; width: 100%;">
                                     <v-pagination v-model="page" color="primary"
-                                        style="position: absolute; bottom: 0; width: 100%;"
                                         :length="Math.ceil(drawReports.length / perPage)" size="24" />
                                 </VContainer>
-                                <!-- <VContainer v-else class="d-flex justify-center">
-                                    <div v-if="startRandom" class="content-wrapper fill-height my-2">
-                                        <VImg v-if="!loadingImage" :src="loadingImage" cover max-width="100%" width="auto"
-                                            max-height="180" />
-                                        <NumberGenerator v-else :numbers="numbers" />
-                                    </div>
-                                    <p v-else class="d-flex align-center h-100">Start random to Get Winner</p>
-                                </VContainer> -->
                             </VSheet>
-                            <VSheet class="rounded-lg main-content mt-4 flex-1">
+                        </VCol>
+                        <VCol class="d-flex flex-column">
+                            <VCard color="primary" rounded="pill" height="5rem" class="d-flex justify-center align-center"
+                                :class="breakpoint ? 'mb-10' : 'mb-8'">
+                                <VCardTitle class="text-center"
+                                    :style="breakpoint ? 'font-size: 2.4rem; font-weight: 700;' : 'font-size: 2rem; font-weight: 700;'">
+                                    {{ capitalizeLetter(draw?.title) }}
+                                </VCardTitle>
+                            </VCard>
+                            <VSheet class="rounded-lg main-content-no-flex flex-1 overflow-hidden">
                                 <VContainer class="fill-height pa-0">
                                     <VRow class="fill-height">
                                         <VCol :cols="12" class="d-flex flex-column justify-space-between">
@@ -74,41 +65,33 @@
                                                     text-color="white" :disabled="isEnabled"
                                                     @handleClick="handleStopRandom" />
                                                 <PrizeDetailCard :amount="drawPrize?.amount" :title="drawPrize?.title"
-                                                    :rank="drawPrize?.rank" :height="height * 0.2" />
-                                                <div class="rounded-lg img-wrapper">
-                                                    <VSheet elevation="1"
-                                                        class="rounded-lg overflow-hidden d-flex justify-center align-center"
-                                                        :width="260" :height="height * 0.18">
-                                                        <VImg v-if="prizeImage" :src="prizeImage" width="auto" />
-                                                        <p v-else>No Image</p>
+                                                    :rank="drawPrize?.rank" :height="height * 0.18" />
+                                                <div v-if="prizeImage" class="rounded-lg img-wrapper">
+                                                    <VSheet elevation="1" class="rounded-lg overflow-hidden">
+                                                        <VImg :width="240" :height="height * 0.18" :src="prizeImage" />
                                                     </VSheet>
                                                     <VImg width="30" :src="Badge"
                                                         style="position: absolute; top: 5px; right: 5px;" />
                                                 </div>
                                             </VRow>
+                                            <VRow v-if="startRandom" class="flex-1 d-flex justify-center align-center">
+                                                <div v-if="!loadingImage">
+                                                    <NumberGenerator :numbers="numbers" />
+                                                </div>
+                                                <VImg v-else :src="loadingImage" :height="height * 0.17" class="mx-10" />
+                                            </VRow>
+                                            <VRow v-else class="flex-1 d-flex justify-center align-center">
+                                                <p v-if="!drawReports">Start random to Get Winner</p>
+                                            </VRow>
                                         </VCol>
                                     </VRow>
                                 </VContainer>
                             </VSheet>
+                            <VSheet class="rounded-lg main-content d-md-flex d-none mt-4 flex-1">
+                            </VSheet>
                         </VCol>
                     </VRow>
                 </VContainer>
-                <v-dialog v-model="dialog" persistent width="auto">
-                    <VRow>
-                        <VCol>
-                            <div v-if="!loadingImage">
-                                <NumberGenerator :numbers="numbers" />
-                            </div>
-                            <VAvatar v-else rounded="lg" size="auto">
-                                <VImg :src="loadingImage" width="auto" />
-                            </VAvatar>
-                        </VCol>
-                    </VRow>
-                    <VRow justify="center">
-                        <VBtn rounded="large" class="text-none" color="red" @click="handleStopRandom">
-                            {{ $t('button.stopRandom') }}</VBtn>
-                    </VRow>
-                </v-dialog>
             </VMain>
         </VLayout>
     </VApp>
@@ -134,6 +117,8 @@ import NumberGenerator from '@/components/random/NumberGenerator.vue';
 import type { DrawReport } from '@/stores/types/drawReport';
 import { useReactiveLocalStorage } from '@/composables/useReactiveLocalStorage';
 
+const { performAction } = useReactiveLocalStorage('status');
+
 const route = useRoute();
 const slug = route.params.slug as string
 const prizeId = route.params.prizeId as string
@@ -146,13 +131,13 @@ const { draw } = storeToRefs(drawStore)
 const { drawPrize } = storeToRefs(drawPrizeStore)
 const { drawReports } = storeToRefs(drawReportStore)
 const { getImage } = useImage();
-const { performAction } = useReactiveLocalStorage('status');
 
 const { width, height } = useDisplay()
 const breakpoint = computed(() => width.value > 1366)
 
 const startRandom = ref(false)
 const page = ref(1)
+// const perPage = ref(6)
 const items = ref<DrawReport[]>([]);
 const isEnabled = ref(false);
 const prizeImage = ref();
@@ -170,14 +155,7 @@ const numbers = reactive({
     number_7: 0,
     number_8: 0
 })
-const dialog = ref(false)
-const perPage = computed(() => {
-    if (height.value > 800) {
-        return 8
-    } else {
-        return 6
-    }
-})
+const perPage = ref(7)
 
 onMounted(async () => {
     document.title = `Random ${capitalizeLetter(slug)}`
@@ -202,6 +180,11 @@ onMounted(async () => {
 })
 
 const visiblePages = computed(() => {
+    if (height.value > 800) {
+        perPage.value = 8
+    } else {
+        perPage.value = 6
+    }
     return drawReports.value.slice((page.value - 1) * perPage.value, page.value * perPage.value)
 })
 
@@ -210,13 +193,13 @@ watch(visiblePages, () => {
     visiblePages.value.forEach((item, index) => {
         setTimeout(() => {
             items.value.push(item)
-        }, 300 * (index + 1))
+        }, 360 * (index + 1))
     })
 })
 
 const handleStartRandom = async () => {
     if (drawPrize.value?.isComplete) {
-        alert('Already random')
+        alert('Already random!')
         return;
     }
 
@@ -228,7 +211,6 @@ const handleStartRandom = async () => {
     }, 3000);
 
     animateRandomNumber()
-    dialog.value = true
 
     await drawStore.luckyDraw({ slug: slug, prizeId: prizeId })
 }
@@ -237,8 +219,7 @@ const handleStopRandom = async () => {
     startRandom.value = false
     await drawPrizeStore.fetchSingleDrawPrizeById(prizeId)
     await drawReportStore.fetchDrawReportsByPrizeId(slug, prizeId)
-    performAction();
-    dialog.value = false
+    performAction()
 }
 
 const animateRandomNumber = () => {
@@ -275,7 +256,7 @@ const animateRandomNumber = () => {
 <style>
 .v-enter-from {
     opacity: 0;
-    translate: -100px 0;
+    translate: -50px 0;
 }
 
 .v-enter-to {
@@ -290,12 +271,7 @@ const animateRandomNumber = () => {
 
 .v-leave-to {
     opacity: 0;
-    translate: 100px 0;
-}
-
-.v-overlay--active {
-    backdrop-filter: blur(2px);
-    background: rgb(0 0 0 / 0.9);
+    translate: 50px 0;
 }
 
 .item {
@@ -308,7 +284,7 @@ const animateRandomNumber = () => {
 .content-wrapper {
     position: relative;
     display: flex;
-    flex-basis: auto;
+    flex: 1;
     align-items: center;
 }
 
@@ -327,11 +303,12 @@ const animateRandomNumber = () => {
     background-color: #F0FFF8;
 }
 
-.flex-1 {
-    flex: 1;
+.main-content-no-flex {
+    border: 3px #028947 solid;
+    background-color: #F0FFF8;
 }
 
-.flex-2 {
-    flex: 2;
+.flex-1 {
+    flex: 1;
 }
 </style>                 

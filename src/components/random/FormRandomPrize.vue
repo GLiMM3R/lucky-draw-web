@@ -24,13 +24,13 @@
                         <VForm @submit.prevent="submit">
                             <VTextField :label="$t('textfield.label.prizeName')" v-model="title.value.value"
                                 :error-messages="title.errorMessage.value" variant="outlined" rounded="lg" autofocus
-                                class="mb-4" />
+                                class="mb-2" />
                             <VTextField :label="$t('textfield.label.prizeRank')" v-model="rank.value.value"
                                 :error-messages="rank.errorMessage.value" type="number" variant="outlined" rounded="lg"
-                                class="mb-4" />
+                                class="mb-2" />
                             <VTextField :label="$t('textfield.label.prizeAmount')" v-model="amount.value.value"
                                 :error-messages="amount.errorMessage.value" type="number" variant="outlined" rounded="lg"
-                                class="mb-4" />
+                                class="mb-2" />
                             <Suspense>
                                 <UploadImage @handleGetImage="getImage" :image="props.prize?.image" :isRounded="false"
                                     :title="$t('uploadFile.chooseFile')" :description="$t('uploadFile.dropFile')" />
@@ -52,7 +52,9 @@ import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import UploadImage from '@/components/UploadImage.vue';
 import { useDrawPrizeStore } from '@/stores/drawPrize';
+import { useI18n } from 'vue-i18n';
 
+const i18n = useI18n()
 const route = useRoute();
 const slug = route.params.slug as string
 
@@ -67,26 +69,27 @@ const file = ref<File>();
 const { handleSubmit, handleReset } = useForm({
     initialValues: {
         title: props.prize?.title ?? '',
-        rank: props.prize?.rank ?? 0,
-        amount: props.prize?.amount ?? 0,
+        rank: props.prize?.rank ?? 1,
+        amount: props.prize?.amount ?? 1,
     },
     validationSchema: {
         title(val: string) {
-            if (val?.trim().length > 0) return true
-            return 'Title is required!'
+            if (val?.trim().length < 3) return i18n.t('validate.campaignTitle')
+
+            return true
         },
         rank(val: number) {
-            if (!val || val < 0) return 'Value must greater than 0'
+            if (!val || val < 1) return i18n.t('validate.prizeRank')
 
             if (Number(props.prize?.rank) != val) {
-                if (drawPrizes.value.filter((item: any) => Number(item.rank) == val).length > 0) return 'Already exists'
+                if (drawPrizes.value.filter((item: any) => Number(item.rank) == val).length > 0) return i18n.t('validate.prizeRankExist')
             }
 
             return true
         },
         amount(val: number) {
-            if (val > 0) return true
-            return 'Prize amount > 0!'
+            if (val < 1) return i18n.t('validate.prizeAmount')
+            return true
         }
     }
 })
