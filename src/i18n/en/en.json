@@ -1,0 +1,141 @@
+{
+    "sidebar": {
+        "home": "Home",
+        "report": "Report",
+        "random": "Random Draw",
+        "wheel": "Wheel Draw",
+        "customization": "Customization",
+        "general": "General"
+    },
+    "table": {
+        "title": {
+            "coupon": "Coupon Data Set",
+            "prize": "Prize",
+            "completed": "Completed"
+        },
+        "campaign": {
+            "title": "Campaign Name",
+            "createdAt": "Create Date",
+            "createdBy": "Create By",
+            "prizeCap": "Winning Quota",
+            "status": "Status"
+        },
+        "prize": {
+            "rank": "Prize Rank",
+            "title": "Prize Name",
+            "createdAt": "Create Date",
+            "createdBy": "Create By",
+            "prizeAmount": "Prize Amount",
+            "prizeLeft": "Remaining",
+            "status": "Status"
+        },
+        "dataset": {
+            "title": "Dataset Name",
+            "createdAt": "Create Date",
+            "createdBy": "Create By"
+        },
+        "winner": {
+            "no": "NO",
+            "customerId": "ID",
+            "winnerName": "Winner Name",
+            "winnerPhone": "Winner Phone",
+            "createdAt": "Create Date",
+            "status": "Status"
+        }
+    },
+    "pageTitle": {
+        "report": "Report",
+        "random": "Random Draw Campaign",
+        "wheel": "Wheel Draw Campaign"
+    },
+    "statistic": {
+        "wheel": "Total Winner of Wheel Draw Campagin",
+        "random": "Total Winner of Random Draw Campagin",
+        "current": "Current Campaign",
+        "finish": "Done"
+    },
+    "textfield": {
+        "placeholder": {
+            "search": "Search..."
+        },
+        "label": {
+            "campaignName": "Campaign Name",
+            "winningQuota": "Winning Quota",
+            "prizeName": "Prize Name",
+            "prizeRank": "Prize Rank",
+            "prizeAmount": "Prize Amount",
+            "bgImage": "Background Campaign",
+            "loadingImage": "GIF Animation",
+            "baseIcon": "Icon"
+        }
+    },
+    "uploadFile": {
+        "bgImage": "Add Campaign Background",
+        "dropFile": "Drop files here or click browse, file must not exceed 5 MB",
+        "loadingImage": "Add GIF Animation",
+        "chooseFile": "Choose File",
+        "dropzoneInfo": "Image must not exceed 5 MB"
+    },
+    "tab": {
+        "current": "Current",
+        "finish": "Finish",
+        "random": "Random Draw",
+        "wheel": "Wheel Draw"
+    },
+    "button": {
+        "newCampaign": "New Campaign",
+        "createPrize": "Create Prize",
+        "editPrize": "Edit Prize",
+        "campaignSetting": "Campaign Setting",
+        "finishCampaign": "Finish Campaign",
+        "duplicateCampaign": "Duplicate Campaign",
+        "importCoupon": "Import Coupon",
+        "exportCoupon": "Export Coupon",
+        "exportAsPNG": "Export As PNG",
+        "confirm": "Confirm",
+        "randomNow": "Random Now",
+        "openRandomPage": "Open Random Page ",
+        "exit": "Exit",
+        "startRandom": "Start Random",
+        "stopRandom": "Stop Random",
+        "login": "Login",
+        "viewall": "View All",
+        "finishCampaignNow": "Close Campaign Now"
+    },
+    "modalTitle": {
+        "createCampaign": "Create Campaign",
+        "editCampaign": "Edit Campaign",
+        "createPrize": "Create Prize",
+        "editPrize": "Edit Prize",
+        "winnerName": "Winner Name",
+        "confirm": "Are you sure?",
+        "duplicateCampaign": "Duplicate Campaign"
+    },
+    "message": {
+        "congratz": "Congratulation ! you are the winner!",
+        "finishCampaign": "your campaign will be finished",
+        "deleteCampaign": "your campaign will be deleted",
+        "deletePrize": "your prize will be deleted"
+    },
+    "breadcrumbs": {
+        "home": "Home",
+        "random": "Random Draw",
+        "wheel": "Wheel Draw",
+        "report": "Report"
+    },
+    "validate": {
+        "campaignTitle": "Campaign name is required!",
+        "prizeCap": "Winning Quota must greater than 0!",
+        "prizeAmount": "Prize amount must greater than 0!",
+        "prizeRank": "Prize rank must greater than 0!",
+        "prizeRankExist": "This rank already exists!",
+        "campaignExist": "Campaign name already exists!"
+    },
+    "alert": {
+        "apiError": "Something went wrong!",
+        "selectCoupon": "Select dataset first!",
+        "noPrize": "Prize is empty!",
+        "noCustomer": "Select customer!",
+        "alreadyRandom": "This prize already randomed!"
+    }
+}

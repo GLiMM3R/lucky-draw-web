@@ -1,0 +1,139 @@
+{
+    "sidebar": {
+        "home": "ໜ້າຫລັກ",
+        "report": "ລາຍງານ",
+        "random": "ສຸ່ມ",
+        "wheel": "ວົງລໍ້ສຸ່ມ",
+        "customization": "Customization",
+        "general": "ທົ່ວໄປ "
+    },
+    "table": {
+        "title": {
+            "coupon": "ຊຸດຂໍ້ມູນຄູປອງ",
+            "prize": "ລະດັບລາງວັນ",
+            "completed": "ສຳເລັດ"
+        },
+        "campaign": {
+            "title": "ຊື່ແຄມເປນ",
+            "createdAt": "ສ້າງວັນທີ ",
+            "createdBy": "ສ້າງໂດຍ",
+            "prizeCap": "ໂຄຕ້າຜູ້ຊະນະ",
+            "status": "ສະຖານະ"
+        },
+        "prize": {
+            "rank": "ອັນດັບລາງວັນ",
+            "title": "ຊື່ລາງວັນ",
+            "createdAt": "ສ້າງວັນທີ",
+            "createdBy": "ສ້າງໂດຍ ",
+            "prizeAmount": "ຈຳນວນຂອງລາງວັນ",
+            "prizeLeft": "ຍັງເຫຼືອ",
+            "status": "ສະຖານະ "
+        },
+        "dataset": {
+            "title": "ຊຸດຂໍ້ມູນຊື່",
+            "createdAt": "ວັນທີອັບໂຫລດ",
+            "createdBy": "ອັບໂຫລດໂດຍ "
+        },
+        "winner": {
+            "no": "ອັນດັບ ",
+            "customerId": "ລະຫັດ",
+            "winnerName": "ຊື່ຜູ້ຊະນະ",
+            "winnerPhone": "ເບີໂທ",
+            "createdAt": "ວັນທີສຸ່ມ",
+            "status": "ສະຖານະ"
+        }
+    },
+    "pageTitle": {
+        "report": "ລາຍງານ",
+        "random": "ແຄມເປນສຸ່ມ",
+        "wheel": "ວົງລໍ້ສຸ່ມ "
+    },
+    "statistic": {
+        "wheel": "ຜູ້ຊະນະທັງໝົດຂອງ  ວົງລໍ້ສຸ່ມແຄມເປນ",
+        "random": "ຜູ້ຊະນະທັງໝົດຂອງ ແຄມເປນສຸ່ມ",
+        "current": "ແຄມເປນປະຈຸບັນ",
+        "finish": "ສຳເລັດແລ້ວ"
+    },
+    "textfield": {
+        "placeholder": {
+            "search": "ຄົ້ນຫາ..."
+        },
+        "label": {
+            "campaignName": "ຊື່ແຄມເປນ",
+            "winningQuota": "ໂຄຕ້າຜູ້ຊະນະ ",
+            "prizeName": "ຊື່ລາງວັນ",
+            "prizeRank": "ອັນດັບລາງວັນ",
+            "prizeAmount": "ຈຳນວນລາງວັນ",
+            "bgImage": "ຮູບພາບພື້ນຫລັງແຄມເປນ",
+            "loadingImage": "ຮູບພາບເຄື່ອນໄຫວ"
+        }
+    },
+    "uploadFile": {
+        "bgImage": "ເພີ່ມພື້ນຫລັງແຄມເປນ",
+        "dropFile": "ວາງໄຟລ໌ໄວ້ບ່ອນນີ້ ຫຼືຄລິກ browse, ຂະໜາດຟາຍບໍຄວນເກີນ 5 MB",
+        "loadingImage": "ເພີ່ມຮູບເຄື່ອນໄຫວ (ສະແດງເມື່ອສຸ່ມ)",
+        "chooseFile": "ເລືອກໄຟລ໌",
+        "dropzoneInfo": "ຮູບພາບຂະໜາດບໍຄວນເກີນ 5 MB"
+    },
+    "tab": {
+        "current": "ປະຈຸບັນ",
+        "finish": "ສຳເລັດ",
+        "random": "ສຸ່ມ",
+        "wheel": "ວົງລໍ້ສຸ່ມ"
+    },
+    "button": {
+        "newCampaign": "ແຄມເປນໃໜ່",
+        "createPrize": "ສ້າງລາງວັນ",
+        "editPrize": "ແກ້ໄຂລາງວັນ",
+        "campaignSetting": "ຕັ້ງຄ່າແຄມເປນ",
+        "finishCampaign": "ສຳເລັດແຄມເປນ",
+        "duplicateCampaign": "ຄັດລອກແຄມເປນ ",
+        "importCoupon": "ນຳເຂົ້າຄູປອງ",
+        "exportCoupon": "ສົ່ງອອກຄູປອງ",
+        "exportAsPNG": "Export As PNG",
+        "confirm": "ຢືນຍັນ ",
+        "randomNow": "ສູ່ມດຽວນີ້ ",
+        "openRandomPage": "ເປີດໜ້າສຸ່ມ",
+        "exit": "ອອກ",
+        "startRandom": "ເລີ່ມສຸ່ມ ",
+        "stopRandom": "ຢຸດສຸ່ມ ",
+        "login": "Login",
+        "viewall": "ເບິ່ງທັງໝົດ",
+        "finishCampaignNow": "ປິດແຄມເປນດຽວນີ້"
+    },
+    "modalTitle": {
+        "createCampaign": "ສ້າງແຄມເປນ",
+        "editCampaign": "ແກ້ໄຂແຄມເປນ",
+        "createPrize": "ສ້າງລາງວັນ",
+        "editPrize": "ແກ້ໄຂລາງວັນ",
+        "winnerName": "ຊື່ຜູ້ຊະນະ",
+        "confirm": "ເຈົ້າແນ່ໃຈບໍ່?",
+        "duplicateCampaign": "ຄັດລອກແຄມເປນ"
+    },
+    "message": {
+        "congratz": "ຂໍສະແດງຄວາມຍິນດີ ! ເຈົ້າເປັນຜູ້ຊະນະ!",
+        "finishCampaign": "ແຄມເປນຂອງທ່ານຈະສຳເລັດ",
+        "deleteCampaign": "ແຄມເປນຂອງທ່ານຈະຖືກລຶບ",
+        "deletePrize": "ລາງວັນຂອງທ່ານຈະຖືກລຶບ"
+    },
+    "breadcrumbs": {
+        "home": "ໜ້າຫຼັກ",
+        "random": "ສຸ່ມ",
+        "wheel": "ວົງລໍ້ສຸ່ມ",
+        "report": "ລາຍງານ"
+    },
+    "validate": {
+        "campaignTitle": "ຊື່ແຄມເປນຕ້ອງຫຼາຍກວ່າ 3!",
+        "prizeCap": "ໂຄຕ້າຜູ້ຊະນະຕ້ອງຫຼາຍກວ່າ 0!",
+        "prizeAmount": "ຈຳນວນລາງວັນຕ້ອງຫຼາຍກວ່າ 0!",
+        "prizeRank": "ອັນດັບລາງວັນຕ້ອງຫຼາຍກວ່າ 1!",
+        "prizeRankExist": "ອັນດັບລາງວັນນີ້ມີແລ້ວ!",
+        "campaignExist": "ຊື່ແຄມເປນນີ້ມີແລ້ວ"
+    },
+    "alert": {
+        "apiError": "ມີບາງຢ່າງຜິດພາດ!",
+        "selectCoupon": "ບໍ່ມີຊຸດຂໍ້ມູນຄູປອງ!",
+        "noPrize": "ບໍ່ມີຂອງລາງວັນ!",
+        "alreadyRandom": "ລາງວັນນີ້ມີການສຸ່ມແລ້ວ"
+    }
+}
